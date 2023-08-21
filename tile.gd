@@ -15,6 +15,12 @@ func uncover():
 	if !is_flagged:
 		is_cover = false
 		$Cover.hide()
+		get_parent().tiles_uncovered += 1
+		if is_bomb:
+			get_parent().build_mode = true
+			get_parent().bombs_found = 0
+			get_parent().tiles_uncovered = 0
+			print("TODO: THE PLAYER HAS LOST, BUILD MODE ENGAGED")
 	var count_surroundings = 0
 	for tile in get_surroundings():
 		if tile.is_bomb:
@@ -49,13 +55,18 @@ func toggle_flag():
 		if !is_flagged:
 			is_flagged = true
 			$Flag.show()
+			if is_bomb:
+				get_parent().bombs_found += 1
 		elif is_flagged:
 			is_flagged = false
 			$Flag.hide()
+			if is_bomb:
+				get_parent().bombs_found -= 1
 
 func _on_control_gui_input(event):
 	if event is InputEventMouseButton:
-		if event.is_action_pressed("left_click"):
-			uncover()
-		if event.is_action_pressed("right_click"):
-			toggle_flag()
+		if !get_parent().build_mode:
+			if event.is_action_pressed("left_click"):
+				uncover()
+			if event.is_action_pressed("right_click"):
+				toggle_flag()
