@@ -1,8 +1,12 @@
 extends Node2D
 
+var Tile = preload("res://Tile.tscn")
+var TestBuilding = preload("res://testBuilding.tscn")
+
 const TILE_SIZE = 64
 
 var build_mode: bool = false
+var placing: bool = false
 
 var row = 3
 var col = 3
@@ -10,7 +14,6 @@ var bomb_count = 1
 var bombs_found = 0
 var tiles_uncovered = 0
 var total_tiles = row*col
-var Tile = preload("res://Tile.tscn")
 var tiles
 
 var population = 10
@@ -18,6 +21,7 @@ var food = 0
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	get_parent().queue_building.connect(_on_building_queue)
 	randomize()
 	for r in row:
 		for c in col:
@@ -43,3 +47,11 @@ func _process(delta):
 		print("TODO: LEVEL WIN! BUILD MODE ENGAGED")
 	get_parent().population = population
 	get_parent().food = food
+	
+func _on_building_queue(building_name):
+	if build_mode and !placing:
+		if building_name == "test":
+			placing = true
+			print("SIGNAL RECEIVED TO BUILD TEST BUILDING")
+			var tBuilding = TestBuilding.instantiate()
+			add_child(tBuilding)

@@ -1,6 +1,7 @@
-[gd_scene load_steps=3 format=3 uid="uid://iqvlmmwy7d46"]
+[gd_scene load_steps=4 format=3 uid="uid://iqvlmmwy7d46"]
 
 [ext_resource type="Script" path="res://main.gd" id="1_rna6o"]
+[ext_resource type="Texture2D" uid="uid://3cwxcuf8gjes" path="res://Assets/PlaceholderBuilding.png" id="2_dmo3i"]
 
 [sub_resource type="Theme" id="Theme_toiel"]
 
@@ -28,8 +29,30 @@ layout_mode = 2
 text = "Food: 0"
 
 [node name="Buildings" type="GridContainer" parent="UI"]
-layout_mode = 0
-offset_left = 1128.0
-offset_top = 2.0
-offset_right = 1277.0
-offset_bottom = 719.0
+layout_mode = 2
+offset_left = 1132.0
+offset_top = 105.0
+offset_right = 1281.0
+offset_bottom = 720.0
+columns = 2
+
+[node name="TestBuilding" type="Sprite2D" parent="UI/Buildings"]
+texture = ExtResource("2_dmo3i")
+centered = false
+
+[node name="Control" type="Control" parent="UI/Buildings/TestBuilding"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Label" type="Label" parent="."]
+offset_left = 1167.0
+offset_top = 65.0
+offset_right = 1238.0
+offset_bottom = 91.0
+text = "Buildings"
+
+[connection signal="gui_input" from="UI/Buildings/TestBuilding/Control" to="." method="_on_test_building_clicked"]
