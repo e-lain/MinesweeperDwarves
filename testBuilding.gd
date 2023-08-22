@@ -21,6 +21,10 @@ func _process(delta):
 		else:
 			self.show()
 			in_bounds = true
+		if num_collisions > 0:
+			print("Place red shader here")
+		else:
+			print("Revert shader to normal here")
 
 func _input(event):
 	if event is InputEventMouseButton && !placed:
