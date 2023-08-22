@@ -20,6 +20,7 @@ func uncover():
 			get_parent().build_mode = true
 			get_parent().bombs_found = 0
 			get_parent().tiles_uncovered = 0
+			get_parent().population -= 5
 			print("TODO: THE PLAYER HAS LOST, BUILD MODE ENGAGED")
 	var count_surroundings = 0
 	for tile in get_surroundings():

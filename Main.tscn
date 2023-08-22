@@ -1,6 +1,8 @@
-[gd_scene load_steps=2 format=3 uid="uid://iqvlmmwy7d46"]
+[gd_scene load_steps=3 format=3 uid="uid://iqvlmmwy7d46"]
 
 [ext_resource type="Script" path="res://main.gd" id="1_rna6o"]
+
+[sub_resource type="Theme" id="Theme_toiel"]
 
 [node name="main" type="Node2D"]
 script = ExtResource("1_rna6o")
@@ -10,8 +12,24 @@ layout_mode = 3
 anchors_preset = 0
 offset_right = 1283.0
 offset_bottom = 720.0
+theme = SubResource("Theme_toiel")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="UI"]
+[node name="Resources" type="VBoxContainer" parent="UI"]
 layout_mode = 0
 offset_right = 160.0
 offset_bottom = 224.0
+
+[node name="Population" type="Label" parent="UI/Resources"]
+layout_mode = 2
+text = "Population: 0"
+
+[node name="Food" type="Label" parent="UI/Resources"]
+layout_mode = 2
+text = "Food: 0"
+
+[node name="Buildings" type="GridContainer" parent="UI"]
+layout_mode = 0
+offset_left = 1128.0
+offset_top = 2.0
+offset_right = 1277.0
+offset_bottom = 719.0

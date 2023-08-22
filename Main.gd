@@ -2,6 +2,9 @@ extends Node2D
 
 var Board = preload("res://board.tscn")
 
+var population = 0
+var food = 0
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	# place board in center with correct offset accounting for tile size and board size
@@ -13,4 +16,5 @@ func _ready():
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
-	pass
+	get_node("UI/Resources/Population").text = "Population: %d" % [population]
+	get_node("UI/Resources/Food").text = "Food: %d" % [food]

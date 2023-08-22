@@ -13,6 +13,9 @@ var total_tiles = row*col
 var Tile = preload("res://Tile.tscn")
 var tiles
 
+var population = 10
+var food = 0
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	randomize()
@@ -38,3 +41,5 @@ func _process(delta):
 		bombs_found = 0
 		tiles_uncovered = 0
 		print("TODO: LEVEL WIN! BUILD MODE ENGAGED")
+	get_parent().population = population
+	get_parent().food = food
