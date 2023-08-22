@@ -13,7 +13,7 @@ func _ready():
 	# place board in center with correct offset accounting for tile size and board size
 	b = Board.instantiate()
 	var center = get_viewport_rect().size/2
-	var offset = Vector2(center.x-(b.col * b.TILE_SIZE/2), center.y-(b.row * b.TILE_SIZE/2))
+	var offset = Vector2(center.x-(b.row * b.TILE_SIZE/2), center.y-(b.col * b.TILE_SIZE/2))
 	b.position = offset
 	add_child(b)
 

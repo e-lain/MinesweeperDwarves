@@ -4,7 +4,7 @@
 [ext_resource type="Texture2D" uid="uid://3cwxcuf8gjes" path="res://Assets/PlaceholderBuilding.png" id="2_ncicm"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ynpqt"]
-size = Vector2(64, 64)
+size = Vector2(52, 49)
 
 [node name="testBuilding" type="Node2D"]
 script = ExtResource("1_rdw3o")
@@ -16,5 +16,8 @@ centered = false
 [node name="Area2D" type="Area2D" parent="."]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
-position = Vector2(32, 32)
+position = Vector2(32, 32.5)
 shape = SubResource("RectangleShape2D_ynpqt")
+
+[connection signal="area_entered" from="Area2D" to="." method="_on_area_2d_area_entered"]
+[connection signal="area_exited" from="Area2D" to="." method="_on_area_2d_area_exited"]

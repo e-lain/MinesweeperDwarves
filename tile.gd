@@ -14,6 +14,7 @@ func set_bomb():
 func uncover():
 	if !is_flagged:
 		is_cover = false
+		$Area2D/CollisionShape2D.disabled = true
 		$Cover.hide()
 		get_parent().tiles_uncovered += 1
 		if is_bomb:

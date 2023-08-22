@@ -50,8 +50,9 @@ func _process(delta):
 	
 func _on_building_queue(building_name):
 	if build_mode and !placing:
+		placing = true
+		var building
 		if building_name == "test":
-			placing = true
 			print("SIGNAL RECEIVED TO BUILD TEST BUILDING")
-			var tBuilding = TestBuilding.instantiate()
-			add_child(tBuilding)
+			building = TestBuilding.instantiate()
+		add_child(building)
