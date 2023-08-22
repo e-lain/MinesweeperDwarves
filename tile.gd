@@ -1,6 +1,6 @@
 extends Node2D
 
-const TILE_SIZE = 32
+const TILE_SIZE = 64
 
 var is_cover: bool = true
 var is_flagged: bool = false

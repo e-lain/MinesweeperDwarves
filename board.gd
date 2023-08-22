@@ -1,6 +1,6 @@
 extends Node2D
 
-const TILE_SIZE = 32
+const TILE_SIZE = 64
 
 var build_mode: bool = false
 
