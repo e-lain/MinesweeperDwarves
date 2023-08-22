@@ -1,0 +1,15 @@
+[gd_scene load_steps=4 format=3 uid="uid://dbn5la8cym5l"]
+
+[ext_resource type="Shader" path="res://ArtTest/GridShader.gdshader" id="1_1oymc"]
+[ext_resource type="Texture2D" uid="uid://bvq6r3dxkw1fb" path="res://Assets/gridlinedownscale1.png" id="2_j5dj0"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_e1tdt"]
+resource_local_to_scene = true
+shader = ExtResource("1_1oymc")
+shader_parameter/speed = 0.02
+
+[node name="Gridlinedownscale1" type="Sprite2D"]
+texture_repeat = 2
+material = SubResource("ShaderMaterial_e1tdt")
+position = Vector2(640, 63)
+texture = ExtResource("2_j5dj0")
