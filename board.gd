@@ -18,7 +18,7 @@ var tiles_uncovered = 0
 var total_tiles = rows*columns
 var tiles = []
 
-var population = 10
+var population = 3
 var food = 0
 
 # Called when the node enters the scene tree for the first time.
@@ -93,7 +93,7 @@ func _on_tile_uncovered(cell_pos: Vector2i):
 		return
 	
 	if tile.is_bomb:
-		population -= 5
+		population -= 1
 		enterBuildMode()
 		print("TODO: THE PLAYER HAS LOST, BUILD MODE ENGAGED")
 	
