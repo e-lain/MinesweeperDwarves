@@ -3,7 +3,6 @@ extends Node2D
 @export var grid_line_prefab: PackedScene = preload("res://ArtTest/GridLine.tscn")
 @onready var tilemap: TileMap = $TileMap
 
-signal go_to_next_level(difficulty: int)
 var difficulty = 0
 
 var Building = preload("res://Buildings/Building.tscn")
@@ -118,7 +117,7 @@ func enter_build_mode():
 				tile.label.queue_free()
 				
 func next_level():
-	go_to_next_level.emit(difficulty+1)
+	get_parent().next_level()
 	hide()
 
 func uncover_tile(tile: BoardTile):

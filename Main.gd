@@ -15,7 +15,6 @@ func _ready():
 	var center = get_viewport_rect().size/2
 	var offset = Vector2(center.x-(b.rows * b.TILE_SIZE/2), center.y-(b.columns * b.TILE_SIZE/2))
 	b.position = offset
-	b.go_to_next_level.connect(_on_go_to_next_level)
 	add_child(b)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -31,8 +30,8 @@ func build(building_name):
 	if building_name == "staircase":
 		queue_building.emit("staircase")
 
-func _on_go_to_next_level():
-	print("MAIN SCENE RECEIVED NEXT LEVEL SIGNAL")
+func next_level():
+	print("MAIN SCENE RECEIVED NEXT LEVEL CALL")
 
 func _on_end_level_btn_pressed():
 	if b.build_mode == false:
