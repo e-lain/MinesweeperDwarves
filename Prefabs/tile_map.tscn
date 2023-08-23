@@ -1,0 +1,9 @@
+[gd_scene load_steps=3 format=3 uid="uid://c7renurwmj3uy"]
+
+[ext_resource type="TileSet" uid="uid://dk354anap47kc" path="res://Assets/walltiles/tileset_walltiles.tres" id="1_pln8h"]
+[ext_resource type="Script" path="res://Prefabs/tile_map.gd" id="2_0frvj"]
+
+[node name="TileMap" type="TileMap"]
+tile_set = ExtResource("1_pln8h")
+format = 2
+script = ExtResource("2_0frvj")

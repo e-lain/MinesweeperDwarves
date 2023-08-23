@@ -1,12 +1,45 @@
 [gd_scene load_steps=4 format=3 uid="uid://iqvlmmwy7d46"]
 
-[ext_resource type="Script" path="res://main.gd" id="1_rna6o"]
 [ext_resource type="Texture2D" uid="uid://3cwxcuf8gjes" path="res://Assets/PlaceholderBuilding.png" id="2_dmo3i"]
+
+[sub_resource type="GDScript" id="GDScript_gj3iy"]
+script/source = "extends Node2D
+
+var Board = preload(\"res://board.tscn\")
+
+var population = 0
+var food = 0
+var b
+
+signal queue_building(building_name)
+
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	# place board in center with correct offset accounting for tile size and board size
+	b = Board.instantiate()
+	var center = get_viewport_rect().size/2
+	var offset = Vector2(center.x-(b.rows * b.TILE_SIZE/2), center.y-(b.columns * b.TILE_SIZE/2))
+	b.position = offset
+	add_child(b)
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta):
+	get_node(\"UI/Resources/Population\").text = \"Population: %d\" % [population]
+	get_node(\"UI/Resources/Food\").text = \"Food: %d\" % [food]
+
+
+func _on_test_building_clicked(event):
+	if event is InputEventMouseButton:
+		if event.is_action_pressed(\"left_click\"):
+			# Signal the board to start building placement for test building
+			queue_building.emit(\"test\")
+
+"
 
 [sub_resource type="Theme" id="Theme_toiel"]
 
 [node name="main" type="Node2D"]
-script = ExtResource("1_rna6o")
+script = SubResource("GDScript_gj3iy")
 
 [node name="UI" type="Control" parent="."]
 layout_mode = 3
