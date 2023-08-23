@@ -73,9 +73,7 @@ func set_bombs():
 
 func _process(delta):
 	if tiles_uncovered == total_tiles - bomb_count:
-		build_mode = true
-		bombs_found = 0
-		tiles_uncovered = 0
+		enterBuildMode()
 		print("TODO: LEVEL WIN! BUILD MODE ENGAGED")
 	get_parent().population = population
 	get_parent().food = food
@@ -95,6 +93,7 @@ func _on_tile_uncovered(cell_pos: Vector2i):
 		return
 	
 	if tile.is_bomb:
+		population -= 5
 		enterBuildMode()
 		print("TODO: THE PLAYER HAS LOST, BUILD MODE ENGAGED")
 	
@@ -106,7 +105,6 @@ func enterBuildMode():
 	build_mode = true
 	bombs_found = 0
 	tiles_uncovered = 0
-	population -= 5
 
 func uncover_tile(tile: BoardTile):
 	tile.is_cover = false
