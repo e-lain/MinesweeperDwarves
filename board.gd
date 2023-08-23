@@ -115,7 +115,7 @@ func _on_tile_uncovered(cell_pos: Vector2i):
 	
 	uncover_tile(tile)
 	
-	#update_shadows()
+	update_shadows()
 
 func enter_build_mode():
 	build_mode = true
@@ -200,25 +200,11 @@ func update_shadows():
 	var used_cells = tilemap.get_used_cells(0)
 	var occupied_tiles = {}
 	
-	var min_x = 9999999
-	var max_x = -999999
-	var min_y = 999999
-	var max_y = -999999
 	for pos in used_cells:
-		if pos.x < min_x:
-			min_x = int(pos.x)
-		elif pos.x > max_x:
-			max_x = int(pos.x)
-		if pos.y < min_y:
-			min_y = int(pos.y)
-		elif pos.y > max_y:
-			max_y = int(pos.y)
-		
 		occupied_tiles[pos] = null
-	
 	var unused_cells = []
-	for x in range(min_x, max_x):
-		for y in range(min_y, max_y):
+	for x in rows:
+		for y in columns:
 			var cell = Vector2i(x,y)
 			if !occupied_tiles.has(cell):
 				unused_cells.append(cell)
