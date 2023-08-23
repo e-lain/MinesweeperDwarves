@@ -2,6 +2,7 @@ extends Node2D
 
 var Board = preload("res://board.tscn")
 
+var depth = 0
 var population = 3
 var stone = 0
 var b
@@ -21,6 +22,7 @@ func _ready():
 func _process(delta):
 	get_node("UI/Resources/Population").text = "Population: %d" % [population]
 	get_node("UI/Resources/Stone").text = "Stone: %d" % [stone]
+	get_node("UI/Resources/Depth").text = "Depth: %d" % [depth]
 
 func build(building_name):
 	print("func build, building_name: ", building_name)
@@ -32,6 +34,7 @@ func build(building_name):
 
 func next_level():
 	print("MAIN SCENE RECEIVED NEXT LEVEL CALL")
+	depth += 1
 
 func _on_end_level_btn_pressed():
 	if b.build_mode == false:
