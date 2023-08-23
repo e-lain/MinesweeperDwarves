@@ -3,8 +3,6 @@ extends Node2D
 @export var grid_line_prefab: PackedScene = preload("res://ArtTest/GridLine.tscn")
 @onready var tilemap: TileMap = $TileMap
 
-var difficulty = 0
-
 var Building = preload("res://Buildings/Building.tscn")
 var Staircase = preload("res://Buildings/Staircase.tscn")
 
@@ -15,7 +13,8 @@ var placing: bool = false
 
 var rows = 6
 var columns = 6
-var bomb_count = 3
+var bomb_count = 4
+
 var bombs_found = 0
 var tiles_uncovered = 0
 var total_tiles = rows*columns
@@ -30,6 +29,11 @@ func _ready():
 	
 	tilemap.uncovered.connect(_on_tile_uncovered)
 	tilemap.flag_toggled.connect(_on_flag_toggled)
+	
+func init_board(rows: int, cols: int, bombs: int):
+	self.rows = rows
+	self.columns = cols
+	self.bomb_count = bombs
 	
 	var fill_cells = []
 	
