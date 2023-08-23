@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://c2ksbtfr3qqrh"]
+
+[ext_resource type="Texture2D" uid="uid://bdvgerrn8866d" path="res://Assets/Mine.png" id="1_26ngi"]
+
+[node name="Bomb" type="Sprite2D"]
+texture = ExtResource("1_26ngi")

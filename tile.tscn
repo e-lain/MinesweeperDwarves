@@ -1,6 +1,6 @@
 [gd_scene load_steps=7 format=3 uid="uid://dngpegm30apw2"]
 
-[ext_resource type="Script" path="res://tile.gd" id="1_pmyao"]
+[ext_resource type="Script" path="res://BoardTile.gd" id="1_pmyao"]
 [ext_resource type="Texture2D" uid="uid://uwmkyp2x0wvv" path="res://Assets/PlaceholderTileBack.png" id="1_prraa"]
 [ext_resource type="Texture2D" uid="uid://bgox7du0lfu4w" path="res://Assets/PlaceholderTileBomb.png" id="2_kcgpn"]
 [ext_resource type="Texture2D" uid="uid://c0ufgfr33kmla" path="res://Assets/PlaceholderTileCover.png" id="3_kgern"]

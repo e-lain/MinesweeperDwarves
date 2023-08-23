@@ -1,7 +1,6 @@
 extends Node2D
 
 @export var grid_line_prefab: PackedScene = preload("res://ArtTest/GridLine.tscn")
-
 @onready var tilemap: TileMap = $WallTileMap
 
 # Called when the node enters the scene tree for the first time.
@@ -22,9 +21,9 @@ func _ready():
 		
 		instance.material.set_shader_parameter("speed", randf_range(0.01, 0.03) * (-1.0 if i % 2 == 0 else 1.0))
 	
-	update_shhadows()
+	update_shadows()
 
-func update_shhadows():
+func update_shadows():
 	var used_cells = tilemap.get_used_cells(0)
 	var occupied_tiles = {}
 	

@@ -1,9 +1,14 @@
-[gd_scene load_steps=5 format=3 uid="uid://dblj6uqwhowfa"]
+[gd_scene load_steps=10 format=3 uid="uid://dblj6uqwhowfa"]
 
 [ext_resource type="Script" path="res://ArtTest/ArtTest.gd" id="1_5g2dc"]
 [ext_resource type="Texture2D" uid="uid://dnsxe5dsaswqg" path="res://Assets/walltiles/newrockbg.png" id="2_xfd4w"]
 [ext_resource type="TileSet" uid="uid://dk354anap47kc" path="res://Assets/walltiles/tileset_walltiles.tres" id="3_6xcy0"]
 [ext_resource type="Texture2D" uid="uid://bdvgerrn8866d" path="res://Assets/Mine.png" id="4_fiqkq"]
+[ext_resource type="Texture2D" uid="uid://cq1p5ky2322w8" path="res://Assets/Buildings/StairsDown.png" id="5_6nu85"]
+[ext_resource type="Texture2D" uid="uid://cfn88x8dv058h" path="res://Assets/Buildings/StairsUp.png" id="6_vveef"]
+[ext_resource type="Texture2D" uid="uid://xboh6tjk056u" path="res://Assets/Buildings/mushroom.png" id="7_lfe8o"]
+[ext_resource type="Texture2D" uid="uid://y0u63ty82mt5" path="res://Assets/Buildings/crystal2.png" id="8_e7ycp"]
+[ext_resource type="Texture2D" uid="uid://btajej43cp77b" path="res://Assets/Buildings/Crystal1.png" id="9_tglb2"]
 
 [node name="ArtTest" type="Node2D"]
 script = ExtResource("1_5g2dc")
@@ -41,7 +46,28 @@ layer_2/tile_data = PackedInt32Array(65549, 196609, 1, 65550, 131073, 1, 131080,
 
 [node name="Camera2D" type="Camera2D" parent="."]
 position = Vector2(640, 360)
+zoom = Vector2(0.5, 0.5)
 
 [node name="Mine" type="Sprite2D" parent="."]
 position = Vector2(928, 288)
 texture = ExtResource("4_fiqkq")
+
+[node name="StairsDown" type="Sprite2D" parent="."]
+position = Vector2(736, 352)
+texture = ExtResource("5_6nu85")
+
+[node name="StairsUp" type="Sprite2D" parent="."]
+position = Vector2(800, 352)
+texture = ExtResource("6_vveef")
+
+[node name="Mushroom" type="Sprite2D" parent="."]
+position = Vector2(928, 160)
+texture = ExtResource("7_lfe8o")
+
+[node name="Crystal2" type="Sprite2D" parent="."]
+position = Vector2(736, 160)
+texture = ExtResource("8_e7ycp")
+
+[node name="Crystal1" type="Sprite2D" parent="."]
+position = Vector2(992, 352)
+texture = ExtResource("9_tglb2")
