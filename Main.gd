@@ -37,3 +37,13 @@ func _on_end_level_btn_pressed():
 		print("MANUALLY ENTERING BUILD MODE")
 	else:
 		print("ALREADY IN BUILD MODE")
+
+
+func _on_control_mouse_entered():
+	# Display tooltip here
+	$UI/Tooltip.show()
+
+
+func _on_control_mouse_exited():
+	# Hide tooltip here
+	$UI/Tooltip.hide()

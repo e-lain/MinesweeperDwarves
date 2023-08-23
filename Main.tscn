@@ -1,9 +1,8 @@
 [gd_scene load_steps=4 format=3 uid="uid://iqvlmmwy7d46"]
 
 [ext_resource type="Script" path="res://Main.gd" id="1_t2km6"]
+[ext_resource type="Theme" uid="uid://dyrton3joryca" path="res://UI.tres" id="2_b2qml"]
 [ext_resource type="Texture2D" uid="uid://xboh6tjk056u" path="res://Assets/Buildings/mushroom.png" id="2_q76qu"]
-
-[sub_resource type="Theme" id="Theme_toiel"]
 
 [node name="main" type="Node2D"]
 script = ExtResource("1_t2km6")
@@ -11,9 +10,11 @@ script = ExtResource("1_t2km6")
 [node name="UI" type="Control" parent="."]
 layout_mode = 3
 anchors_preset = 0
-offset_right = 1283.0
-offset_bottom = 720.0
-theme = SubResource("Theme_toiel")
+offset_left = 1.0
+offset_top = 1.0
+offset_right = 1280.0
+offset_bottom = 721.0
+theme = ExtResource("2_b2qml")
 
 [node name="Resources" type="VBoxContainer" parent="UI"]
 layout_mode = 0
@@ -64,12 +65,26 @@ text = "To Build Mode"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Label" type="Label" parent="."]
-offset_left = 1167.0
-offset_top = 65.0
-offset_right = 1238.0
-offset_bottom = 91.0
+[node name="Tooltip" type="Label" parent="UI"]
+visible = false
+layout_mode = 2
+offset_left = 847.0
+offset_top = -1.0
+offset_right = 1110.0
+offset_bottom = 103.0
+text = "Test Building
+Cost - blah
+
+Wow this is a building, pretty neat"
+
+[node name="Label" type="Label" parent="UI"]
+offset_left = 1166.0
+offset_top = 64.0
+offset_right = 1237.0
+offset_bottom = 90.0
 text = "Buildings"
 
 [connection signal="gui_input" from="UI/Buildings/TestBuilding/Control" to="." method="_on_test_building_clicked"]
+[connection signal="mouse_entered" from="UI/Buildings/TestBuilding/Control" to="." method="_on_control_mouse_entered"]
+[connection signal="mouse_exited" from="UI/Buildings/TestBuilding/Control" to="." method="_on_control_mouse_exited"]
 [connection signal="pressed" from="UI/EndLevelBtn" to="." method="_on_end_level_btn_pressed"]
