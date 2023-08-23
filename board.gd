@@ -95,15 +95,18 @@ func _on_tile_uncovered(cell_pos: Vector2i):
 		return
 	
 	if tile.is_bomb:
-		build_mode = true
-		bombs_found = 0
-		tiles_uncovered = 0
-		population -= 5
+		enterBuildMode()
 		print("TODO: THE PLAYER HAS LOST, BUILD MODE ENGAGED")
 	
 	uncover_tile(tile)
 	
 	#update_shadows()
+
+func enterBuildMode():
+	build_mode = true
+	bombs_found = 0
+	tiles_uncovered = 0
+	population -= 5
 
 func uncover_tile(tile: BoardTile):
 	tile.is_cover = false

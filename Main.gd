@@ -29,3 +29,11 @@ func _on_test_building_clicked(event):
 			# Signal the board to start building placement for test building
 			queue_building.emit("test")
 
+
+
+func _on_end_level_btn_pressed():
+	if b.build_mode == false:
+		b.enterBuildMode()
+		print("MANUALLY ENTERING BUILD MODE")
+	else:
+		print("ALREADY IN BUILD MODE")
