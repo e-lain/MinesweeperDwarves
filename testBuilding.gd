@@ -15,7 +15,7 @@ func _process(delta):
 		var mouse = get_parent().get_local_mouse_position()
 		var snapped = Vector2(snapped(mouse.x-TILE_SIZE/2, TILE_SIZE), snapped(mouse.y-TILE_SIZE/2, TILE_SIZE))
 		position = snapped
-		if position.x <= 0-TILE_SIZE || position.x >= TILE_SIZE * get_parent().row || position.y <= 0-TILE_SIZE || position.y >= TILE_SIZE * get_parent().col:
+		if position.x <= 0 - TILE_SIZE || position.x >= TILE_SIZE * get_parent().rows || position.y <= 0-TILE_SIZE || position.y >= TILE_SIZE * get_parent().columns:
 			self.hide()
 			in_bounds = false
 		else:
@@ -39,7 +39,6 @@ func _input(event):
 
 func _on_area_2d_area_entered(area):
 	num_collisions += 1
-
 
 func _on_area_2d_area_exited(area):
 	num_collisions -= 1
