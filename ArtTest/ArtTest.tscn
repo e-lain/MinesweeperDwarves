@@ -10,7 +10,7 @@
 [ext_resource type="Texture2D" uid="uid://y0u63ty82mt5" path="res://Assets/Buildings/crystal2.png" id="8_e7ycp"]
 [ext_resource type="Texture2D" uid="uid://btajej43cp77b" path="res://Assets/Buildings/Crystal1.png" id="9_tglb2"]
 [ext_resource type="Texture2D" uid="uid://deskwms7mei6a" path="res://Assets/Buildings/MiningBuildingDownscale.png" id="10_j45g1"]
-[ext_resource type="Texture2D" uid="uid://otfamw48ndt4" path="res://Assets/Buildings/HouseBuildingDownscaled.png" id="11_2hrln"]
+[ext_resource type="Texture2D" uid="uid://bowj44y12xpil" path="res://Assets/Buildings/HouseBuildingDownscaled.png" id="11_2hrln"]
 
 [node name="ArtTest" type="Node2D"]
 script = ExtResource("1_5g2dc")
@@ -22,6 +22,28 @@ offset_left = -224.0
 offset_top = -288.0
 offset_right = 1510.0
 offset_bottom = 1019.0
+texture = ExtResource("2_xfd4w")
+expand_mode = 1
+stretch_mode = 1
+
+[node name="TextureRect2" type="TextureRect" parent="."]
+modulate = Color(1, 1, 1, 0.788235)
+texture_repeat = 2
+offset_left = 707.0
+offset_top = 514.0
+offset_right = 830.0
+offset_bottom = 637.0
+texture = ExtResource("2_xfd4w")
+expand_mode = 1
+stretch_mode = 1
+
+[node name="TextureRect3" type="TextureRect" parent="."]
+modulate = Color(1, 1, 1, 0.788235)
+texture_repeat = 2
+offset_left = 386.0
+offset_top = 514.0
+offset_right = 509.0
+offset_bottom = 637.0
 texture = ExtResource("2_xfd4w")
 expand_mode = 1
 stretch_mode = 1
