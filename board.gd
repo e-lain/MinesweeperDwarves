@@ -121,7 +121,17 @@ func enter_build_mode():
 		for tile in row:
 			if tile.label:
 				tile.label.queue_free()
-				
+
+func on_building_placed(building_world_pos: Vector2, size: int, is_stairs: bool):
+	placing = false
+	stairs_placed = is_stairs
+	
+	var world_positions_to_update = get_world_positions_in_area(building_world_pos, size)
+	for world_pos in world_positions_to_update:
+		var cell_pos = tilemap.local_to_map(tilemap.to_local(world_pos))
+		var tile = tiles[cell_pos.x][cell_pos.y]
+		tile.has_building = true
+
 func next_level():
 	get_parent().next_level()
 	hide()
@@ -213,17 +223,21 @@ func update_shadows():
 	tilemap.set_cells_terrain_connect(1, unused_cells, 0, 1)
 
 func can_place_at_position(world_pos: Vector2, size: int):
-	var places_to_check = []
-	for x in range(size):
-		for y in range (size):
-			places_to_check.push_back(Vector2(world_pos.x + x*TILE_SIZE, world_pos.y + y*TILE_SIZE))
-			
+	var places_to_check = get_world_positions_in_area(world_pos, size)
 	for pos in places_to_check:
 		var cell_pos = tilemap.local_to_map(tilemap.to_local(pos))
 		if cell_pos.x < 0 || cell_pos.x >= columns || cell_pos.y < 0 || cell_pos.y > rows:
 			return false
 		var tile = tiles[cell_pos.x][cell_pos.y]
-		if !(tilemap.get_cell_tile_data(0, cell_pos) == null && !tile.is_bomb):
+		if !(tilemap.get_cell_tile_data(0, cell_pos) == null && !tile.is_bomb && !tile.has_building):
 			return false
 			
 	return true
+
+func get_world_positions_in_area(origin_world_pos: Vector2, size: int) -> Array[Vector2]:
+	var tiles: Array[Vector2] = []
+	for x in range(size):
+		for y in range (size):
+			tiles.push_back(Vector2(origin_world_pos.x + x*TILE_SIZE, origin_world_pos.y + y*TILE_SIZE))
+	
+	return tiles

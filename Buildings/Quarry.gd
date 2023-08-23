@@ -7,6 +7,7 @@ const TILE_SIZE = 64
 
 var placed: bool = false
 var in_bounds: bool = false
+var size: int = 2
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -31,7 +32,7 @@ func _process(delta):
 				sprite.material = null
 
 func can_place():
-	return get_parent().can_place_at_position(global_position, 2)
+	return get_parent().can_place_at_position(global_position, size)
 
 func _on_control_gui_input(event):
 	if event is InputEventMouseButton && !placed:
@@ -39,7 +40,7 @@ func _on_control_gui_input(event):
 			if can_place() && in_bounds:
 				placed = true
 				get_parent().get_parent().stone += 4
-				get_parent().placing = false
+				get_parent().on_building_placed(global_position, size, false)
 				return
 		if event.is_action_pressed("right_click"):
 			get_parent().placing = false

@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=3 uid="uid://cn0omm56kg1us"]
+[gd_scene load_steps=5 format=3 uid="uid://khlxis4j0qhq"]
 
 [ext_resource type="Script" path="res://Buildings/Quarry.gd" id="1_m84qh"]
 [ext_resource type="Material" uid="uid://nqpwbe45b8cn" path="res://Shaders/InvalidBuildingPlacement.tres" id="2_3al8u"]

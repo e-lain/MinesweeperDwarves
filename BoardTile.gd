@@ -12,6 +12,8 @@ var is_cover: bool = true
 var is_flagged: bool = false
 var is_bomb: bool = false
 
+var has_building: bool = false
+
 var label
 var flag
 var bomb
