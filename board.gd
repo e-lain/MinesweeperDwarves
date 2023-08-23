@@ -21,9 +21,6 @@ var tiles_uncovered = 0
 var total_tiles = rows*columns
 var tiles = []
 
-var population = 3
-var food = 0
-
 var stairs_placed: bool = false
 
 # Called when the node enters the scene tree for the first time.
@@ -80,9 +77,8 @@ func _process(delta):
 	#if tiles_uncovered == total_tiles - bomb_count:
 	#	enter_build_mode()
 	#	print("TODO: LEVEL WIN! BUILD MODE ENGAGED")
-	get_parent().population = population
-	get_parent().food = food
-	
+	pass
+
 func _on_building_queue(building_name):
 	if build_mode and !placing:
 		placing = true
@@ -101,7 +97,7 @@ func _on_tile_uncovered(cell_pos: Vector2i):
 		return
 	
 	if tile.is_bomb:
-		population -= 1
+		get_parent().population -= 1
 		enter_build_mode()
 		print("TODO: THE PLAYER HAS LOST, BUILD MODE ENGAGED")
 	

@@ -2,8 +2,8 @@ extends Node2D
 
 var Board = preload("res://board.tscn")
 
-var population = 0
-var food = 0
+var population = 3
+var stone = 0
 var b
 
 signal queue_building(building_name)
@@ -20,7 +20,7 @@ func _ready():
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
 	get_node("UI/Resources/Population").text = "Population: %d" % [population]
-	get_node("UI/Resources/Food").text = "Food: %d" % [food]
+	get_node("UI/Resources/Stone").text = "Stone: %d" % [stone]
 
 func build(building_name):
 	print("func build, building_name: ", building_name)

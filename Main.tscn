@@ -26,7 +26,7 @@ offset_bottom = 224.0
 layout_mode = 2
 text = "Population: 0"
 
-[node name="Food" type="Label" parent="UI/Resources"]
+[node name="Stone" type="Label" parent="UI/Resources"]
 layout_mode = 2
 text = "Food: 0"
 
