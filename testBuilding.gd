@@ -1,10 +1,12 @@
 extends Node2D
 
+@onready var sprite: Sprite2D = $Sprite2D
+var building_placement_material: ShaderMaterial = preload("res://Shaders/InvalidBuildingPlacement.tres")
+
 const TILE_SIZE = 64
 
 var placed: bool = false
 var in_bounds: bool = false
-var num_collisions = 0
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -21,11 +23,17 @@ func _process(delta):
 		else:
 			self.show()
 			in_bounds = true
+		
+		if in_bounds:
+			if !can_place():
+				sprite.material = building_placement_material
+			else:
+				sprite.material = null
 
 func _input(event):
 	if event is InputEventMouseButton && !placed:
 		if event.is_action_pressed("left_click"):
-			if num_collisions == 0 && in_bounds:
+			if can_place() && in_bounds:
 				placed = true
 				get_parent().placing = false
 				return
@@ -33,8 +41,5 @@ func _input(event):
 			get_parent().placing = false
 			queue_free()
 
-func _on_area_2d_area_entered(area):
-	num_collisions += 1
-
-func _on_area_2d_area_exited(area):
-	num_collisions -= 1
+func can_place():
+	return get_parent().can_place_at_position(global_position)

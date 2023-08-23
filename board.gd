@@ -21,7 +21,6 @@ var tiles = []
 var population = 10
 var food = 0
 
-
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	get_parent().queue_building.connect(_on_building_queue)
@@ -192,3 +191,9 @@ func update_shadows():
 	tilemap.clear_layer(1)
 	tilemap.set_cells_terrain_connect(1, unused_cells, 0, 1)
 
+func can_place_at_position(world_pos: Vector2):
+	var cell_pos = tilemap.local_to_map(tilemap.to_local(world_pos))
+	if cell_pos.x < 0 || cell_pos.x >= columns || cell_pos.y < 0 || cell_pos.y > rows:
+		return false
+	var tile = tiles[cell_pos.x][cell_pos.y]
+	return tilemap.get_cell_tile_data(0, cell_pos) == null && !tile.is_bomb
