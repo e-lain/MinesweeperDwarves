@@ -29,7 +29,10 @@ func _process(delta):
 			else:
 				sprite.material = null
 
-func _input(event):
+func can_place():
+	return get_parent().can_place_at_position(global_position)
+
+func _on_control_gui_input(event):
 	if event is InputEventMouseButton && !placed:
 		if event.is_action_pressed("left_click"):
 			if can_place() && in_bounds:
@@ -39,6 +42,3 @@ func _input(event):
 		if event.is_action_pressed("right_click"):
 			get_parent().placing = false
 			queue_free()
-
-func can_place():
-	return get_parent().can_place_at_position(global_position)

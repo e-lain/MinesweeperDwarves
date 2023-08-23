@@ -29,20 +29,23 @@ func _process(delta):
 			else:
 				sprite.material = null
 
-func _input(event):
+func can_place():
+	return get_parent().can_place_at_position(global_position)
+
+func _on_control_gui_input(event):
 	if event is InputEventMouseButton:
 		if event.is_action_pressed("left_click"):
-			if can_place() && in_bounds && !placed:
-				placed = true
-				get_parent().placing = false
-				return
 			if get_parent().build_mode and placed and !get_parent().placing:
 				print("USING STAIRCASE")
 				get_parent().next_level()
 				return
+			elif get_parent().stairs_placed:
+				print("Stairs already placed!")
+			elif can_place() && in_bounds && !placed && !get_parent().stairs_placed:
+				placed = true
+				get_parent().stairs_placed = true
+				get_parent().placing = false
+				return
 		if event.is_action_pressed("right_click"):
 			get_parent().placing = false
 			queue_free()
-
-func can_place():
-	return get_parent().can_place_at_position(global_position)

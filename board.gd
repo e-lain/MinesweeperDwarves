@@ -24,6 +24,8 @@ var tiles = []
 var population = 3
 var food = 0
 
+var stairs_placed: bool = false
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	get_parent().queue_building.connect(_on_building_queue)
