@@ -1,0 +1,30 @@
+[gd_scene load_steps=5 format=3 uid="uid://bm864sbgynrnj"]
+
+[ext_resource type="Script" path="res://Buildings/Building.gd" id="1_hefja"]
+[ext_resource type="Material" uid="uid://nqpwbe45b8cn" path="res://Shaders/InvalidBuildingPlacement.tres" id="2_5kpac"]
+[ext_resource type="Texture2D" uid="uid://xboh6tjk056u" path="res://Assets/Buildings/mushroom.png" id="3_uttvy"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ynpqt"]
+size = Vector2(52, 49)
+
+[node name="Building" type="Node2D"]
+script = ExtResource("1_hefja")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+material = ExtResource("2_5kpac")
+texture = ExtResource("3_uttvy")
+centered = false
+
+[node name="Area2D" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+position = Vector2(32, 32.5)
+shape = SubResource("RectangleShape2D_ynpqt")
+
+[node name="Control" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 64.0
+offset_bottom = 64.0
+
+[connection signal="gui_input" from="Control" to="." method="_on_control_gui_input"]

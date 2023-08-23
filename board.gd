@@ -3,7 +3,8 @@ extends Node2D
 @export var grid_line_prefab: PackedScene = preload("res://Prefabs/GridLine.tscn")
 @onready var tilemap: TileMap = $TileMap
 
-var TestBuilding = preload("res://testBuilding.tscn")
+var Building = preload("res://Buildings/Building.tscn")
+var Staircase = preload("res://Buildings/Staircase.tscn")
 
 const TILE_SIZE = 64
 
@@ -12,14 +13,14 @@ var placing: bool = false
 
 var rows = 6
 var columns = 6
-var bomb_count = 3
+var bomb_count = 4
+
 var bombs_found = 0
 var tiles_uncovered = 0
 var total_tiles = rows*columns
 var tiles = []
 
-var population = 10
-var food = 0
+var stairs_placed: bool = false
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -28,6 +29,11 @@ func _ready():
 	
 	tilemap.uncovered.connect(_on_tile_uncovered)
 	tilemap.flag_toggled.connect(_on_flag_toggled)
+	
+func init_board(rows: int, cols: int, bombs: int):
+	self.rows = rows
+	self.columns = cols
+	self.bomb_count = bombs
 	
 	var fill_cells = []
 	
@@ -72,21 +78,21 @@ func set_bombs():
 			n += 1
 
 func _process(delta):
-	if tiles_uncovered == total_tiles - bomb_count:
-		build_mode = true
-		bombs_found = 0
-		tiles_uncovered = 0
-		print("TODO: LEVEL WIN! BUILD MODE ENGAGED")
-	get_parent().population = population
-	get_parent().food = food
-	
+	#if tiles_uncovered == total_tiles - bomb_count:
+	#	enter_build_mode()
+	#	print("TODO: LEVEL WIN! BUILD MODE ENGAGED")
+	pass
+
 func _on_building_queue(building_name):
 	if build_mode and !placing:
 		placing = true
 		var building
 		if building_name == "test":
 			print("SIGNAL RECEIVED TO BUILD TEST BUILDING")
-			building = TestBuilding.instantiate()
+			building = Building.instantiate()
+		if building_name == "staircase":
+			print("SIGNAL RECEIVED TO BUILD STAIRCASE")
+			building = Staircase.instantiate()
 		add_child(building)
 
 func _on_tile_uncovered(cell_pos: Vector2i):
@@ -95,15 +101,26 @@ func _on_tile_uncovered(cell_pos: Vector2i):
 		return
 	
 	if tile.is_bomb:
-		build_mode = true
-		bombs_found = 0
-		tiles_uncovered = 0
-		population -= 5
+		get_parent().population -= 1
+		enter_build_mode()
 		print("TODO: THE PLAYER HAS LOST, BUILD MODE ENGAGED")
 	
 	uncover_tile(tile)
 	
 	#update_shadows()
+
+func enter_build_mode():
+	build_mode = true
+	bombs_found = 0
+	tiles_uncovered = 0
+	for row in tiles:
+		for tile in row:
+			if tile.label:
+				tile.label.queue_free()
+				
+func next_level():
+	get_parent().next_level()
+	hide()
 
 func uncover_tile(tile: BoardTile):
 	tile.is_cover = false
