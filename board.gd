@@ -72,9 +72,9 @@ func set_bombs():
 			n += 1
 
 func _process(delta):
-	if tiles_uncovered == total_tiles - bomb_count:
-		enter_build_mode()
-		print("TODO: LEVEL WIN! BUILD MODE ENGAGED")
+	#if tiles_uncovered == total_tiles - bomb_count:
+	#	enter_build_mode()
+	#	print("TODO: LEVEL WIN! BUILD MODE ENGAGED")
 	get_parent().population = population
 	get_parent().food = food
 	
