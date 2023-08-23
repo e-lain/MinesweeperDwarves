@@ -1,0 +1,22 @@
+[gd_scene load_steps=3 format=3 uid="uid://beb8hfwwuwf7y"]
+
+[ext_resource type="Texture2D" uid="uid://4pw7jurtbanu" path="res://Assets/PlaceholderQuarry.png" id="1_8au1x"]
+[ext_resource type="Script" path="res://Buildings/ToolbarQuarry.gd" id="2_nhh84"]
+
+[node name="Quarry" type="Sprite2D"]
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("1_8au1x")
+centered = false
+script = ExtResource("2_nhh84")
+
+[node name="Control" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[connection signal="gui_input" from="Control" to="." method="_on_control_gui_input"]
+[connection signal="mouse_entered" from="Control" to="." method="_on_control_mouse_entered"]
+[connection signal="mouse_exited" from="Control" to="." method="_on_control_mouse_exited"]

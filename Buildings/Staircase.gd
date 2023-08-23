@@ -30,7 +30,7 @@ func _process(delta):
 				sprite.material = null
 
 func can_place():
-	return get_parent().can_place_at_position(global_position)
+	return get_parent().can_place_at_position(global_position, 1)
 
 func _on_control_gui_input(event):
 	if event is InputEventMouseButton:

@@ -17,7 +17,8 @@ func _process(delta):
 		var mouse = get_parent().get_local_mouse_position()
 		var snapped = Vector2(snapped(mouse.x-TILE_SIZE/2, TILE_SIZE), snapped(mouse.y-TILE_SIZE/2, TILE_SIZE))
 		position = snapped
-		if position.x <= 0 - TILE_SIZE || position.x >= TILE_SIZE * get_parent().rows || position.y <= 0-TILE_SIZE || position.y >= TILE_SIZE * get_parent().columns:
+		# Upper bound x and y are -1 because this is a 2x2 building
+		if position.x <= 0 - TILE_SIZE || position.x >= TILE_SIZE * (get_parent().rows-1) || position.y <= 0-TILE_SIZE || position.y >= TILE_SIZE * (get_parent().columns-1):
 			self.hide()
 			in_bounds = false
 		else:
@@ -30,13 +31,14 @@ func _process(delta):
 				sprite.material = null
 
 func can_place():
-	return get_parent().can_place_at_position(global_position, 1)
+	return get_parent().can_place_at_position(global_position, 2)
 
 func _on_control_gui_input(event):
 	if event is InputEventMouseButton && !placed:
 		if event.is_action_pressed("left_click"):
 			if can_place() && in_bounds:
 				placed = true
+				get_parent().get_parent().stone += 4
 				get_parent().placing = false
 				return
 		if event.is_action_pressed("right_click"):

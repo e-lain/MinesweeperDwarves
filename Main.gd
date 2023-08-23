@@ -44,11 +44,7 @@ func _process(delta):
 
 func build(building_name):
 	print("func build, building_name: ", building_name)
-	if building_name == "test":
-		# Signal the board to start building placement for test building
-		queue_building.emit("test")
-	if building_name == "staircase":
-		queue_building.emit("staircase")
+	queue_building.emit(building_name)
 
 func next_level():
 	print("MAIN SCENE RECEIVED NEXT LEVEL CALL")

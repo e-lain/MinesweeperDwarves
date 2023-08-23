@@ -5,6 +5,7 @@ extends Node2D
 
 var Building = preload("res://Buildings/Building.tscn")
 var Staircase = preload("res://Buildings/Staircase.tscn")
+var Quarry = preload("res://Buildings/Quarry.tscn")
 
 const TILE_SIZE = 64
 
@@ -93,6 +94,9 @@ func _on_building_queue(building_name):
 		if building_name == "staircase":
 			print("SIGNAL RECEIVED TO BUILD STAIRCASE")
 			building = Staircase.instantiate()
+		if building_name == "quarry":
+			print("SIGNAL RECEIVED TO BUILD QUARRY")
+			building = Quarry.instantiate()
 		add_child(building)
 
 func _on_tile_uncovered(cell_pos: Vector2i):
@@ -208,9 +212,18 @@ func update_shadows():
 	tilemap.clear_layer(1)
 	tilemap.set_cells_terrain_connect(1, unused_cells, 0, 1)
 
-func can_place_at_position(world_pos: Vector2):
-	var cell_pos = tilemap.local_to_map(tilemap.to_local(world_pos))
-	if cell_pos.x < 0 || cell_pos.x >= columns || cell_pos.y < 0 || cell_pos.y > rows:
-		return false
-	var tile = tiles[cell_pos.x][cell_pos.y]
-	return tilemap.get_cell_tile_data(0, cell_pos) == null && !tile.is_bomb
+func can_place_at_position(world_pos: Vector2, size: int):
+	var places_to_check = []
+	for x in range(size):
+		for y in range (size):
+			places_to_check.push_back(Vector2(world_pos.x + x*TILE_SIZE, world_pos.y + y*TILE_SIZE))
+			
+	for pos in places_to_check:
+		var cell_pos = tilemap.local_to_map(tilemap.to_local(pos))
+		if cell_pos.x < 0 || cell_pos.x >= columns || cell_pos.y < 0 || cell_pos.y > rows:
+			return false
+		var tile = tiles[cell_pos.x][cell_pos.y]
+		if !(tilemap.get_cell_tile_data(0, cell_pos) == null && !tile.is_bomb):
+			return false
+			
+	return true
