@@ -1,8 +1,9 @@
-[gd_scene load_steps=7 format=3 uid="uid://iqvlmmwy7d46"]
+[gd_scene load_steps=8 format=3 uid="uid://iqvlmmwy7d46"]
 
 [ext_resource type="Script" path="res://Main.gd" id="1_t2km6"]
 [ext_resource type="Theme" uid="uid://dyrton3joryca" path="res://UI.tres" id="2_b2qml"]
 [ext_resource type="PackedScene" uid="uid://dmmp1otl8dakg" path="res://Buildings/ToolbarBuilding.tscn" id="3_22qjw"]
+[ext_resource type="Script" path="res://BuildMenu.gd" id="3_kygl0"]
 [ext_resource type="PackedScene" uid="uid://lykhjbqcmwof" path="res://Buildings/ToolbarStaircase.tscn" id="4_xtd47"]
 [ext_resource type="PackedScene" uid="uid://beb8hfwwuwf7y" path="res://Buildings/ToolbarQuarry.tscn" id="5_6wo4m"]
 [ext_resource type="PackedScene" uid="uid://drqyga44lndxq" path="res://Buildings/ToolbarHouse.tscn" id="6_8mp50"]
@@ -52,36 +53,43 @@ text = "To Build Mode"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Label" type="Label" parent="UI"]
+[node name="BuildMenu" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+theme = ExtResource("2_b2qml")
+script = ExtResource("3_kygl0")
+
+[node name="Staircase" parent="BuildMenu" instance=ExtResource("4_xtd47")]
+position = Vector2(1152, 64)
+
+[node name="Building" parent="BuildMenu" instance=ExtResource("3_22qjw")]
+position = Vector2(1216, 64)
+
+[node name="Quarry" parent="BuildMenu" instance=ExtResource("5_6wo4m")]
+position = Vector2(1152, 128)
+
+[node name="House" parent="BuildMenu" instance=ExtResource("6_8mp50")]
+position = Vector2(1216, 128)
+
+[node name="Label" type="Label" parent="BuildMenu"]
 layout_mode = 0
-offset_left = 1176.0
-offset_top = 39.0
-offset_right = 1247.0
-offset_bottom = 65.0
+offset_left = 1177.0
+offset_top = 40.0
+offset_right = 1248.0
+offset_bottom = 66.0
 text = "Buildings"
 
-[node name="Tooltip" type="Label" parent="UI"]
+[node name="Tooltip" type="Label" parent="BuildMenu"]
 visible = false
 layout_mode = 2
-offset_left = 847.0
-offset_top = -1.0
-offset_right = 1110.0
-offset_bottom = 103.0
+offset_left = 848.0
+offset_right = 1111.0
+offset_bottom = 104.0
 text = "Test Building
 Cost - blah
 
 Wow this is a building, pretty neat"
-
-[node name="Staircase" parent="UI" instance=ExtResource("4_xtd47")]
-position = Vector2(1151, 63)
-
-[node name="Building" parent="UI" instance=ExtResource("3_22qjw")]
-position = Vector2(1215, 63)
-
-[node name="Quarry" parent="UI" instance=ExtResource("5_6wo4m")]
-position = Vector2(1151, 127)
-
-[node name="House" parent="UI" instance=ExtResource("6_8mp50")]
-position = Vector2(1215, 127)
 
 [connection signal="pressed" from="UI/EndLevelBtn" to="." method="_on_end_level_btn_pressed"]

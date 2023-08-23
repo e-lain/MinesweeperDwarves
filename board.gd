@@ -33,6 +33,8 @@ func _ready():
 	tilemap.flag_toggled.connect(_on_flag_toggled)
 	
 func init_board(rows: int, cols: int, bombs: int):
+	get_parent().build_mode = false
+	
 	self.rows = rows
 	self.columns = cols
 	self.bomb_count = bombs
@@ -119,6 +121,7 @@ func _on_tile_uncovered(cell_pos: Vector2i):
 
 func enter_build_mode():
 	build_mode = true
+	get_parent().build_mode = true
 	bombs_found = 0
 	tiles_uncovered = 0
 	for row in tiles:

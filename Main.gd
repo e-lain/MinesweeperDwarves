@@ -2,6 +2,8 @@ extends Node2D
 
 var Board = preload("res://board.tscn")
 
+var build_mode: bool = false
+
 var depth = 0
 var population = 3
 var stone = 0
