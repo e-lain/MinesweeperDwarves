@@ -1,0 +1,7 @@
+[gd_resource type="ShaderMaterial" load_steps=2 format=3 uid="uid://nqpwbe45b8cn"]
+
+[ext_resource type="Shader" path="res://Shaders/BuildingPlacement.gdshader" id="1_1vd5c"]
+
+[resource]
+shader = ExtResource("1_1vd5c")
+shader_parameter/override_color = Color(0.811765, 0, 0, 1)
