@@ -1,10 +1,11 @@
-[gd_scene load_steps=4 format=3 uid="uid://iqvlmmwy7d46"]
+[gd_scene load_steps=5 format=3 uid="uid://iqvlmmwy7d46"]
 
 [ext_resource type="Script" path="res://Main.gd" id="1_t2km6"]
 [ext_resource type="Theme" uid="uid://dyrton3joryca" path="res://UI.tres" id="2_b2qml"]
-[ext_resource type="Texture2D" uid="uid://xboh6tjk056u" path="res://Assets/Buildings/mushroom.png" id="2_q76qu"]
+[ext_resource type="PackedScene" uid="uid://dmmp1otl8dakg" path="res://Buildings/ToolbarBuilding.tscn" id="3_22qjw"]
+[ext_resource type="PackedScene" uid="uid://lykhjbqcmwof" path="res://Buildings/ToolbarStaircase.tscn" id="4_xtd47"]
 
-[node name="main" type="Node2D"]
+[node name="Main" type="Node2D"]
 script = ExtResource("1_t2km6")
 
 [node name="UI" type="Control" parent="."]
@@ -29,26 +30,6 @@ text = "Population: 0"
 layout_mode = 2
 text = "Food: 0"
 
-[node name="Buildings" type="GridContainer" parent="UI"]
-layout_mode = 2
-offset_left = 1132.0
-offset_top = 105.0
-offset_right = 1281.0
-offset_bottom = 720.0
-columns = 2
-
-[node name="TestBuilding" type="Sprite2D" parent="UI/Buildings"]
-texture = ExtResource("2_q76qu")
-centered = false
-
-[node name="Control" type="Control" parent="UI/Buildings/TestBuilding"]
-layout_mode = 3
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-
 [node name="EndLevelBtn" type="Button" parent="UI"]
 layout_mode = 0
 offset_left = 7.0
@@ -65,6 +46,14 @@ text = "To Build Mode"
 horizontal_alignment = 1
 vertical_alignment = 1
 
+[node name="Label" type="Label" parent="UI"]
+layout_mode = 0
+offset_left = 1176.0
+offset_top = 39.0
+offset_right = 1247.0
+offset_bottom = 65.0
+text = "Buildings"
+
 [node name="Tooltip" type="Label" parent="UI"]
 visible = false
 layout_mode = 2
@@ -77,14 +66,10 @@ Cost - blah
 
 Wow this is a building, pretty neat"
 
-[node name="Label" type="Label" parent="UI"]
-offset_left = 1166.0
-offset_top = 64.0
-offset_right = 1237.0
-offset_bottom = 90.0
-text = "Buildings"
+[node name="Staircase" parent="UI" instance=ExtResource("4_xtd47")]
+position = Vector2(1151, 63)
 
-[connection signal="gui_input" from="UI/Buildings/TestBuilding/Control" to="." method="_on_test_building_clicked"]
-[connection signal="mouse_entered" from="UI/Buildings/TestBuilding/Control" to="." method="_on_control_mouse_entered"]
-[connection signal="mouse_exited" from="UI/Buildings/TestBuilding/Control" to="." method="_on_control_mouse_exited"]
+[node name="Building" parent="UI" instance=ExtResource("3_22qjw")]
+position = Vector2(1215, 63)
+
 [connection signal="pressed" from="UI/EndLevelBtn" to="." method="_on_end_level_btn_pressed"]

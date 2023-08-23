@@ -3,7 +3,11 @@ extends Node2D
 @export var grid_line_prefab: PackedScene = preload("res://ArtTest/GridLine.tscn")
 @onready var tilemap: TileMap = $TileMap
 
-var TestBuilding = preload("res://testBuilding.tscn")
+signal go_to_next_level(difficulty: int)
+var difficulty = 0
+
+var Building = preload("res://Buildings/Building.tscn")
+var Staircase = preload("res://Buildings/Staircase.tscn")
 
 const TILE_SIZE = 64
 
@@ -84,7 +88,10 @@ func _on_building_queue(building_name):
 		var building
 		if building_name == "test":
 			print("SIGNAL RECEIVED TO BUILD TEST BUILDING")
-			building = TestBuilding.instantiate()
+			building = Building.instantiate()
+		if building_name == "staircase":
+			print("SIGNAL RECEIVED TO BUILD STAIRCASE")
+			building = Staircase.instantiate()
 		add_child(building)
 
 func _on_tile_uncovered(cell_pos: Vector2i):
@@ -109,6 +116,10 @@ func enter_build_mode():
 		for tile in row:
 			if tile.label:
 				tile.label.queue_free()
+				
+func next_level():
+	go_to_next_level.emit(difficulty+1)
+	hide()
 
 func uncover_tile(tile: BoardTile):
 	tile.is_cover = false
