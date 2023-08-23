@@ -6,6 +6,7 @@ extends Node2D
 var Building = preload("res://Buildings/Building.tscn")
 var Staircase = preload("res://Buildings/Staircase.tscn")
 var Quarry = preload("res://Buildings/Quarry.tscn")
+var House = preload("res://Buildings/House.tscn")
 
 const TILE_SIZE = 64
 
@@ -97,6 +98,9 @@ func _on_building_queue(building_name):
 		if building_name == "quarry":
 			print("SIGNAL RECEIVED TO BUILD QUARRY")
 			building = Quarry.instantiate()
+		if building_name == "house":
+			print("SIGNAL RECEIVED TO BUILD HOUSE")
+			building = House.instantiate()
 		add_child(building)
 
 func _on_tile_uncovered(cell_pos: Vector2i):
