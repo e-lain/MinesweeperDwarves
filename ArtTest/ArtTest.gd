@@ -1,6 +1,6 @@
 extends Node2D
 
-@export var grid_line_prefab: PackedScene = preload("res://ArtTest/GridLine.tscn")
+@export var grid_line_prefab: PackedScene = preload("res://Prefabs/GridLine.tscn")
 @onready var tilemap: TileMap = $WallTileMap
 
 # Called when the node enters the scene tree for the first time.

@@ -36,6 +36,7 @@ func _input(event):
 			if can_place() && in_bounds:
 				placed = true
 				get_parent().placing = false
+				sprite.material = null
 				return
 		if event.is_action_pressed("right_click"):
 			get_parent().placing = false
