@@ -1,11 +1,11 @@
-[gd_scene load_steps=3 format=3 uid="uid://beb8hfwwuwf7y"]
+[gd_scene load_steps=3 format=3 uid="uid://bi7tw4w7bafp6"]
 
-[ext_resource type="Texture2D" uid="uid://4pw7jurtbanu" path="res://Assets/PlaceholderQuarry.png" id="1_8au1x"]
+[ext_resource type="Texture2D" uid="uid://deskwms7mei6a" path="res://Assets/Buildings/MiningBuildingDownscale.png" id="1_lw8r0"]
 [ext_resource type="Script" path="res://Buildings/ToolbarQuarry.gd" id="2_nhh84"]
 
 [node name="Quarry" type="Sprite2D"]
 scale = Vector2(0.5, 0.5)
-texture = ExtResource("1_8au1x")
+texture = ExtResource("1_lw8r0")
 centered = false
 script = ExtResource("2_nhh84")
 

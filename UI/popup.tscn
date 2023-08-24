@@ -1,10 +1,15 @@
-[gd_scene load_steps=2 format=3 uid="uid://doi658hn04jhv"]
+[gd_scene load_steps=6 format=3 uid="uid://doi658hn04jhv"]
 
 [ext_resource type="Texture2D" uid="uid://d0o6bpct5y38h" path="res://Assets/UI/Popup.png" id="1_ohmxe"]
+[ext_resource type="Theme" uid="uid://b6iv3a38m6uhb" path="res://UI.tres" id="1_u8v58"]
+[ext_resource type="Script" path="res://UI/popup.gd" id="2_p5i3d"]
+[ext_resource type="Texture2D" uid="uid://du5p0tvlhojks" path="res://Assets/UI/PopIcon.png" id="4_tfbb0"]
+[ext_resource type="Texture2D" uid="uid://ca5lct0ctr37m" path="res://Assets/UI/StoneIcon.png" id="5_abpn8"]
 
 [node name="Popup" type="NinePatchRect"]
 offset_right = 200.0
 offset_bottom = 100.0
+theme = ExtResource("1_u8v58")
 texture = ExtResource("1_ohmxe")
 patch_margin_left = 7
 patch_margin_top = 11
@@ -12,3 +17,67 @@ patch_margin_right = 10
 patch_margin_bottom = 11
 axis_stretch_horizontal = 2
 axis_stretch_vertical = 2
+script = ExtResource("2_p5i3d")
+
+[node name="NameLabel" type="RichTextLabel" parent="."]
+layout_mode = 2
+anchor_right = 0.85
+anchor_bottom = 0.28
+offset_left = 10.0
+offset_top = 13.0
+offset_right = 11.0
+offset_bottom = 13.0
+text = "House"
+metadata/_edit_use_anchors_ = true
+
+[node name="DescriptionLabel" type="RichTextLabel" parent="."]
+layout_mode = 0
+offset_left = 10.0
+offset_top = 40.0
+offset_right = 188.0
+offset_bottom = 66.0
+theme_override_font_sizes/normal_font_size = 16
+text = "Grants 3 Population"
+
+[node name="Costs" type="HBoxContainer" parent="."]
+layout_mode = 0
+offset_left = 90.0
+offset_top = 65.0
+offset_right = 188.0
+offset_bottom = 105.0
+theme_override_constants/separation = 6
+alignment = 2
+
+[node name="PopulationBox" type="HBoxContainer" parent="Costs"]
+layout_mode = 2
+size_flags_vertical = 0
+theme_override_constants/separation = 0
+
+[node name="Population" type="TextureRect" parent="Costs/PopulationBox"]
+modulate = Color(0, 0, 0, 1)
+layout_mode = 2
+texture = ExtResource("4_tfbb0")
+expand_mode = 2
+stretch_mode = 4
+
+[node name="Label" type="Label" parent="Costs/PopulationBox"]
+layout_mode = 2
+text = "5"
+vertical_alignment = 2
+
+[node name="StoneBox" type="HBoxContainer" parent="Costs"]
+layout_mode = 2
+size_flags_vertical = 0
+theme_override_constants/separation = 0
+
+[node name="Stone" type="TextureRect" parent="Costs/StoneBox"]
+modulate = Color(0, 0, 0, 1)
+layout_mode = 2
+texture = ExtResource("5_abpn8")
+expand_mode = 2
+stretch_mode = 4
+
+[node name="Label" type="Label" parent="Costs/StoneBox"]
+layout_mode = 2
+text = "5"
+vertical_alignment = 2

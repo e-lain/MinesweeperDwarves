@@ -1,8 +1,8 @@
-[gd_scene load_steps=5 format=3 uid="uid://dkbgv2mekmwnh"]
+[gd_scene load_steps=5 format=3 uid="uid://b1jqrx2x08va2"]
 
 [ext_resource type="Script" path="res://Buildings/House.gd" id="1_pxe0k"]
 [ext_resource type="Material" uid="uid://nqpwbe45b8cn" path="res://Shaders/InvalidBuildingPlacement.tres" id="2_dpxss"]
-[ext_resource type="Texture2D" uid="uid://bh3pnfhvrijmv" path="res://Assets/PlaceholderHouse.png" id="3_cjr7o"]
+[ext_resource type="Texture2D" uid="uid://bowj44y12xpil" path="res://Assets/Buildings/HouseBuildingDownscaled.png" id="3_u8cda"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ynpqt"]
 size = Vector2(116, 112)
@@ -12,7 +12,7 @@ script = ExtResource("1_pxe0k")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 material = ExtResource("2_dpxss")
-texture = ExtResource("3_cjr7o")
+texture = ExtResource("3_u8cda")
 centered = false
 
 [node name="Area2D" type="Area2D" parent="."]

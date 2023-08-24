@@ -94,20 +94,17 @@ func _process(delta):
 	#	print("TODO: LEVEL WIN! BUILD MODE ENGAGED")
 	pass
 
-func _on_building_queue(building_name):
+func _on_building_queue(type: BuildingData.Type):
 	if build_mode and !placing:
 		placing = true
 		var building
-		if building_name == "test":
-			print("SIGNAL RECEIVED TO BUILD TEST BUILDING")
-			building = Building.instantiate()
-		if building_name == "staircase":
+		if type == BuildingData.Type.STAIRCASE:
 			print("SIGNAL RECEIVED TO BUILD STAIRCASE")
 			building = Staircase.instantiate()
-		if building_name == "quarry":
+		if type == BuildingData.Type.QUARRY:
 			print("SIGNAL RECEIVED TO BUILD QUARRY")
 			building = Quarry.instantiate()
-		if building_name == "house":
+		if type == BuildingData.Type.HOUSE:
 			print("SIGNAL RECEIVED TO BUILD HOUSE")
 			building = House.instantiate()
 		add_child(building)

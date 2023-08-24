@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://Buildings/Quarry.gd" id="1_m84qh"]
 [ext_resource type="Material" uid="uid://nqpwbe45b8cn" path="res://Shaders/InvalidBuildingPlacement.tres" id="2_3al8u"]
-[ext_resource type="Texture2D" uid="uid://4pw7jurtbanu" path="res://Assets/PlaceholderQuarry.png" id="3_opcfs"]
+[ext_resource type="Texture2D" uid="uid://deskwms7mei6a" path="res://Assets/Buildings/MiningBuildingDownscale.png" id="3_gfwse"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ynpqt"]
 size = Vector2(116, 112)
@@ -12,7 +12,7 @@ script = ExtResource("1_m84qh")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 material = ExtResource("2_3al8u")
-texture = ExtResource("3_opcfs")
+texture = ExtResource("3_gfwse")
 centered = false
 
 [node name="Area2D" type="Area2D" parent="."]

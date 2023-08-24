@@ -10,7 +10,7 @@ var stone = 0
 
 var boards = []
 
-signal queue_building(building_name)
+signal queue_building(building_type: BuildingData.Type)
 
 func generate_board(difficulty: int):
 	var b = Board.instantiate()
@@ -44,9 +44,9 @@ func _process(delta):
 	get_node("CanvasLayer/UI/Resources/Stone").text = "Stone: %d" % [stone]
 	get_node("CanvasLayer/UI/Resources/Depth").text = "Depth: %d" % [depth]
 
-func build(building_name):
-	print("func build, building_name: ", building_name)
-	queue_building.emit(building_name)
+func build(type: BuildingData.Type):
+	print("func build, building_name: ", type)
+	queue_building.emit(type)
 
 func next_level():
 	print("MAIN SCENE RECEIVED NEXT LEVEL CALL")
