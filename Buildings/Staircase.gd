@@ -46,6 +46,6 @@ func _on_control_gui_input(event):
 				placed = true
 				get_parent().on_building_placed(global_position, size, true)
 				return
-		if event.is_action_pressed("right_click"):
+		if event.is_action_pressed("right_click") and !placed:
 			get_parent().placing = false
 			queue_free()

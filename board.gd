@@ -51,24 +51,31 @@ func init_board(rows: int, cols: int, bombs: int):
 	
 	tilemap.set_cells_terrain_connect(0, fill_cells, 0, 0)
 	set_bombs()
-	create_grid_lines()
 
 func create_grid_lines():
-	for i in 30:
-		var instance
-		if i < 12:
-			instance = grid_line_prefab.instantiate()
-			add_child(instance)
-			instance.position.y = 64 * i
-			instance.material.set_shader_parameter("speed", randf_range(0.01, 0.03) * (-1.0 if i % 2 == 0 else 1.0))
-			
-		instance = grid_line_prefab.instantiate()
+	var offset = Vector2(TILE_SIZE, TILE_SIZE)
+	var min_fade_pos = to_global(tilemap.map_to_local(Vector2i.ZERO)) - offset
+	var max_fade_pos = min_fade_pos + Vector2(TILE_SIZE * columns, TILE_SIZE * rows) + offset
+	
+	for i in range(1, rows):
+		var instance = grid_line_prefab.instantiate()
+		add_child(instance)
+		instance.position.x = -100
+		instance.position.y = 64 * i
+		instance.material.set_shader_parameter("speed", randf_range(0.01, 0.025) * (-1.0 if i % 2 == 0 else 1.0))
+		instance.material.set_shader_parameter("min_fade_pos", min_fade_pos)
+		instance.material.set_shader_parameter("max_fade_pos", max_fade_pos)
+		
+	for i in range(1, columns):
+		var instance = grid_line_prefab.instantiate()
 		add_child(instance)
 		instance.global_rotation_degrees = 90
 		instance.position.x = 64 * i
 		instance.position.y = 360
 		
-		instance.material.set_shader_parameter("speed", randf_range(0.01, 0.03) * (-1.0 if i % 2 == 0 else 1.0))
+		instance.material.set_shader_parameter("speed", randf_range(0.01, 0.025) * (-1.0 if i % 2 == 0 else 1.0))
+		instance.material.set_shader_parameter("min_fade_pos", min_fade_pos)
+		instance.material.set_shader_parameter("max_fade_pos", max_fade_pos)
 
 func set_bombs():
 	var n = 0

@@ -1,0 +1,14 @@
+[gd_scene load_steps=2 format=3 uid="uid://doi658hn04jhv"]
+
+[ext_resource type="Texture2D" uid="uid://d0o6bpct5y38h" path="res://Assets/UI/Popup.png" id="1_ohmxe"]
+
+[node name="Popup" type="NinePatchRect"]
+offset_right = 200.0
+offset_bottom = 100.0
+texture = ExtResource("1_ohmxe")
+patch_margin_left = 7
+patch_margin_top = 11
+patch_margin_right = 10
+patch_margin_bottom = 11
+axis_stretch_horizontal = 2
+axis_stretch_vertical = 2
