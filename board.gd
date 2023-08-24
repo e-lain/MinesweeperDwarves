@@ -119,8 +119,10 @@ func _on_tile_uncovered(cell_pos: Vector2i):
 	
 	if tile.is_bomb:
 		get_parent().population -= 1
-		enter_build_mode()
-		print("TODO: THE PLAYER HAS LOST, BUILD MODE ENGAGED")
+		get_parent().generate_board(get_parent().depth)
+		hide()
+		# TODO: Player feedback that they have lost
+		print("TODO: THE PLAYER HAS LOST, resetting level")
 	
 	uncover_tile(tile)
 	
