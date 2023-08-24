@@ -8,7 +8,7 @@ func _ready():
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
-	if get_parent().build_mode:
+	if get_parent().get_parent().build_mode:
 		hide()
 	else:
 		show()
