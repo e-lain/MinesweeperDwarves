@@ -1,10 +1,12 @@
-[gd_scene load_steps=9 format=3 uid="uid://iqvlmmwy7d46"]
+[gd_scene load_steps=11 format=3 uid="uid://iqvlmmwy7d46"]
 
 [ext_resource type="Script" path="res://Main.gd" id="1_t2km6"]
 [ext_resource type="Theme" uid="uid://b6iv3a38m6uhb" path="res://UI.tres" id="2_b2qml"]
 [ext_resource type="PackedScene" uid="uid://dmmp1otl8dakg" path="res://Buildings/ToolbarBuilding.tscn" id="3_22qjw"]
 [ext_resource type="Texture2D" uid="uid://c5ocuxxxsbgne" path="res://Assets/UI/UIMapBackgroundAndBorder.png" id="3_c74ye"]
 [ext_resource type="Script" path="res://BuildMenu.gd" id="4_4yfy1"]
+[ext_resource type="Texture2D" uid="uid://du5p0tvlhojks" path="res://Assets/UI/PopIcon.png" id="4_wg3lp"]
+[ext_resource type="Texture2D" uid="uid://ca5lct0ctr37m" path="res://Assets/UI/StoneIcon.png" id="5_o2ngn"]
 [ext_resource type="FontFile" uid="uid://m1fwnp6qsmnn" path="res://Assets/UI/Quikhand.ttf" id="6_rv3xe"]
 [ext_resource type="PackedScene" uid="uid://doi658hn04jhv" path="res://UI/popup.tscn" id="7_703se"]
 [ext_resource type="Script" path="res://AbilityMenu.gd" id="9_3lmso"]
@@ -34,22 +36,47 @@ offset_bottom = 720.0
 mouse_filter = 2
 texture = ExtResource("3_c74ye")
 
-[node name="Resources" type="VBoxContainer" parent="CanvasLayer/UI"]
-layout_mode = 0
-offset_right = 160.0
-offset_bottom = 224.0
-
-[node name="Depth" type="Label" parent="CanvasLayer/UI/Resources"]
+[node name="Depth" type="Label" parent="CanvasLayer/UI"]
 layout_mode = 2
+offset_left = 65.0
+offset_top = 251.0
+offset_right = 225.0
+offset_bottom = 295.0
+theme_override_font_sizes/font_size = 36
 text = "Depth: 0"
 
-[node name="Population" type="Label" parent="CanvasLayer/UI/Resources"]
-layout_mode = 2
-text = "Population: 0"
+[node name="Resources" type="VBoxContainer" parent="CanvasLayer/UI"]
+layout_mode = 0
+offset_left = 57.0
+offset_top = 52.0
+offset_right = 217.0
+offset_bottom = 276.0
 
-[node name="Stone" type="Label" parent="CanvasLayer/UI/Resources"]
+[node name="PopulationBox" type="HBoxContainer" parent="CanvasLayer/UI/Resources"]
 layout_mode = 2
-text = "Food: 0"
+
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer/UI/Resources/PopulationBox"]
+modulate = Color(0, 0, 0, 1)
+layout_mode = 2
+texture = ExtResource("4_wg3lp")
+
+[node name="Population" type="Label" parent="CanvasLayer/UI/Resources/PopulationBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 36
+text = "x 3"
+
+[node name="StoneBox" type="HBoxContainer" parent="CanvasLayer/UI/Resources"]
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer/UI/Resources/StoneBox"]
+modulate = Color(0, 0, 0, 1)
+layout_mode = 2
+texture = ExtResource("5_o2ngn")
+
+[node name="Stone" type="Label" parent="CanvasLayer/UI/Resources/StoneBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 36
+text = "x 3"
 
 [node name="EndLevelBtn" type="Button" parent="CanvasLayer/UI"]
 layout_mode = 0
@@ -110,10 +137,11 @@ type = 3
 
 [node name="Label" type="Label" parent="CanvasLayer/BuildMenu"]
 layout_mode = 0
-offset_left = 943.0
-offset_top = 19.0
-offset_right = 1014.0
-offset_bottom = 45.0
+offset_left = 942.0
+offset_top = 18.0
+offset_right = 1013.0
+offset_bottom = 44.0
+theme_override_font_sizes/font_size = 20
 text = "Buildings"
 
 [node name="Tooltip" type="Label" parent="CanvasLayer/BuildMenu"]

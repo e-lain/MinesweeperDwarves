@@ -1,5 +1,9 @@
 extends Node2D
 
+@onready var depth_label = $CanvasLayer/UI/Depth
+@onready var population_label = $CanvasLayer/UI/Resources/PopulationBox/Population
+@onready var stone_label =$CanvasLayer/UI/Resources/StoneBox/Stone
+
 var Board = preload("res://board.tscn")
 
 var build_mode: bool = false
@@ -40,9 +44,9 @@ func _ready():
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
-	get_node("CanvasLayer/UI/Resources/Population").text = "Population: %d" % [population]
-	get_node("CanvasLayer/UI/Resources/Stone").text = "Stone: %d" % [stone]
-	get_node("CanvasLayer/UI/Resources/Depth").text = "Depth: %d" % [depth]
+	population_label.text = "x %d" % [population]
+	stone_label.text = "x %d" % [stone]
+	depth_label.text = "Depth: %d" % [depth + 1]
 
 func build(type: BuildingData.Type):
 	print("func build, building_name: ", type)
