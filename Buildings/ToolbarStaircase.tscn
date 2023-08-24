@@ -1,10 +1,10 @@
 [gd_scene load_steps=3 format=3 uid="uid://lykhjbqcmwof"]
 
-[ext_resource type="Texture2D" uid="uid://d0kw2ldkcn56a" path="res://Assets/PlaceholderStairs.png" id="1_u7ia5"]
+[ext_resource type="Texture2D" uid="uid://cq1p5ky2322w8" path="res://Assets/Buildings/StairsDown.png" id="1_5tqsr"]
 [ext_resource type="Script" path="res://Buildings/ToolbarStaircase.gd" id="2_2k5tx"]
 
 [node name="Staircase" type="Sprite2D"]
-texture = ExtResource("1_u7ia5")
+texture = ExtResource("1_5tqsr")
 centered = false
 script = ExtResource("2_2k5tx")
 

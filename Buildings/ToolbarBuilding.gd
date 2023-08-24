@@ -1,29 +1,29 @@
-extends Sprite2D
+extends PanelContainer
 
+signal build(type: BuildingData.Type)
 
-# Called when the node enters the scene tree for the first time.
+@export var info_popup: BuildingInfoPopup
+@export var type: BuildingData.Type
+@onready var texture_rect: TextureRect = $MarginContainer/TextureRect
+
+var data
+
 func _ready():
-	pass # Replace with function body.
+	data = BuildingData.data[type]
+	texture_rect.texture = load(data["icon_path"])
+
+func _on_mouse_entered():
+	info_popup.visible = true
+	info_popup.set_data(type)
 
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta):
-	pass
+func _on_mouse_exited():
+	info_popup.visible = false
 
 
-func _on_control_mouse_entered():
-	var UINode = get_parent()
-	var tooltip = UINode.get_node("Tooltip")
-	tooltip.text = "Test building"
-	tooltip.show()
-
-func _on_control_mouse_exited():
-	var UINode = get_parent()
-	UINode.get_node("Tooltip").hide()
-
-
-func _on_control_gui_input(event):
+func _on_gui_input(event):
 	if event is InputEventMouseButton:
 		if event.is_action_pressed("left_click"):
-			print("test building clicked")
-			get_parent().get_parent().get_parent().build("test")
+			build.emit(type)
+
+

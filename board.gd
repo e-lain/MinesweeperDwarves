@@ -1,5 +1,8 @@
 extends Node2D
 
+
+signal mine_animation_complete
+
 @export var grid_line_prefab: PackedScene = preload("res://Prefabs/GridLine.tscn")
 @onready var tilemap: TileMap = $TileMap
 
@@ -101,20 +104,17 @@ func _process(delta):
 	#	print("TODO: LEVEL WIN! BUILD MODE ENGAGED")
 	pass
 
-func _on_building_queue(building_name):
+func _on_building_queue(type: BuildingData.Type):
 	if build_mode and !placing:
 		placing = true
 		var building
-		if building_name == "test":
-			print("SIGNAL RECEIVED TO BUILD TEST BUILDING")
-			building = Building.instantiate()
-		if building_name == "staircase":
+		if type == BuildingData.Type.STAIRCASE:
 			print("SIGNAL RECEIVED TO BUILD STAIRCASE")
 			building = Staircase.instantiate()
-		if building_name == "quarry":
+		if type == BuildingData.Type.QUARRY:
 			print("SIGNAL RECEIVED TO BUILD QUARRY")
 			building = Quarry.instantiate()
-		if building_name == "house":
+		if type == BuildingData.Type.HOUSE:
 			print("SIGNAL RECEIVED TO BUILD HOUSE")
 			building = House.instantiate()
 		add_child(building)
@@ -141,10 +141,10 @@ func _on_tile_uncovered(cell_pos: Vector2i):
 	if tile.is_bomb:
 		hide()
 		get_parent().population -= 1
-		get_parent().generate_board(get_parent().depth)
-		# TODO: Player feedback that they have lost
-		print("TODO: THE PLAYER HAS LOST, resetting level")
-		queue_free()
+		
+		explode_mine()
+		
+		print("TODO: THE PLAYER HAS LOST, BUILD MODE ENGAGED")
 	
 	uncover_tile(tile)
 	update_shadows()
@@ -202,6 +202,9 @@ func uncover_tile(tile: BoardTile):
 			if adjacent_tile.is_cover && !tile.is_bomb:
 				uncover_tile(adjacent_tile)
 
+func explode_mine():
+	# TODO: play an animation and emit signal when it finishes
+	mine_animation_complete.emit()
 
 func get_adjacent_tiles(tile: BoardTile) -> Array[BoardTile]:
 	var surroundings: Array[BoardTile] = []

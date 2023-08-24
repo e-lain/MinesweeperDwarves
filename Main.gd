@@ -1,5 +1,13 @@
 extends Node2D
 
+@onready var depth_label = $CanvasLayer/UI/Depth
+@onready var population_label = $CanvasLayer/UI/Resources/PopulationBox/Population
+@onready var stone_label =$CanvasLayer/UI/Resources/StoneBox/Stone
+@onready var mine_hit_popup = $CanvasLayer/MineHitPopup
+@onready var greyout = $CanvasLayer/ColorRect
+@onready var enter_build_mode_button = $CanvasLayer/UI/EndLevelBtn
+
+
 var Board = preload("res://board.tscn")
 
 var build_mode: bool = false
@@ -14,7 +22,7 @@ var ability_destroy = 0
 var boards = [] # Note, some of these may be null references because we queue_free() boards that have hit a bomb
 
 signal queue_ability(ability_name)
-signal queue_building(building_name)
+signal queue_building(building_type: BuildingData.Type)
 
 func generate_board(difficulty: int):
 	# Reset all ability counts
@@ -38,6 +46,7 @@ func generate_board(difficulty: int):
 	var offset = Vector2(center.x-(b.rows * b.TILE_SIZE/2), center.y-(b.columns * b.TILE_SIZE/2))
 	b.position = offset
 	b.create_grid_lines()
+	b.mine_animation_complete.connect(on_mine_animation_complete)
 	boards.push_back(b)
 
 # Called when the node enters the scene tree for the first time.
@@ -47,29 +56,40 @@ func _ready():
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
-	get_node("CanvasLayer/UI/Resources/Population").text = "Population: %d" % [population]
-	get_node("CanvasLayer/UI/Resources/Stone").text = "Stone: %d" % [stone]
-	get_node("CanvasLayer/UI/Resources/Depth").text = "Depth: %d" % [depth]
+	population_label.text = "x %d" % [population]
+	stone_label.text = "x %d" % [stone]
+	depth_label.text = "Depth: %d" % [depth + 1]
 
-func build(building_name):
-	print("func build, building_name: ", building_name)
-	queue_building.emit(building_name)
-	
 func ability(ability_name):
 	print("func ability, ability_name: ", ability_name)
 	if ability_name == "destroy" && ability_destroy < 1:
 		print("can't use destroy, out of uses")
 		return
 	queue_ability.emit(ability_name)
+func build(type: BuildingData.Type):
+	print("func build, building_name: ", type)
+	queue_building.emit(type)
 
 func next_level():
 	print("MAIN SCENE RECEIVED NEXT LEVEL CALL")
 	depth += 1
 	generate_board(depth)
+	enter_build_mode_button.show()
 
 func _on_end_level_btn_pressed():
 	if boards[len(boards)-1].build_mode == false:
 		boards[len(boards)-1].enter_build_mode()
+		enter_build_mode_button.hide()
 		print("MANUALLY ENTERING BUILD MODE")
 	else:
 		print("ALREADY IN BUILD MODE")
+
+func on_mine_animation_complete():
+	mine_hit_popup.visible = true
+	greyout.visible = true
+
+func _on_mine_hit_restart_level_pressed():
+	mine_hit_popup.visible = false
+	greyout.visible = false
+	boards[boards.size() - 1].queue_free()
+	generate_board(depth)

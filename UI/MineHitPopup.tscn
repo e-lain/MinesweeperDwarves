@@ -1,0 +1,97 @@
+[gd_scene load_steps=7 format=3 uid="uid://cbn0lpatmkt08"]
+
+[ext_resource type="Theme" uid="uid://b6iv3a38m6uhb" path="res://UI.tres" id="1_sc2v7"]
+[ext_resource type="Texture2D" uid="uid://d0o6bpct5y38h" path="res://Assets/UI/Popup.png" id="2_4afkn"]
+[ext_resource type="Texture2D" uid="uid://j7h3rx30o7hw" path="res://Assets/UI/DottedLine9Patch.png" id="4_ij052"]
+[ext_resource type="Texture2D" uid="uid://du5p0tvlhojks" path="res://Assets/UI/PopIcon.png" id="4_rebtq"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_s7ihv"]
+texture = ExtResource("4_ij052")
+texture_margin_left = 16.0
+texture_margin_top = 17.0
+texture_margin_right = 17.0
+texture_margin_bottom = 16.0
+axis_stretch_horizontal = 1
+axis_stretch_vertical = 1
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_flcfo"]
+texture = ExtResource("4_ij052")
+texture_margin_left = 16.0
+texture_margin_top = 17.0
+texture_margin_right = 17.0
+texture_margin_bottom = 16.0
+axis_stretch_horizontal = 1
+axis_stretch_vertical = 1
+modulate_color = Color(1, 1, 1, 0.741176)
+
+[node name="MineHitPopup" type="NinePatchRect"]
+offset_right = 200.0
+offset_bottom = 146.0
+theme = ExtResource("1_sc2v7")
+texture = ExtResource("2_4afkn")
+patch_margin_left = 7
+patch_margin_top = 11
+patch_margin_right = 10
+patch_margin_bottom = 11
+axis_stretch_horizontal = 2
+axis_stretch_vertical = 2
+
+[node name="Title" type="Label" parent="."]
+layout_mode = 2
+anchor_top = 0.11
+anchor_right = 1.0
+anchor_bottom = 0.34
+grow_horizontal = 2
+grow_vertical = 2
+text = "You found a bomb!"
+horizontal_alignment = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="Body" type="Label" parent="."]
+layout_mode = 0
+offset_left = 14.0
+offset_top = 40.0
+offset_right = 192.0
+offset_bottom = 66.0
+text = "It Exploded..."
+
+[node name="PopulationBox" type="HBoxContainer" parent="."]
+offset_left = 83.0
+offset_top = 61.0
+offset_right = 119.0
+offset_bottom = 83.0
+size_flags_vertical = 0
+theme_override_constants/separation = 0
+
+[node name="Population" type="TextureRect" parent="PopulationBox"]
+modulate = Color(0, 0, 0, 1)
+layout_mode = 2
+texture = ExtResource("4_rebtq")
+expand_mode = 2
+stretch_mode = 4
+
+[node name="Label" type="Label" parent="PopulationBox"]
+layout_mode = 2
+text = "-1"
+vertical_alignment = 2
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 0
+offset_left = 62.0
+offset_top = 71.0
+offset_right = 102.0
+offset_bottom = 90.0
+
+[node name="Button" type="Button" parent="."]
+layout_mode = 0
+offset_left = 41.0
+offset_top = 82.0
+offset_right = 152.0
+offset_bottom = 132.0
+theme = ExtResource("1_sc2v7")
+theme_override_colors/font_hover_color = Color(0, 0, 0, 0.823529)
+theme_override_styles/normal = SubResource("StyleBoxTexture_s7ihv")
+theme_override_styles/hover = SubResource("StyleBoxTexture_flcfo")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_s7ihv")
+theme_override_styles/focus = SubResource("StyleBoxTexture_s7ihv")
+text = "Restart"

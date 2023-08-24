@@ -1,4 +1,12 @@
-[gd_resource type="Theme" format=3 uid="uid://dyrton3joryca"]
+[gd_resource type="Theme" load_steps=2 format=3 uid="uid://b6iv3a38m6uhb"]
+
+[ext_resource type="FontFile" uid="uid://m1fwnp6qsmnn" path="res://Assets/UI/Quikhand.ttf" id="1_2yecv"]
 
 [resource]
+Button/colors/font_color = Color(0, 0, 0, 1)
+Button/fonts/font = ExtResource("1_2yecv")
 Label/colors/font_color = Color(0, 0, 0, 1)
+Label/fonts/font = ExtResource("1_2yecv")
+RichTextLabel/colors/default_color = Color(0, 0, 0, 1)
+RichTextLabel/font_sizes/normal_font_size = 20
+RichTextLabel/fonts/normal_font = ExtResource("1_2yecv")
