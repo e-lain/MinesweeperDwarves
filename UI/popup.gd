@@ -23,9 +23,6 @@ func set_data(type: BuildingData.Type):
 	var population_cost = data["population_cost"]
 	var stone_cost = data["stone_cost"] 
 	
-
-
-	
 	if population_cost == 0:
 		population_box.visible = false
 	elif population_cost > 0:

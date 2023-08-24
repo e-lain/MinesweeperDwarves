@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://iqvlmmwy7d46"]
+[gd_scene load_steps=15 format=3 uid="uid://iqvlmmwy7d46"]
 
 [ext_resource type="Script" path="res://Main.gd" id="1_t2km6"]
 [ext_resource type="Theme" uid="uid://b6iv3a38m6uhb" path="res://UI.tres" id="2_b2qml"]
@@ -11,6 +11,7 @@
 [ext_resource type="FontFile" uid="uid://m1fwnp6qsmnn" path="res://Assets/UI/Quikhand.ttf" id="6_rv3xe"]
 [ext_resource type="PackedScene" uid="uid://doi658hn04jhv" path="res://UI/popup.tscn" id="7_703se"]
 [ext_resource type="Script" path="res://AbilityMenu.gd" id="9_3lmso"]
+[ext_resource type="PackedScene" uid="uid://cbn0lpatmkt08" path="res://UI/MineHitPopup.tscn" id="12_4reet"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_p42ak"]
 texture = ExtResource("6_nia6k")
@@ -232,8 +233,42 @@ offset_right = 1249.0
 offset_bottom = 67.0
 text = "Abilities"
 
+[node name="ColorRect" type="ColorRect" parent="CanvasLayer"]
+visible = false
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.333333)
+
+[node name="MineHitPopup" parent="CanvasLayer" instance=ExtResource("12_4reet")]
+visible = false
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -143.0
+offset_top = -83.0
+offset_right = 56.9999
+offset_bottom = 63.0
+grow_horizontal = 2
+grow_vertical = 2
+rotation = -0.0543328
+
+[node name="PopulationBox" parent="CanvasLayer/MineHitPopup" index="2"]
+layout_mode = 0
+offset_left = 74.7352
+offset_top = 62.1503
+offset_right = 110.735
+offset_bottom = 84.1503
+
 [connection signal="pressed" from="CanvasLayer/UI/EndLevelBtn" to="." method="_on_end_level_btn_pressed"]
 [connection signal="build" from="CanvasLayer/BuildMenu/VBoxContainer/Staircase" to="." method="build"]
 [connection signal="build" from="CanvasLayer/BuildMenu/VBoxContainer/House" to="." method="build"]
 [connection signal="build" from="CanvasLayer/BuildMenu/VBoxContainer/Quarry" to="." method="build"]
 [connection signal="build" from="CanvasLayer/BuildMenu/VBoxContainer/Workshop" to="." method="build"]
+[connection signal="pressed" from="CanvasLayer/MineHitPopup/Button" to="." method="_on_mine_hit_restart_level_pressed"]
+
+[editable path="CanvasLayer/MineHitPopup"]

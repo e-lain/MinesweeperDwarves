@@ -1,5 +1,8 @@
 extends Node2D
 
+
+signal mine_animation_complete
+
 @export var grid_line_prefab: PackedScene = preload("res://Prefabs/GridLine.tscn")
 @onready var tilemap: TileMap = $TileMap
 
@@ -116,7 +119,9 @@ func _on_tile_uncovered(cell_pos: Vector2i):
 	
 	if tile.is_bomb:
 		get_parent().population -= 1
-		enter_build_mode()
+		
+		explode_mine()
+		
 		print("TODO: THE PLAYER HAS LOST, BUILD MODE ENGAGED")
 	
 	uncover_tile(tile)
@@ -170,6 +175,9 @@ func uncover_tile(tile: BoardTile):
 			if adjacent_tile.is_cover && !tile.is_bomb:
 				uncover_tile(adjacent_tile)
 
+func explode_mine():
+	# TODO: play an animation and emit signal when it finishes
+	mine_animation_complete.emit()
 
 func get_adjacent_tiles(tile: BoardTile) -> Array[BoardTile]:
 	var surroundings: Array[BoardTile] = []
