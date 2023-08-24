@@ -8,10 +8,15 @@ var Staircase = preload("res://Buildings/Staircase.tscn")
 var Quarry = preload("res://Buildings/Quarry.tscn")
 var House = preload("res://Buildings/House.tscn")
 
+var Destroy = preload("res://Abilities/Destroy.tscn")
+
 const TILE_SIZE = 64
 
 var build_mode: bool = false
 var placing: bool = false
+
+# Ability usage toggles
+var clearing_tile: bool = false
 
 var rows = 6
 var columns = 6
@@ -27,8 +32,10 @@ var stairs_placed: bool = false
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	get_parent().queue_building.connect(_on_building_queue)
+	get_parent().queue_ability.connect(_on_ability_queue)
 	randomize()
 	
+	tilemap.destroyed.connect(_on_tile_destroyed)
 	tilemap.uncovered.connect(_on_tile_uncovered)
 	tilemap.flag_toggled.connect(_on_flag_toggled)
 	
@@ -111,6 +118,20 @@ func _on_building_queue(building_name):
 			print("SIGNAL RECEIVED TO BUILD HOUSE")
 			building = House.instantiate()
 		add_child(building)
+		
+func _on_ability_queue(ability_name):
+	var placing = true
+	var ability
+	if ability_name == "destroy" && get_parent().ability_destroy > 0:
+		print("SIGNAL RECEIVED TO USE DESTROY ABILITY")
+		ability = Destroy.instantiate()
+		clearing_tile = true
+	add_child(ability)
+	
+func _on_tile_destroyed(cell_pos: Vector2i):
+	print("tile destroyed called")
+	var tile = tiles[cell_pos.x][cell_pos.y]
+	clear_tile(tile)
 
 func _on_tile_uncovered(cell_pos: Vector2i):
 	var tile = tiles[cell_pos.x][cell_pos.y]
@@ -118,21 +139,19 @@ func _on_tile_uncovered(cell_pos: Vector2i):
 		return
 	
 	if tile.is_bomb:
+		hide()
 		get_parent().population -= 1
 		get_parent().generate_board(get_parent().depth)
-		hide()
 		# TODO: Player feedback that they have lost
 		print("TODO: THE PLAYER HAS LOST, resetting level")
+		queue_free()
 	
 	uncover_tile(tile)
-	
 	update_shadows()
 
 func enter_build_mode():
 	build_mode = true
 	get_parent().build_mode = true
-	bombs_found = 0
-	tiles_uncovered = 0
 	for row in tiles:
 		for tile in row:
 			if tile.label:
@@ -149,8 +168,16 @@ func on_building_placed(building_world_pos: Vector2, size: int, is_stairs: bool)
 		tile.has_building = true
 
 func next_level():
+	placing = false
+	clearing_tile = false
 	get_parent().next_level()
 	hide()
+	
+func clear_tile(tile: BoardTile):
+	uncover_tile(tile)
+	update_shadows()
+	if get_parent().ability_destroy < 1:
+		clearing_tile = false
 
 func uncover_tile(tile: BoardTile):
 	tile.is_cover = false
@@ -235,6 +262,15 @@ func can_place_at_position(world_pos: Vector2, size: int):
 			return false
 			
 	return true
+	
+func can_use_ability_at_position(world_pos: Vector2, size: int):
+	var places_to_check = get_world_positions_in_area(world_pos, size)
+	for pos in places_to_check:
+		var cell_pos = tilemap.local_to_map(tilemap.to_local(pos))
+		var tile = tiles[cell_pos.x][cell_pos.y]
+		if tile.is_bomb && !tile.is_cover:
+			return false
+	return !can_place_at_position(world_pos, size)
 
 func get_world_positions_in_area(origin_world_pos: Vector2, size: int) -> Array[Vector2]:
 	var tiles: Array[Vector2] = []

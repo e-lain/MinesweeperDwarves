@@ -7,12 +7,19 @@ var build_mode: bool = false
 var depth = 0
 var population = 3
 var stone = 0
+ 
+var ability_destroy_max = 0
+var ability_destroy = 0
 
-var boards = []
+var boards = [] # Note, some of these may be null references because we queue_free() boards that have hit a bomb
 
+signal queue_ability(ability_name)
 signal queue_building(building_name)
 
 func generate_board(difficulty: int):
+	# Reset all ability counts
+	ability_destroy = ability_destroy_max
+	
 	var b = Board.instantiate()
 	add_child(b)
 	
@@ -47,6 +54,13 @@ func _process(delta):
 func build(building_name):
 	print("func build, building_name: ", building_name)
 	queue_building.emit(building_name)
+	
+func ability(ability_name):
+	print("func ability, ability_name: ", ability_name)
+	if ability_name == "destroy" && ability_destroy < 1:
+		print("can't use destroy, out of uses")
+		return
+	queue_ability.emit(ability_name)
 
 func next_level():
 	print("MAIN SCENE RECEIVED NEXT LEVEL CALL")

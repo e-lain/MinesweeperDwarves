@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://iqvlmmwy7d46"]
+[gd_scene load_steps=11 format=3 uid="uid://iqvlmmwy7d46"]
 
 [ext_resource type="Script" path="res://Main.gd" id="1_t2km6"]
 [ext_resource type="Theme" uid="uid://dyrton3joryca" path="res://UI.tres" id="2_b2qml"]
@@ -9,6 +9,7 @@
 [ext_resource type="PackedScene" uid="uid://beb8hfwwuwf7y" path="res://Buildings/ToolbarQuarry.tscn" id="5_6wo4m"]
 [ext_resource type="PackedScene" uid="uid://drqyga44lndxq" path="res://Buildings/ToolbarHouse.tscn" id="6_8mp50"]
 [ext_resource type="Script" path="res://AbilityMenu.gd" id="9_3lmso"]
+[ext_resource type="PackedScene" uid="uid://cp25vmlk0k3ck" path="res://Abilities/AbilityDestroy.tscn" id="10_bm3kx"]
 
 [node name="Main" type="Node2D"]
 script = ExtResource("1_t2km6")
@@ -124,5 +125,20 @@ offset_top = 41.0
 offset_right = 1249.0
 offset_bottom = 67.0
 text = "Abilities"
+
+[node name="Tooltip" type="Label" parent="CanvasLayer/AbilityMenu"]
+visible = false
+layout_mode = 2
+offset_left = 849.0
+offset_top = 1.0
+offset_right = 1112.0
+offset_bottom = 105.0
+text = "Test Building
+Cost - blah
+
+Wow this is a building, pretty neat"
+
+[node name="Destroy" parent="CanvasLayer/AbilityMenu" instance=ExtResource("10_bm3kx")]
+position = Vector2(1152, 64)
 
 [connection signal="pressed" from="CanvasLayer/UI/EndLevelBtn" to="." method="_on_end_level_btn_pressed"]

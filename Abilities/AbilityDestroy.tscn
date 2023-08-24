@@ -1,0 +1,31 @@
+[gd_scene load_steps=4 format=3 uid="uid://cp25vmlk0k3ck"]
+
+[ext_resource type="Texture2D" uid="uid://bsrr1hjdprcj2" path="res://Assets/PlaceholderDestroy.png" id="1_1kqwd"]
+[ext_resource type="Script" path="res://Abilities/AbilityDestroy.gd" id="2_2p5aj"]
+[ext_resource type="Theme" uid="uid://dyrton3joryca" path="res://UI.tres" id="3_8pykt"]
+
+[node name="Destroy" type="Sprite2D"]
+texture = ExtResource("1_1kqwd")
+centered = false
+script = ExtResource("2_2p5aj")
+
+[node name="Control" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Uses" type="Label" parent="."]
+offset_left = 20.0
+offset_top = 46.0
+offset_right = 65.0
+offset_bottom = 72.0
+theme = ExtResource("3_8pykt")
+text = "0"
+horizontal_alignment = 2
+
+[connection signal="gui_input" from="Control" to="." method="_on_control_gui_input"]
+[connection signal="mouse_entered" from="Control" to="." method="_on_control_mouse_entered"]
+[connection signal="mouse_exited" from="Control" to="." method="_on_control_mouse_exited"]
