@@ -26,4 +26,4 @@ func _on_control_gui_input(event):
 	if event is InputEventMouseButton:
 		if event.is_action_pressed("left_click"):
 			print("quarry building clicked")
-			get_parent().get_parent().build("quarry")
+			get_parent().get_parent().get_parent().build("quarry")

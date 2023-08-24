@@ -53,24 +53,31 @@ func init_board(rows: int, cols: int, bombs: int):
 	
 	tilemap.set_cells_terrain_connect(0, fill_cells, 0, 0)
 	set_bombs()
-	create_grid_lines()
 
 func create_grid_lines():
-	for i in 30:
-		var instance
-		if i < 12:
-			instance = grid_line_prefab.instantiate()
-			add_child(instance)
-			instance.position.y = 64 * i
-			instance.material.set_shader_parameter("speed", randf_range(0.01, 0.03) * (-1.0 if i % 2 == 0 else 1.0))
-			
-		instance = grid_line_prefab.instantiate()
+	var offset = Vector2(TILE_SIZE, TILE_SIZE)
+	var min_fade_pos = to_global(tilemap.map_to_local(Vector2i.ZERO)) - offset
+	var max_fade_pos = min_fade_pos + Vector2(TILE_SIZE * columns, TILE_SIZE * rows) + offset
+	
+	for i in range(1, rows):
+		var instance = grid_line_prefab.instantiate()
+		add_child(instance)
+		instance.position.x = -100
+		instance.position.y = 64 * i
+		instance.material.set_shader_parameter("speed", randf_range(0.01, 0.025) * (-1.0 if i % 2 == 0 else 1.0))
+		instance.material.set_shader_parameter("min_fade_pos", min_fade_pos)
+		instance.material.set_shader_parameter("max_fade_pos", max_fade_pos)
+		
+	for i in range(1, columns):
+		var instance = grid_line_prefab.instantiate()
 		add_child(instance)
 		instance.global_rotation_degrees = 90
 		instance.position.x = 64 * i
 		instance.position.y = 360
 		
-		instance.material.set_shader_parameter("speed", randf_range(0.01, 0.03) * (-1.0 if i % 2 == 0 else 1.0))
+		instance.material.set_shader_parameter("speed", randf_range(0.01, 0.025) * (-1.0 if i % 2 == 0 else 1.0))
+		instance.material.set_shader_parameter("min_fade_pos", min_fade_pos)
+		instance.material.set_shader_parameter("max_fade_pos", max_fade_pos)
 
 func set_bombs():
 	var n = 0
@@ -117,7 +124,7 @@ func _on_tile_uncovered(cell_pos: Vector2i):
 	
 	uncover_tile(tile)
 	
-	#update_shadows()
+	update_shadows()
 
 func enter_build_mode():
 	build_mode = true
@@ -128,7 +135,17 @@ func enter_build_mode():
 		for tile in row:
 			if tile.label:
 				tile.label.queue_free()
-				
+
+func on_building_placed(building_world_pos: Vector2, size: int, is_stairs: bool):
+	placing = false
+	stairs_placed = is_stairs
+	
+	var world_positions_to_update = get_world_positions_in_area(building_world_pos, size)
+	for world_pos in world_positions_to_update:
+		var cell_pos = tilemap.local_to_map(tilemap.to_local(world_pos))
+		var tile = tiles[cell_pos.x][cell_pos.y]
+		tile.has_building = true
+
 func next_level():
 	get_parent().next_level()
 	hide()
@@ -193,25 +210,11 @@ func update_shadows():
 	var used_cells = tilemap.get_used_cells(0)
 	var occupied_tiles = {}
 	
-	var min_x = 9999999
-	var max_x = -999999
-	var min_y = 999999
-	var max_y = -999999
 	for pos in used_cells:
-		if pos.x < min_x:
-			min_x = int(pos.x)
-		elif pos.x > max_x:
-			max_x = int(pos.x)
-		if pos.y < min_y:
-			min_y = int(pos.y)
-		elif pos.y > max_y:
-			max_y = int(pos.y)
-		
 		occupied_tiles[pos] = null
-	
 	var unused_cells = []
-	for x in range(min_x, max_x):
-		for y in range(min_y, max_y):
+	for x in rows:
+		for y in columns:
 			var cell = Vector2i(x,y)
 			if !occupied_tiles.has(cell):
 				unused_cells.append(cell)
@@ -220,17 +223,21 @@ func update_shadows():
 	tilemap.set_cells_terrain_connect(1, unused_cells, 0, 1)
 
 func can_place_at_position(world_pos: Vector2, size: int):
-	var places_to_check = []
-	for x in range(size):
-		for y in range (size):
-			places_to_check.push_back(Vector2(world_pos.x + x*TILE_SIZE, world_pos.y + y*TILE_SIZE))
-			
+	var places_to_check = get_world_positions_in_area(world_pos, size)
 	for pos in places_to_check:
 		var cell_pos = tilemap.local_to_map(tilemap.to_local(pos))
 		if cell_pos.x < 0 || cell_pos.x >= columns || cell_pos.y < 0 || cell_pos.y > rows:
 			return false
 		var tile = tiles[cell_pos.x][cell_pos.y]
-		if !(tilemap.get_cell_tile_data(0, cell_pos) == null && !tile.is_bomb):
+		if !(tilemap.get_cell_tile_data(0, cell_pos) == null && !tile.is_bomb && !tile.has_building):
 			return false
 			
 	return true
+
+func get_world_positions_in_area(origin_world_pos: Vector2, size: int) -> Array[Vector2]:
+	var tiles: Array[Vector2] = []
+	for x in range(size):
+		for y in range (size):
+			tiles.push_back(Vector2(origin_world_pos.x + x*TILE_SIZE, origin_world_pos.y + y*TILE_SIZE))
+	
+	return tiles

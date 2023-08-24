@@ -1,0 +1,14 @@
+[gd_scene load_steps=2 format=3 uid="uid://cu687f6aroifi"]
+
+[ext_resource type="Texture2D" uid="uid://j7h3rx30o7hw" path="res://Assets/UI/DottedLine9Patch.png" id="1_v4eh3"]
+
+[node name="DottedLine" type="NinePatchRect"]
+offset_right = 172.0
+offset_bottom = 172.0
+texture = ExtResource("1_v4eh3")
+patch_margin_left = 15
+patch_margin_top = 17
+patch_margin_right = 17
+patch_margin_bottom = 16
+axis_stretch_horizontal = 2
+axis_stretch_vertical = 2

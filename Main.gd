@@ -15,7 +15,6 @@ signal queue_building(building_name)
 func generate_board(difficulty: int):
 	var b = Board.instantiate()
 	add_child(b)
-	await b._ready()
 	
 	if difficulty == 0:
 		b.init_board(6,6,4)
@@ -31,6 +30,7 @@ func generate_board(difficulty: int):
 	var center = get_viewport_rect().size/2
 	var offset = Vector2(center.x-(b.rows * b.TILE_SIZE/2), center.y-(b.columns * b.TILE_SIZE/2))
 	b.position = offset
+	b.create_grid_lines()
 	boards.push_back(b)
 
 # Called when the node enters the scene tree for the first time.
@@ -40,9 +40,9 @@ func _ready():
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
-	get_node("UI/Resources/Population").text = "Population: %d" % [population]
-	get_node("UI/Resources/Stone").text = "Stone: %d" % [stone]
-	get_node("UI/Resources/Depth").text = "Depth: %d" % [depth]
+	get_node("CanvasLayer/UI/Resources/Population").text = "Population: %d" % [population]
+	get_node("CanvasLayer/UI/Resources/Stone").text = "Stone: %d" % [stone]
+	get_node("CanvasLayer/UI/Resources/Depth").text = "Depth: %d" % [depth]
 
 func build(building_name):
 	print("func build, building_name: ", building_name)

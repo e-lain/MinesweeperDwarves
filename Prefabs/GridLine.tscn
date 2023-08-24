@@ -6,7 +6,10 @@
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_e1tdt"]
 resource_local_to_scene = true
 shader = ExtResource("1_8obgj")
+shader_parameter/min_fade_pos = null
+shader_parameter/max_fade_pos = null
 shader_parameter/speed = 0.02
+shader_parameter/smooth_distance = 32.0
 
 [node name="Gridlinedownscale1" type="Sprite2D"]
 z_index = -1
