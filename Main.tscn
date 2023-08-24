@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://iqvlmmwy7d46"]
+[gd_scene load_steps=14 format=3 uid="uid://iqvlmmwy7d46"]
 
 [ext_resource type="Script" path="res://Main.gd" id="1_t2km6"]
 [ext_resource type="Theme" uid="uid://b6iv3a38m6uhb" path="res://UI.tres" id="2_b2qml"]
@@ -7,9 +7,29 @@
 [ext_resource type="Script" path="res://BuildMenu.gd" id="4_4yfy1"]
 [ext_resource type="Texture2D" uid="uid://du5p0tvlhojks" path="res://Assets/UI/PopIcon.png" id="4_wg3lp"]
 [ext_resource type="Texture2D" uid="uid://ca5lct0ctr37m" path="res://Assets/UI/StoneIcon.png" id="5_o2ngn"]
+[ext_resource type="Texture2D" uid="uid://d0o6bpct5y38h" path="res://Assets/UI/Popup.png" id="6_nia6k"]
 [ext_resource type="FontFile" uid="uid://m1fwnp6qsmnn" path="res://Assets/UI/Quikhand.ttf" id="6_rv3xe"]
 [ext_resource type="PackedScene" uid="uid://doi658hn04jhv" path="res://UI/popup.tscn" id="7_703se"]
 [ext_resource type="Script" path="res://AbilityMenu.gd" id="9_3lmso"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_p42ak"]
+texture = ExtResource("6_nia6k")
+texture_margin_left = 8.0
+texture_margin_top = 11.0
+texture_margin_right = 10.0
+texture_margin_bottom = 13.0
+axis_stretch_horizontal = 2
+axis_stretch_vertical = 2
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_askgf"]
+texture = ExtResource("6_nia6k")
+texture_margin_left = 8.0
+texture_margin_top = 11.0
+texture_margin_right = 10.0
+texture_margin_bottom = 13.0
+axis_stretch_horizontal = 2
+axis_stretch_vertical = 2
+modulate_color = Color(0.721569, 0.721569, 0.721569, 1)
 
 [node name="Main" type="Node2D"]
 script = ExtResource("1_t2km6")
@@ -80,16 +100,23 @@ text = "x 3"
 
 [node name="EndLevelBtn" type="Button" parent="CanvasLayer/UI"]
 layout_mode = 0
-offset_left = 7.0
-offset_top = 670.0
-offset_right = 158.0
-offset_bottom = 712.0
+offset_left = 28.0
+offset_top = 638.0
+offset_right = 215.0
+offset_bottom = 703.0
+theme_override_styles/normal = SubResource("StyleBoxTexture_p42ak")
+theme_override_styles/hover = SubResource("StyleBoxTexture_askgf")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_p42ak")
+theme_override_styles/focus = SubResource("StyleBoxTexture_p42ak")
 
 [node name="Label" type="Label" parent="CanvasLayer/UI/EndLevelBtn"]
-layout_mode = 0
-offset_top = -1.0
-offset_right = 151.0
-offset_bottom = 43.0
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 24
 text = "To Build Mode"
 horizontal_alignment = 1
 vertical_alignment = 1
