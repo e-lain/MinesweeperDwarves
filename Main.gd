@@ -118,3 +118,7 @@ func _on_page_down_button_pressed():
 	page_down.disabled = true
 	page_two.show()
 	page_up.disabled = false
+
+
+func stairs_placed():
+	return boards[boards.size() - 1].stairs_placed

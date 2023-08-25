@@ -167,7 +167,8 @@ func enter_build_mode():
 
 func on_building_placed(building_world_pos: Vector2, size: int, is_stairs: bool):
 	placing = false
-	stairs_placed = is_stairs
+	if !stairs_placed:
+		stairs_placed = is_stairs
 	
 	var world_positions_to_update = get_world_positions_in_area(building_world_pos, size)
 	for world_pos in world_positions_to_update:

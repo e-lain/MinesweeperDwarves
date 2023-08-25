@@ -41,7 +41,7 @@ static var data = {
 		"name": "Engineer's Workshop",
 		"description": "Gain Ability to Destroy Tiles ",
 		"stone_cost": 50,
-		"population_cost": 1,
+		"population_cost": 3,
 		"size": 3,
 		"icon_path": "res://Assets/Buildings/EngineerWorkshopBuildingDownscale.png"
 	},
