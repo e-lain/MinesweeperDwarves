@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=3 uid="uid://iqvlmmwy7d46"]
+[gd_scene load_steps=20 format=3 uid="uid://iqvlmmwy7d46"]
 
 [ext_resource type="Script" path="res://Main.gd" id="1_t2km6"]
 [ext_resource type="Theme" uid="uid://b6iv3a38m6uhb" path="res://UI.tres" id="2_b2qml"]
@@ -12,7 +12,9 @@
 [ext_resource type="PackedScene" uid="uid://doi658hn04jhv" path="res://UI/popup.tscn" id="7_703se"]
 [ext_resource type="Script" path="res://AbilityMenu.gd" id="9_3lmso"]
 [ext_resource type="PackedScene" uid="uid://cp25vmlk0k3ck" path="res://Abilities/AbilityDestroy.tscn" id="10_bm3kx"]
+[ext_resource type="Texture2D" uid="uid://7an4owy3gbe2" path="res://Assets/UI/ArrowUp.png" id="11_gm014"]
 [ext_resource type="PackedScene" uid="uid://cbn0lpatmkt08" path="res://UI/MineHitPopup.tscn" id="12_4reet"]
+[ext_resource type="Texture2D" uid="uid://cugy8vitkf3fg" path="res://Assets/UI/ArrowDown.png" id="12_hutn7"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_p42ak"]
 texture = ExtResource("6_nia6k")
@@ -32,6 +34,10 @@ texture_margin_bottom = 13.0
 axis_stretch_horizontal = 2
 axis_stretch_vertical = 2
 modulate_color = Color(0.721569, 0.721569, 0.721569, 1)
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_cckrc"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_bthxj"]
 
 [node name="Main" type="Node2D"]
 script = ExtResource("1_t2km6")
@@ -134,35 +140,52 @@ mouse_filter = 2
 theme = ExtResource("2_b2qml")
 script = ExtResource("4_4yfy1")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/BuildMenu"]
+[node name="Page1" type="VBoxContainer" parent="CanvasLayer/BuildMenu"]
 layout_mode = 1
 anchors_preset = -1
-anchor_left = 0.810156
+anchor_left = 0.803906
 anchor_top = 0.0652778
-anchor_right = 0.810156
+anchor_right = 0.803906
 anchor_bottom = 0.345833
 offset_left = -97.0
 offset_bottom = 299.0
 metadata/_edit_use_anchors_ = true
 
-[node name="Staircase" parent="CanvasLayer/BuildMenu/VBoxContainer" node_paths=PackedStringArray("info_popup") instance=ExtResource("3_22qjw")]
+[node name="Staircase" parent="CanvasLayer/BuildMenu/Page1" node_paths=PackedStringArray("info_popup") instance=ExtResource("3_22qjw")]
 layout_mode = 2
 info_popup = NodePath("../../StaircasePopup")
 type = 2
 
-[node name="House" parent="CanvasLayer/BuildMenu/VBoxContainer" node_paths=PackedStringArray("info_popup") instance=ExtResource("3_22qjw")]
+[node name="House" parent="CanvasLayer/BuildMenu/Page1" node_paths=PackedStringArray("info_popup") instance=ExtResource("3_22qjw")]
 layout_mode = 2
 info_popup = NodePath("../../HousePopup")
 
-[node name="Quarry" parent="CanvasLayer/BuildMenu/VBoxContainer" node_paths=PackedStringArray("info_popup") instance=ExtResource("3_22qjw")]
+[node name="Quarry" parent="CanvasLayer/BuildMenu/Page1" node_paths=PackedStringArray("info_popup") instance=ExtResource("3_22qjw")]
 layout_mode = 2
 info_popup = NodePath("../../QuarryPopup")
 type = 1
 
-[node name="Workshop" parent="CanvasLayer/BuildMenu/VBoxContainer" node_paths=PackedStringArray("info_popup") instance=ExtResource("3_22qjw")]
+[node name="Workshop" parent="CanvasLayer/BuildMenu/Page1" node_paths=PackedStringArray("info_popup") instance=ExtResource("3_22qjw")]
 layout_mode = 2
 info_popup = NodePath("../../WorkshopPopup")
 type = 3
+
+[node name="Page2" type="VBoxContainer" parent="CanvasLayer/BuildMenu"]
+visible = false
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.804688
+anchor_top = 0.0652778
+anchor_right = 0.804688
+anchor_bottom = 0.345833
+offset_left = -97.0
+offset_bottom = 299.0
+metadata/_edit_use_anchors_ = true
+
+[node name="Wonder" parent="CanvasLayer/BuildMenu/Page2" node_paths=PackedStringArray("info_popup") instance=ExtResource("3_22qjw")]
+layout_mode = 2
+info_popup = NodePath("../../StaircasePopup")
+type = 4
 
 [node name="Label" type="Label" parent="CanvasLayer/BuildMenu"]
 layout_mode = 0
@@ -217,6 +240,43 @@ offset_left = 736.0
 offset_top = 492.0
 offset_right = 936.0
 offset_bottom = 592.0
+
+[node name="PageUpButton" type="Button" parent="CanvasLayer/BuildMenu"]
+layout_mode = 0
+offset_left = 1022.0
+offset_top = 38.0
+offset_right = 1039.0
+offset_bottom = 68.0
+rotation = -1.60875
+theme_override_colors/icon_pressed_color = Color(0, 0, 0, 0.764706)
+theme_override_colors/icon_hover_color = Color(0, 0, 0, 0.764706)
+theme_override_colors/icon_hover_pressed_color = Color(0, 0, 0, 0.764706)
+theme_override_colors/icon_disabled_color = Color(0, 0, 0, 0.372549)
+theme_override_styles/normal = SubResource("StyleBoxEmpty_cckrc")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_cckrc")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_cckrc")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_cckrc")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_cckrc")
+disabled = true
+icon = ExtResource("11_gm014")
+
+[node name="PageDownButton" type="Button" parent="CanvasLayer/BuildMenu"]
+layout_mode = 0
+offset_left = 1062.0
+offset_top = 35.0
+offset_right = 1079.0
+offset_bottom = 65.0
+rotation = 4.83077
+theme_override_colors/icon_pressed_color = Color(0, 0, 0, 0.764706)
+theme_override_colors/icon_hover_color = Color(0, 0, 0, 0.764706)
+theme_override_colors/icon_hover_pressed_color = Color(0, 0, 0, 0.764706)
+theme_override_colors/icon_disabled_color = Color(0, 0, 0, 0.384314)
+theme_override_styles/normal = SubResource("StyleBoxEmpty_bthxj")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_bthxj")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_bthxj")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_bthxj")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_bthxj")
+icon = ExtResource("12_hutn7")
 
 [node name="AbilityMenu" type="Control" parent="CanvasLayer"]
 layout_mode = 3
@@ -281,10 +341,13 @@ offset_right = 110.735
 offset_bottom = 84.1503
 
 [connection signal="pressed" from="CanvasLayer/UI/EndLevelBtn" to="." method="_on_end_level_btn_pressed"]
-[connection signal="build" from="CanvasLayer/BuildMenu/VBoxContainer/Staircase" to="." method="build"]
-[connection signal="build" from="CanvasLayer/BuildMenu/VBoxContainer/House" to="." method="build"]
-[connection signal="build" from="CanvasLayer/BuildMenu/VBoxContainer/Quarry" to="." method="build"]
-[connection signal="build" from="CanvasLayer/BuildMenu/VBoxContainer/Workshop" to="." method="build"]
+[connection signal="build" from="CanvasLayer/BuildMenu/Page1/Staircase" to="." method="build"]
+[connection signal="build" from="CanvasLayer/BuildMenu/Page1/House" to="." method="build"]
+[connection signal="build" from="CanvasLayer/BuildMenu/Page1/Quarry" to="." method="build"]
+[connection signal="build" from="CanvasLayer/BuildMenu/Page1/Workshop" to="." method="build"]
+[connection signal="build" from="CanvasLayer/BuildMenu/Page2/Wonder" to="." method="build"]
+[connection signal="pressed" from="CanvasLayer/BuildMenu/PageUpButton" to="." method="_on_page_up_button_pressed"]
+[connection signal="pressed" from="CanvasLayer/BuildMenu/PageDownButton" to="." method="_on_page_down_button_pressed"]
 [connection signal="pressed" from="CanvasLayer/MineHitPopup/Button" to="." method="_on_mine_hit_restart_level_pressed"]
 
 [editable path="CanvasLayer/MineHitPopup"]

@@ -7,6 +7,12 @@ extends Node2D
 @onready var greyout = $CanvasLayer/ColorRect
 @onready var enter_build_mode_button = $CanvasLayer/UI/EndLevelBtn
 
+@onready var page_one = $CanvasLayer/BuildMenu/Page1
+@onready var page_two = $CanvasLayer/BuildMenu/Page2
+@onready var page_up = $CanvasLayer/BuildMenu/PageUpButton
+@onready var page_down = $CanvasLayer/BuildMenu/PageDownButton
+
+
 
 var Board = preload("res://board.tscn")
 
@@ -99,3 +105,16 @@ func _on_mine_hit_restart_level_pressed():
 	greyout.visible = false
 	boards[boards.size() - 1].queue_free()
 	generate_board(depth)
+
+
+func _on_page_up_button_pressed():
+	page_one.show()
+	page_down.disabled = false
+	page_two.hide()
+	page_up.disabled = true
+
+func _on_page_down_button_pressed():
+	page_one.hide()
+	page_down.disabled = true
+	page_two.show()
+	page_up.disabled = false
