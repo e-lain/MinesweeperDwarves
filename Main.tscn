@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=3 uid="uid://iqvlmmwy7d46"]
+[gd_scene load_steps=21 format=3 uid="uid://iqvlmmwy7d46"]
 
 [ext_resource type="Script" path="res://Main.gd" id="1_t2km6"]
 [ext_resource type="Theme" uid="uid://b6iv3a38m6uhb" path="res://UI.tres" id="2_b2qml"]
@@ -34,6 +34,16 @@ texture_margin_bottom = 13.0
 axis_stretch_horizontal = 2
 axis_stretch_vertical = 2
 modulate_color = Color(0.721569, 0.721569, 0.721569, 1)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_qk65p"]
+texture = ExtResource("6_nia6k")
+texture_margin_left = 8.0
+texture_margin_top = 11.0
+texture_margin_right = 10.0
+texture_margin_bottom = 13.0
+axis_stretch_horizontal = 2
+axis_stretch_vertical = 2
+modulate_color = Color(1, 1, 1, 0.403922)
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_cckrc"]
 
@@ -112,24 +122,19 @@ offset_left = 28.0
 offset_top = 638.0
 offset_right = 215.0
 offset_bottom = 703.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_hover_color = Color(0, 0, 0, 1)
+theme_override_colors/font_disabled_color = Color(0.411765, 0.411765, 0.411765, 1)
+theme_override_font_sizes/font_size = 22
 theme_override_styles/normal = SubResource("StyleBoxTexture_p42ak")
 theme_override_styles/hover = SubResource("StyleBoxTexture_askgf")
 theme_override_styles/pressed = SubResource("StyleBoxTexture_p42ak")
+theme_override_styles/disabled = SubResource("StyleBoxTexture_qk65p")
 theme_override_styles/focus = SubResource("StyleBoxTexture_p42ak")
-
-[node name="Label" type="Label" parent="CanvasLayer/UI/EndLevelBtn"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_font_sizes/font_size = 24
 text = "To Build Mode"
-horizontal_alignment = 1
-vertical_alignment = 1
 
 [node name="BuildMenu" type="Control" parent="CanvasLayer"]
+visible = false
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -288,10 +293,11 @@ script = ExtResource("9_3lmso")
 
 [node name="Label" type="Label" parent="CanvasLayer/AbilityMenu"]
 layout_mode = 0
-offset_left = 1178.0
-offset_top = 41.0
-offset_right = 1249.0
-offset_bottom = 67.0
+offset_left = 942.0
+offset_top = 18.0
+offset_right = 1013.0
+offset_bottom = 44.0
+theme_override_font_sizes/font_size = 20
 text = "Abilities"
 
 [node name="Tooltip" type="Label" parent="CanvasLayer/AbilityMenu"]
@@ -306,8 +312,20 @@ Cost - blah
 
 Wow this is a building, pretty neat"
 
-[node name="Destroy" parent="CanvasLayer/AbilityMenu" instance=ExtResource("10_bm3kx")]
-position = Vector2(1152, 64)
+[node name="Destroy" parent="CanvasLayer/AbilityMenu" node_paths=PackedStringArray("info_popup") instance=ExtResource("10_bm3kx")]
+layout_mode = 0
+offset_left = 932.0
+offset_top = 48.0
+offset_right = 1092.0
+offset_bottom = 209.0
+info_popup = NodePath("../DestroyPopup")
+
+[node name="DestroyPopup" parent="CanvasLayer/AbilityMenu" instance=ExtResource("7_703se")]
+visible = false
+offset_left = 737.0
+offset_top = 75.0
+offset_right = 937.0
+offset_bottom = 175.0
 
 [node name="ColorRect" type="ColorRect" parent="CanvasLayer"]
 visible = false

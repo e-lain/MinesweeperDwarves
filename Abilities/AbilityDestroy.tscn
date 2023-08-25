@@ -1,31 +1,38 @@
-[gd_scene load_steps=4 format=3 uid="uid://cp25vmlk0k3ck"]
+[gd_scene load_steps=6 format=3 uid="uid://cp25vmlk0k3ck"]
 
-[ext_resource type="Texture2D" uid="uid://bsrr1hjdprcj2" path="res://Assets/PlaceholderDestroy.png" id="1_1kqwd"]
+[ext_resource type="Texture2D" uid="uid://j7h3rx30o7hw" path="res://Assets/UI/DottedLine9Patch.png" id="1_4pbfw"]
 [ext_resource type="Script" path="res://Abilities/AbilityDestroy.gd" id="2_2p5aj"]
-[ext_resource type="Theme" uid="uid://dyrton3joryca" path="res://UI.tres" id="3_8pykt"]
+[ext_resource type="Theme" uid="uid://b6iv3a38m6uhb" path="res://UI.tres" id="3_8pykt"]
+[ext_resource type="Texture2D" uid="uid://k6po4d3bukag" path="res://Assets/UI/CraneUI.png" id="3_ds6ux"]
 
-[node name="Destroy" type="Sprite2D"]
-texture = ExtResource("1_1kqwd")
-centered = false
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_pepr0"]
+texture = ExtResource("1_4pbfw")
+texture_margin_left = 14.0
+texture_margin_top = 17.0
+texture_margin_right = 18.0
+texture_margin_bottom = 16.0
+axis_stretch_horizontal = 2
+axis_stretch_vertical = 2
+
+[node name="Destroy" type="PanelContainer"]
+theme_override_styles/panel = SubResource("StyleBoxTexture_pepr0")
 script = ExtResource("2_2p5aj")
 
-[node name="Control" type="Control" parent="."]
-layout_mode = 3
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="MarginContainer"]
+layout_mode = 2
+texture = ExtResource("3_ds6ux")
 
 [node name="Uses" type="Label" parent="."]
-offset_left = 20.0
-offset_top = 46.0
-offset_right = 65.0
-offset_bottom = 72.0
+layout_mode = 2
+size_flags_vertical = 1
 theme = ExtResource("3_8pykt")
 text = "0"
 horizontal_alignment = 2
+vertical_alignment = 3
 
-[connection signal="gui_input" from="Control" to="." method="_on_control_gui_input"]
-[connection signal="mouse_entered" from="Control" to="." method="_on_control_mouse_entered"]
-[connection signal="mouse_exited" from="Control" to="." method="_on_control_mouse_exited"]
+[connection signal="gui_input" from="." to="." method="_on_gui_input"]
+[connection signal="mouse_entered" from="." to="." method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="." to="." method="_on_mouse_exited"]

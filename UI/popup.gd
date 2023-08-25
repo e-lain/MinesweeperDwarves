@@ -39,3 +39,8 @@ func set_data(type: BuildingData.Type):
 		stone_label.text = str(-stone_cost)
 	
 
+func set_description(header: String, description: String):
+	name_label.text = header
+	description_label.text = description
+	population_box.visible = false
+	stone_box.visible = false

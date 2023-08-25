@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://Abilities/Destroy.gd" id="1_u141h"]
 [ext_resource type="Material" uid="uid://nqpwbe45b8cn" path="res://Shaders/InvalidBuildingPlacement.tres" id="2_1iw44"]
-[ext_resource type="Texture2D" uid="uid://bsrr1hjdprcj2" path="res://Assets/PlaceholderDestroy.png" id="3_q6syk"]
+[ext_resource type="Texture2D" uid="uid://dr83dy41g1kvp" path="res://Assets/UI/CraneSmaller.png" id="3_5nbiq"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ynpqt"]
 size = Vector2(52, 49)
@@ -12,7 +12,7 @@ script = ExtResource("1_u141h")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 material = ExtResource("2_1iw44")
-texture = ExtResource("3_q6syk")
+texture = ExtResource("3_5nbiq")
 centered = false
 
 [node name="Area2D" type="Area2D" parent="."]
