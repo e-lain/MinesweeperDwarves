@@ -32,6 +32,8 @@ func _process(delta):
 				sprite.material = null
 
 func can_place():
+	if get_parent().get_parent().stone - 10 < 0:
+		return false
 	return get_parent().can_place_at_position(global_position, size)
 
 func _on_control_gui_input(event):
@@ -40,6 +42,7 @@ func _on_control_gui_input(event):
 			if can_place() && in_bounds:
 				placed = true
 				get_parent().on_building_placed(global_position, size, false)
+				get_parent().get_parent().stone -= 10
 				get_parent().get_parent().population += 2
 				return
 		if event.is_action_pressed("right_click"):
