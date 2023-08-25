@@ -47,7 +47,7 @@ static var data = {
 	},
 	Type.WONDER: {
 		"type": Type.WONDER,
-		"name": "TBD",
+		"name": "Beer Hall",
 		"description": "Win the Game",
 		"stone_cost": 100,
 		"population_cost": 5,

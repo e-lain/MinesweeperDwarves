@@ -11,6 +11,7 @@ var Staircase = preload("res://Buildings/Staircase.tscn")
 var Quarry = preload("res://Buildings/Quarry.tscn")
 var House = preload("res://Buildings/House.tscn")
 var Workshop = preload("res://Buildings/Workshop.tscn")
+var Wonder = preload("res://Buildings/Wonder.tscn")
 
 var Destroy = preload("res://Abilities/Destroy.tscn")
 
@@ -121,6 +122,9 @@ func _on_building_queue(type: BuildingData.Type):
 		if type == BuildingData.Type.WORKSHOP:
 			print("SIGNAL RECEIVED TO BUILD WORKSHOP")
 			building = Workshop.instantiate()
+		if type == BuildingData.Type.WONDER:
+			print("SIGNAL RECEIVED TO BUILD WONDER")
+			building = Wonder.instantiate()
 		add_child(building)
 		
 func _on_ability_queue(ability_name):
