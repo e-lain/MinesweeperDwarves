@@ -1,0 +1,30 @@
+[gd_scene load_steps=5 format=3 uid="uid://bovfq77ouxg85"]
+
+[ext_resource type="Script" path="res://Buildings/Workshop.gd" id="1_j8262"]
+[ext_resource type="Material" uid="uid://nqpwbe45b8cn" path="res://Shaders/InvalidBuildingPlacement.tres" id="2_q7sgy"]
+[ext_resource type="Texture2D" uid="uid://b8udsrx8dm05v" path="res://Assets/Buildings/EngineerWorkshopBuildingDownscale.png" id="3_2jk3g"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ynpqt"]
+size = Vector2(178, 176)
+
+[node name="Building" type="Node2D"]
+script = ExtResource("1_j8262")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+material = ExtResource("2_q7sgy")
+texture = ExtResource("3_2jk3g")
+centered = false
+
+[node name="Area2D" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+position = Vector2(95, 96)
+shape = SubResource("RectangleShape2D_ynpqt")
+
+[node name="Control" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 192.0
+offset_bottom = 192.0
+
+[connection signal="gui_input" from="Control" to="." method="_on_control_gui_input"]

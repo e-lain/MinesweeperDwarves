@@ -10,6 +10,7 @@ var Building = preload("res://Buildings/Building.tscn")
 var Staircase = preload("res://Buildings/Staircase.tscn")
 var Quarry = preload("res://Buildings/Quarry.tscn")
 var House = preload("res://Buildings/House.tscn")
+var Workshop = preload("res://Buildings/Workshop.tscn")
 
 var Destroy = preload("res://Abilities/Destroy.tscn")
 
@@ -117,6 +118,9 @@ func _on_building_queue(type: BuildingData.Type):
 		if type == BuildingData.Type.HOUSE:
 			print("SIGNAL RECEIVED TO BUILD HOUSE")
 			building = House.instantiate()
+		if type == BuildingData.Type.WORKSHOP:
+			print("SIGNAL RECEIVED TO BUILD WORKSHOP")
+			building = Workshop.instantiate()
 		add_child(building)
 		
 func _on_ability_queue(ability_name):
@@ -174,6 +178,8 @@ func next_level():
 	hide()
 	
 func clear_tile(tile: BoardTile):
+	if tile.is_flagged:
+		tile.toggle_flag()
 	uncover_tile(tile)
 	update_shadows()
 	if get_parent().ability_destroy < 1:
