@@ -28,6 +28,8 @@ var rows = 6
 var columns = 6
 var bomb_count = 4
 
+var flags = bomb_count
+
 var bombs_found = 0
 var tiles_uncovered = 0
 var total_tiles = rows*columns
@@ -52,6 +54,7 @@ func init_board(rows: int, cols: int, bombs: int):
 	self.rows = rows
 	self.columns = cols
 	self.bomb_count = bombs
+	self.flags = self.bomb_count
 	
 	var fill_cells = []
 	
@@ -159,6 +162,7 @@ func _on_tile_uncovered(cell_pos: Vector2i):
 	update_shadows()
 
 func enter_build_mode():
+	get_parent().steel += bombs_found
 	build_mode = true
 	get_parent().build_mode = true
 	for row in tiles:
@@ -189,6 +193,8 @@ func next_level():
 	
 func clear_tile(tile: BoardTile):
 	if tile.is_flagged:
+		flags += 1
+		print("bombs found: ", bombs_found)
 		tile.toggle_flag()
 	uncover_tile(tile)
 	update_shadows()
@@ -205,6 +211,7 @@ func uncover_tile(tile: BoardTile):
 		return
 		
 	if tile.is_flagged:
+		flags += 1
 		tile.destroy_flag()
 	
 	var adjacent_tiles = get_adjacent_tiles(tile)
@@ -247,6 +254,15 @@ func get_adjacent_tiles(tile: BoardTile) -> Array[BoardTile]:
 
 func _on_flag_toggled(cell_pos: Vector2i):
 	var tile = tiles[cell_pos.x][cell_pos.y]
+		
+	if tile.is_flagged:
+		flags += 1
+	elif flags > 0:
+		flags -= 1
+	else:
+		# TODO: Notify player there are not enough flags left
+		return
+		
 	if !tile.is_cover:
 		return
 	if !tile.is_flagged && tile.is_bomb:
@@ -254,8 +270,8 @@ func _on_flag_toggled(cell_pos: Vector2i):
 	elif tile.is_flagged && tile.is_bomb:
 		bombs_found -= 1
 	
+	print("bombs found: ", bombs_found)
 	tile.toggle_flag()
-
 
 func update_shadows():
 	var used_cells = tilemap.get_used_cells(0)

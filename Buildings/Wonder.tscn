@@ -12,7 +12,6 @@ script = ExtResource("1_nfcj8")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 material = ExtResource("2_qwi8n")
-scale = Vector2(1, 1)
 texture = ExtResource("3_qfi6d")
 centered = false
 

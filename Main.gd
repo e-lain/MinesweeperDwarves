@@ -3,6 +3,7 @@ extends Node2D
 @onready var depth_label = $CanvasLayer/UI/Depth
 @onready var population_label = $CanvasLayer/UI/Resources/PopulationBox/Population
 @onready var stone_label =$CanvasLayer/UI/Resources/StoneBox/Stone
+@onready var steel_label = $CanvasLayer/UI/Resources/SteelBox/Steel
 @onready var mine_hit_popup = $CanvasLayer/MineHitPopup
 @onready var greyout = $CanvasLayer/ColorRect
 @onready var enter_build_mode_button = $CanvasLayer/UI/EndLevelBtn
@@ -23,7 +24,8 @@ var build_mode: bool = false
 
 var depth = 0
 var population = 3
-var stone = 0
+var stone = 8
+var steel = 3
  
 var ability_destroy_max = 0
 var ability_destroy = 0
@@ -69,8 +71,10 @@ func _process(delta):
 	population_label.text = "x %d" % [population]
 	stone_label.text = "x %d" % [stone]
 	depth_label.text = "Depth: %d" % [depth + 1]
+	steel_label.text = "x %d" % [steel]
 	
 	if boards[len(boards)-1]:
+		$CanvasLayer/UI/Flags.text = "Flags: " + str(boards[len(boards)-1].flags)
 		if boards[len(boards)-1].tiles_uncovered == 0:
 			enter_build_mode_button.disabled = true
 		else:

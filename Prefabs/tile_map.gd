@@ -6,7 +6,6 @@ signal destroyed(cell_pos: Vector2i)
 
 func _input(event):
 	if event is InputEventMouseButton:
-		print("clearing tile status: ", get_parent().clearing_tile)
 		if event.is_action_pressed("left_click") && get_parent().clearing_tile:
 			event = make_input_local(event)
 			var mouse_pos = event.position

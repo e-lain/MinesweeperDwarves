@@ -85,6 +85,15 @@ offset_bottom = 332.0
 theme_override_font_sizes/font_size = 36
 text = "Depth: 0"
 
+[node name="Flags" type="Label" parent="CanvasLayer/UI"]
+layout_mode = 2
+offset_left = 47.0
+offset_top = 335.0
+offset_right = 207.0
+offset_bottom = 379.0
+theme_override_font_sizes/font_size = 36
+text = "Flags: 0"
+
 [node name="Resources" type="VBoxContainer" parent="CanvasLayer/UI"]
 layout_mode = 0
 offset_left = 57.0
