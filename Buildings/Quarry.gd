@@ -40,7 +40,7 @@ func _on_control_gui_input(event):
 			if can_place() && in_bounds:
 				placed = true
 				get_parent().get_parent().stone += 4
-				get_parent().on_building_placed(global_position, size, false)
+				get_parent().on_building_placed(global_position, BuildingData.Type.QUARRY)
 				return
 		if event.is_action_pressed("right_click"):
 			get_parent().placing = false

@@ -40,7 +40,7 @@ func _on_control_gui_input(event):
 				print("Stairs already placed!")
 			elif can_place() && in_bounds && !placed && !get_parent().stairs_placed:
 				placed = true
-				get_parent().on_building_placed(global_position, size, true)
+				get_parent().on_building_placed(global_position, BuildingData.Type.STAIRCASE)
 				return
 		if event.is_action_pressed("right_click") and !placed:
 			get_parent().placing = false

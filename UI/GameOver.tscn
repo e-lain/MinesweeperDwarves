@@ -1,0 +1,95 @@
+[gd_scene load_steps=7 format=3 uid="uid://b8qmhoccrox3y"]
+
+[ext_resource type="Theme" uid="uid://b6iv3a38m6uhb" path="res://UI.tres" id="1_q2ptn"]
+[ext_resource type="Texture2D" uid="uid://d0o6bpct5y38h" path="res://Assets/UI/Popup.png" id="2_8fhvq"]
+[ext_resource type="Texture2D" uid="uid://j7h3rx30o7hw" path="res://Assets/UI/DottedLine9Patch.png" id="3_a1nnj"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_bn4so"]
+texture = ExtResource("2_8fhvq")
+texture_margin_left = 9.0
+texture_margin_top = 12.0
+texture_margin_right = 11.0
+texture_margin_bottom = 10.0
+axis_stretch_horizontal = 2
+axis_stretch_vertical = 2
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_fq166"]
+texture = ExtResource("3_a1nnj")
+texture_margin_left = 15.0
+texture_margin_top = 18.0
+texture_margin_right = 18.0
+texture_margin_bottom = 17.0
+axis_stretch_horizontal = 1
+axis_stretch_vertical = 1
+region_rect = Rect2(0, 0, 89, 89)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_d2vof"]
+texture = ExtResource("3_a1nnj")
+texture_margin_left = 15.0
+texture_margin_top = 18.0
+texture_margin_right = 18.0
+texture_margin_bottom = 17.0
+axis_stretch_horizontal = 1
+axis_stretch_vertical = 1
+region_rect = Rect2(0, 0, 89, 89)
+modulate_color = Color(1, 1, 1, 0.490196)
+
+[node name="GameOver" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+theme = ExtResource("1_q2ptn")
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 0
+offset_right = 384.0
+offset_bottom = 192.0
+theme_override_styles/panel = SubResource("StyleBoxTexture_bn4so")
+
+[node name="RichTextLabel" type="RichTextLabel" parent="Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 11.0
+offset_bottom = 11.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/normal_font_size = 48
+bbcode_enabled = true
+text = "[center][wave amp=20 freq=1.0]Game Over[/wave][/center]"
+
+[node name="Label" type="Label" parent="Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 75.0
+offset_bottom = 75.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 22
+text = "Every dwarf has died"
+horizontal_alignment = 1
+
+[node name="RestartButton" type="Button" parent="Panel"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -36.5
+offset_top = 21.0
+offset_right = 36.5
+offset_bottom = 75.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_pressed_color = Color(0, 0, 0, 0.690196)
+theme_override_colors/font_hover_color = Color(0, 0, 0, 0.611765)
+theme_override_colors/font_focus_color = Color(0, 0, 0, 1)
+theme_override_colors/font_hover_pressed_color = Color(0, 0, 0, 0.615686)
+theme_override_styles/normal = SubResource("StyleBoxTexture_fq166")
+theme_override_styles/hover = SubResource("StyleBoxTexture_d2vof")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_fq166")
+text = "Restart"

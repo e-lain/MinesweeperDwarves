@@ -40,7 +40,7 @@ func _on_control_gui_input(event):
 			if can_place() && in_bounds:
 				placed = true
 				# TODO: GAME WIN LOGIC HERE
-				get_parent().on_building_placed(global_position, size, false)
+				get_parent().on_building_placed(global_position, BuildingData.Type.WONDER)
 				return
 		if event.is_action_pressed("right_click"):
 			get_parent().placing = false

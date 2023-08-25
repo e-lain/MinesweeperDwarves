@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=3 uid="uid://iqvlmmwy7d46"]
+[gd_scene load_steps=22 format=3 uid="uid://iqvlmmwy7d46"]
 
 [ext_resource type="Script" path="res://Main.gd" id="1_t2km6"]
 [ext_resource type="Theme" uid="uid://b6iv3a38m6uhb" path="res://UI.tres" id="2_b2qml"]
@@ -10,6 +10,7 @@
 [ext_resource type="Texture2D" uid="uid://d0o6bpct5y38h" path="res://Assets/UI/Popup.png" id="6_nia6k"]
 [ext_resource type="FontFile" uid="uid://m1fwnp6qsmnn" path="res://Assets/UI/Quikhand.ttf" id="6_rv3xe"]
 [ext_resource type="PackedScene" uid="uid://doi658hn04jhv" path="res://UI/popup.tscn" id="7_703se"]
+[ext_resource type="PackedScene" uid="uid://b8qmhoccrox3y" path="res://UI/GameOver.tscn" id="7_wj57j"]
 [ext_resource type="Script" path="res://AbilityMenu.gd" id="9_3lmso"]
 [ext_resource type="PackedScene" uid="uid://cp25vmlk0k3ck" path="res://Abilities/AbilityDestroy.tscn" id="10_bm3kx"]
 [ext_resource type="Texture2D" uid="uid://7an4owy3gbe2" path="res://Assets/UI/ArrowUp.png" id="11_gm014"]
@@ -365,6 +366,46 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0, 0, 0, 0.333333)
 
+[node name="GameOver" parent="CanvasLayer" instance=ExtResource("7_wj57j")]
+visible = false
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -191.0
+offset_top = -95.0
+offset_right = -191.0
+offset_bottom = -95.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="RestartButton" parent="CanvasLayer/GameOver/Panel" index="2"]
+text = "Return To Title Screen"
+
+[node name="YouWin" parent="CanvasLayer" instance=ExtResource("7_wj57j")]
+visible = false
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -191.0
+offset_top = -95.0
+offset_right = -191.0
+offset_bottom = -95.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="RichTextLabel" parent="CanvasLayer/YouWin/Panel" index="0"]
+text = "[center][wave amp=20 freq=1.0]You Win![/wave][/center]"
+
+[node name="Label" parent="CanvasLayer/YouWin/Panel" index="1"]
+text = "The dwarves live happily"
+
+[node name="RestartButton" parent="CanvasLayer/YouWin/Panel" index="2"]
+text = "Return To Title Screen"
+
 [node name="MineHitPopup" parent="CanvasLayer" instance=ExtResource("12_4reet")]
 visible = false
 anchors_preset = 8
@@ -396,6 +437,10 @@ offset_bottom = 84.1503
 [connection signal="build" from="CanvasLayer/BuildMenu/Page2/Wonder" to="." method="build"]
 [connection signal="pressed" from="CanvasLayer/BuildMenu/PageUpButton" to="." method="_on_page_up_button_pressed"]
 [connection signal="pressed" from="CanvasLayer/BuildMenu/PageDownButton" to="." method="_on_page_down_button_pressed"]
+[connection signal="pressed" from="CanvasLayer/GameOver/Panel/RestartButton" to="." method="_on_loss_restart_button_pressed"]
+[connection signal="pressed" from="CanvasLayer/YouWin/Panel/RestartButton" to="." method="_on_win_restart_button_pressed"]
 [connection signal="pressed" from="CanvasLayer/MineHitPopup/Button" to="." method="_on_mine_hit_restart_level_pressed"]
 
+[editable path="CanvasLayer/GameOver"]
+[editable path="CanvasLayer/YouWin"]
 [editable path="CanvasLayer/MineHitPopup"]

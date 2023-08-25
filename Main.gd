@@ -14,6 +14,8 @@ extends Node2D
 
 @onready var next_floor_button = $CanvasLayer/UI/NextFloorBtn
 
+@onready var game_over = $CanvasLayer/GameOver
+@onready var you_win = $CanvasLayer/YouWin
 
 var Board = preload("res://board.tscn")
 
@@ -54,6 +56,7 @@ func generate_board(difficulty: int):
 	b.position = offset
 	b.create_grid_lines()
 	b.mine_animation_complete.connect(on_mine_animation_complete)
+	b.wonder_placed.connect(on_wonder_placed)
 	boards.push_back(b)
 
 # Called when the node enters the scene tree for the first time.
@@ -84,6 +87,7 @@ func ability(ability_name):
 		print("can't use destroy, out of uses")
 		return
 	queue_ability.emit(ability_name)
+
 func build(type: BuildingData.Type):
 	print("func build, building_name: ", type)
 	queue_building.emit(type)
@@ -108,8 +112,12 @@ func _on_end_level_btn_pressed():
 		print("ALREADY IN BUILD MODE")
 
 func on_mine_animation_complete():
-	mine_hit_popup.visible = true
-	greyout.visible = true
+	if population > 0:
+		mine_hit_popup.visible = true
+		greyout.visible = true
+	elif population == 0:
+		game_over.show()
+		greyout.show()
 
 func _on_mine_hit_restart_level_pressed():
 	mine_hit_popup.visible = false
@@ -137,3 +145,13 @@ func stairs_placed():
 
 func _on_next_floor_btn_pressed():
 	next_level()
+
+func _on_win_restart_button_pressed():
+	get_tree().reload_current_scene() # TODO: GO TO TITLE SCREEN
+
+func _on_loss_restart_button_pressed():
+	get_tree().reload_current_scene()  # TODO: GO TO TITLE SCREEN
+
+func on_wonder_placed():
+	you_win.show()
+	greyout.show()

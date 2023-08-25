@@ -38,7 +38,7 @@ func _on_control_gui_input(event):
 		if event.is_action_pressed("left_click"):
 			if can_place() && in_bounds:
 				placed = true
-				get_parent().on_building_placed(global_position, size, false)
+				get_parent().on_building_placed(global_position, BuildingData.Type.HOUSE)
 				sprite.material = null
 				return
 		if event.is_action_pressed("right_click"):

@@ -2,6 +2,7 @@ extends Node2D
 
 
 signal mine_animation_complete
+signal wonder_placed
 
 @export var grid_line_prefab: PackedScene = preload("res://Prefabs/GridLine.tscn")
 @onready var tilemap: TileMap = $TileMap
@@ -33,6 +34,7 @@ var total_tiles = rows*columns
 var tiles = []
 
 var stairs_placed: bool = false
+
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -147,7 +149,6 @@ func _on_tile_uncovered(cell_pos: Vector2i):
 		return
 	
 	if tile.is_bomb:
-		hide()
 		get_parent().population -= 1
 		
 		explode_mine()
@@ -165,16 +166,20 @@ func enter_build_mode():
 			if tile.label:
 				tile.label.queue_free()
 
-func on_building_placed(building_world_pos: Vector2, size: int, is_stairs: bool):
+func on_building_placed(building_world_pos: Vector2, type: BuildingData.Type):
 	placing = false
+	var data = BuildingData.data[type]
+	var size = data["size"]
 	if !stairs_placed:
-		stairs_placed = is_stairs
+		stairs_placed = type == BuildingData.Type.STAIRCASE
 	
 	var world_positions_to_update = get_world_positions_in_area(building_world_pos, size)
 	for world_pos in world_positions_to_update:
 		var cell_pos = tilemap.local_to_map(tilemap.to_local(world_pos))
 		var tile = tiles[cell_pos.x][cell_pos.y]
 		tile.has_building = true
+	if type == BuildingData.Type.WONDER:
+		wonder_placed.emit()
 
 func next_level():
 	placing = false

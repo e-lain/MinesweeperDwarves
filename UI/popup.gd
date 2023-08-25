@@ -26,16 +26,19 @@ func set_data(type: BuildingData.Type):
 	if population_cost == 0:
 		population_box.visible = false
 	elif population_cost > 0:
+		population_box.visible = true
 		population_label.text = str(-population_cost)
-
 	else:
+		population_box.visible = true
 		population_label.text = str(-population_cost)
 	
 	if stone_cost == 0:
 		stone_box.visible = false
 	elif stone_cost > 0:
+		stone_box.visible = true
 		stone_label.text = str(-stone_cost)
 	else:
+		stone_box.visible = true
 		stone_label.text = str(-stone_cost)
 	
 
