@@ -59,6 +59,12 @@ func _process(delta):
 	population_label.text = "x %d" % [population]
 	stone_label.text = "x %d" % [stone]
 	depth_label.text = "Depth: %d" % [depth + 1]
+	
+	if boards[len(boards)-1]:
+		if boards[len(boards)-1].tiles_uncovered == 0:
+			enter_build_mode_button.disabled = true
+		else:
+			enter_build_mode_button.disabled = false
 
 func ability(ability_name):
 	print("func ability, ability_name: ", ability_name)
