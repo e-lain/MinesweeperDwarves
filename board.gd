@@ -74,7 +74,7 @@ func create_grid_lines():
 	for i in range(1, rows):
 		var instance = grid_line_prefab.instantiate()
 		add_child(instance)
-		instance.position.x = -100
+		instance.position.x = 0
 		instance.position.y = 64 * i
 		instance.material.set_shader_parameter("speed", randf_range(0.01, 0.025) * (-1.0 if i % 2 == 0 else 1.0))
 		instance.material.set_shader_parameter("min_fade_pos", min_fade_pos)

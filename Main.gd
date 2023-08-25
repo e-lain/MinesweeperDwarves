@@ -12,6 +12,7 @@ extends Node2D
 @onready var page_up = $CanvasLayer/BuildMenu/PageUpButton
 @onready var page_down = $CanvasLayer/BuildMenu/PageDownButton
 
+@onready var next_floor_button = $CanvasLayer/UI/NextFloorBtn
 
 
 var Board = preload("res://board.tscn")
@@ -71,6 +72,11 @@ func _process(delta):
 			enter_build_mode_button.disabled = true
 		else:
 			enter_build_mode_button.disabled = false
+		
+		if stairs_placed():
+			next_floor_button.show()
+		else:
+			next_floor_button.hide()
 
 func ability(ability_name):
 	print("func ability, ability_name: ", ability_name)
@@ -83,6 +89,11 @@ func build(type: BuildingData.Type):
 	queue_building.emit(type)
 
 func next_level():
+	var cur_board = boards[len(boards) - 1]
+	cur_board.placing = false
+	cur_board.clearing_tile = false
+	cur_board.hide()	
+	
 	print("MAIN SCENE RECEIVED NEXT LEVEL CALL")
 	depth += 1
 	generate_board(depth)
@@ -122,3 +133,7 @@ func _on_page_down_button_pressed():
 
 func stairs_placed():
 	return boards[boards.size() - 1].stairs_placed
+
+
+func _on_next_floor_btn_pressed():
+	next_level()

@@ -36,11 +36,7 @@ func can_place():
 func _on_control_gui_input(event):
 	if event is InputEventMouseButton:
 		if event.is_action_pressed("left_click"):
-			if get_parent().build_mode and placed and !get_parent().placing:
-				print("USING STAIRCASE")
-				get_parent().next_level()
-				return
-			elif get_parent().stairs_placed:
+			if get_parent().stairs_placed:
 				print("Stairs already placed!")
 			elif can_place() && in_bounds && !placed && !get_parent().stairs_placed:
 				placed = true

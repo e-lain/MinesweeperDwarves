@@ -133,6 +133,24 @@ theme_override_styles/disabled = SubResource("StyleBoxTexture_qk65p")
 theme_override_styles/focus = SubResource("StyleBoxTexture_p42ak")
 text = "To Build Mode"
 
+[node name="NextFloorBtn" type="Button" parent="CanvasLayer/UI"]
+visible = false
+layout_mode = 0
+offset_left = 28.0
+offset_top = 638.0
+offset_right = 215.0
+offset_bottom = 703.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_hover_color = Color(0, 0, 0, 1)
+theme_override_colors/font_disabled_color = Color(0.411765, 0.411765, 0.411765, 1)
+theme_override_font_sizes/font_size = 22
+theme_override_styles/normal = SubResource("StyleBoxTexture_p42ak")
+theme_override_styles/hover = SubResource("StyleBoxTexture_askgf")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_p42ak")
+theme_override_styles/disabled = SubResource("StyleBoxTexture_qk65p")
+theme_override_styles/focus = SubResource("StyleBoxTexture_p42ak")
+text = "Descend..."
+
 [node name="BuildMenu" type="Control" parent="CanvasLayer"]
 visible = false
 layout_mode = 3
@@ -370,6 +388,7 @@ offset_right = 110.735
 offset_bottom = 84.1503
 
 [connection signal="pressed" from="CanvasLayer/UI/EndLevelBtn" to="." method="_on_end_level_btn_pressed"]
+[connection signal="pressed" from="CanvasLayer/UI/NextFloorBtn" to="." method="_on_next_floor_btn_pressed"]
 [connection signal="build" from="CanvasLayer/BuildMenu/Page1/Staircase" to="." method="build"]
 [connection signal="build" from="CanvasLayer/BuildMenu/Page1/House" to="." method="build"]
 [connection signal="build" from="CanvasLayer/BuildMenu/Page1/Quarry" to="." method="build"]
