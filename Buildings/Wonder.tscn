@@ -1,8 +1,8 @@
-[gd_scene load_steps=5 format=3 uid="uid://c740iaqqf4l83"]
+[gd_scene load_steps=5 format=3 uid="uid://dgwc4s7ekoxu1"]
 
 [ext_resource type="Script" path="res://Buildings/Workshop.gd" id="1_qxlbc"]
 [ext_resource type="Material" uid="uid://nqpwbe45b8cn" path="res://Shaders/InvalidBuildingPlacement.tres" id="2_qwi8n"]
-[ext_resource type="Texture2D" uid="uid://b8udsrx8dm05v" path="res://Assets/Buildings/EngineerWorkshopBuildingDownscale.png" id="3_yqel8"]
+[ext_resource type="Texture2D" uid="uid://te50q3hpxrqb" path="res://Assets/Buildings/WonderFlattenedDownscaled.png" id="3_jsqjm"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ynpqt"]
 size = Vector2(306, 304)
@@ -12,8 +12,7 @@ script = ExtResource("1_qxlbc")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 material = ExtResource("2_qwi8n")
-scale = Vector2(1.66667, 1.66667)
-texture = ExtResource("3_yqel8")
+texture = ExtResource("3_jsqjm")
 centered = false
 
 [node name="Area2D" type="Area2D" parent="."]

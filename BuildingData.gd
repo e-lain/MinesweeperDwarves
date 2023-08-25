@@ -52,6 +52,6 @@ static var data = {
 		"stone_cost": 100,
 		"population_cost": 5,
 		"size": 5,
-		"icon_path": "res://Assets/Buildings/EngineerWorkshopBuildingDownscale.png"
+		"icon_path": "res://Assets/UI/WonderUIIcon.png"
 	},
 }
