@@ -197,6 +197,9 @@ func uncover_tile(tile: BoardTile):
 	if tile.is_bomb:
 		tile.create_bomb()
 		return
+		
+	if tile.is_flagged:
+		tile.destroy_flag()
 	
 	var adjacent_tiles = get_adjacent_tiles(tile)
 	
