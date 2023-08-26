@@ -112,7 +112,9 @@ func _process(delta):
 	#if tiles_uncovered == total_tiles - bomb_count:
 	#	enter_build_mode()
 	#	print("TODO: LEVEL WIN! BUILD MODE ENGAGED")
-	pass
+	if build_mode && placing:
+		get_parent().help_text_is_overriden = true
+		get_parent().help_text_bar.text = "Left-click on valid space to build. Right-click to cancel"
 
 func _on_building_queue(type: BuildingData.Type):
 	if build_mode and !placing:

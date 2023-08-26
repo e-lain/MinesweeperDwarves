@@ -132,8 +132,6 @@ func ability(ability_name):
 
 func build(type: BuildingData.Type):
 	print("func build, building_name: ", type)
-	help_text_is_overriden = true
-	help_text_bar.text = "Left-click on valid space to build. Right-click to cancel"
 	queue_building.emit(type)
 
 func next_level():
