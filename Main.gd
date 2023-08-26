@@ -33,6 +33,9 @@ var ability_destroy = 0
 var ability_armor_max = 0
 var ability_armor = 0
 
+var ability_dowse_max = 0
+var ability_dowse = 0
+
 var boards = [] # Note, some of these may be null references because we queue_free() boards that have hit a bomb
 
 signal queue_ability(ability_name)
@@ -42,7 +45,7 @@ func generate_board(difficulty: int):
 	# Reset all ability counts
 	ability_destroy = ability_destroy_max
 	ability_armor = ability_armor_max
-	
+	ability_dowse = ability_dowse_max 
 	var b = Board.instantiate()
 	add_child(b)
 	
@@ -105,6 +108,15 @@ func ability(ability_name):
 			return
 		else:
 			ability_armor -= 1
+	elif ability_name == "dowse":
+		if ability_dowse < 1:
+			print("can't use dowse, out of uses")
+			return
+		elif boards[len(boards)-1].flags < 1:
+			print("can't use dowse, out of flags")
+			# TODO: Notify the player that all flags are used, or just gray out ability?
+			return
+		
 	queue_ability.emit(ability_name)
 
 func build(type: BuildingData.Type):

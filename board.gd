@@ -34,7 +34,9 @@ var flags = bomb_count
 var bombs_found = 0
 var tiles_uncovered = 0
 var total_tiles = rows*columns
+
 var tiles = []
+var bomb_tiles = []
 
 var stairs_placed: bool = false
 
@@ -103,6 +105,7 @@ func set_bombs():
 		var tile = tiles[bomb_index / rows][bomb_index % rows]
 		if tile.is_bomb == false:
 			tile.set_bomb()
+			bomb_tiles.append(tile)
 			n += 1
 
 func _process(delta):
@@ -144,6 +147,24 @@ func _on_ability_queue(ability_name):
 		placing = false
 		armor_active = true
 		return
+	elif ability_name == "dowse":
+		print("SIGNAL RECEIVED TO USE DOWSE ABILITY")
+		get_parent().ability_dowse -= 1
+		placing = false
+		if bomb_tiles.size() > 0:
+			var picked = false
+			while !picked:
+				print("bomb tiles: ", bomb_tiles)
+				randomize()
+				var rand_index:int = randi() % bomb_tiles.size()
+				if !bomb_tiles[rand_index].is_flagged:
+					bomb_tiles[rand_index].toggle_flag()
+					bombs_found += 1
+					print("bombs found: ", bombs_found)
+					flags -= 1
+					picked = true
+					return
+		return
 	add_child(ability)
 	
 func _on_tile_destroyed(cell_pos: Vector2i):
@@ -176,6 +197,7 @@ func enter_build_mode():
 				tile.label.queue_free()
 			if tile.is_bomb:
 				tile.destroy_bomb()
+				bomb_tiles.erase(tile)
 
 func on_building_placed(building_world_pos: Vector2, type: BuildingData.Type):
 	placing = false
