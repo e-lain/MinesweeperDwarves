@@ -25,8 +25,8 @@ var Board = preload("res://board.tscn")
 var build_mode: bool = false
 
 var depth = 0
-var population = 300
-var stone = 800
+var population = 3
+var stone = 8
 var steel = 3
  
 var ability_destroy_max = 0
@@ -207,7 +207,6 @@ func on_workshop_placed():
 	greyout.show()
 	get_tree().paused = true
 
-
 func _on_choose_active_ability_chosen(ability_name):
 	choose_active.hide()
 	greyout.hide()
@@ -216,5 +215,5 @@ func _on_choose_active_ability_chosen(ability_name):
 		ability_destroy_max += 1
 	elif ability_name == "armor":
 		ability_armor_max += 1
-#	elif ability_name == "scanner":
-#		ability_scanner_max += 1
+	elif ability_name == "scanner":
+		ability_dowse_max += 1
