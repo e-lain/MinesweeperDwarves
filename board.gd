@@ -1,5 +1,5 @@
 extends Node2D
-
+class_name Board
 
 signal mine_animation_complete
 signal wonder_placed
@@ -7,12 +7,9 @@ signal wonder_placed
 @export var grid_line_prefab: PackedScene = preload("res://Prefabs/GridLine.tscn")
 @onready var tilemap: TileMap = $TileMap
 
-var Building = preload("res://Buildings/Building.tscn")
-var Staircase = preload("res://Buildings/Staircase.tscn")
-var Quarry = preload("res://Buildings/Quarry.tscn")
-var House = preload("res://Buildings/House.tscn")
-var Workshop = preload("res://Buildings/Workshop.tscn")
-var Wonder = preload("res://Buildings/Wonder.tscn")
+var total_building_count = 0
+
+var building_prefab = preload("res://Buildings/BaseBuilding.tscn")
 
 var Destroy = preload("res://Abilities/Destroy.tscn")
 
@@ -39,6 +36,8 @@ var tiles = []
 var bomb_tiles = []
 
 var stairs_placed: bool = false
+
+var buildings_by_id := {}
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -117,24 +116,10 @@ func _process(delta):
 func _on_building_queue(type: BuildingData.Type):
 	if build_mode and !placing:
 		placing = true
-		var building
-		if type == BuildingData.Type.STAIRCASE:
-			print("SIGNAL RECEIVED TO BUILD STAIRCASE")
-			building = Staircase.instantiate()
-		if type == BuildingData.Type.QUARRY:
-			print("SIGNAL RECEIVED TO BUILD QUARRY")
-			building = Quarry.instantiate()
-		if type == BuildingData.Type.HOUSE:
-			print("SIGNAL RECEIVED TO BUILD HOUSE")
-			building = House.instantiate()
-		if type == BuildingData.Type.WORKSHOP:
-			print("SIGNAL RECEIVED TO BUILD WORKSHOP")
-			building = Workshop.instantiate()
-		if type == BuildingData.Type.WONDER:
-			print("SIGNAL RECEIVED TO BUILD WONDER")
-			building = Wonder.instantiate()
+		var building = building_prefab.instantiate()
 		add_child(building)
-		
+		building.set_type(type)
+
 func _on_ability_queue(ability_name):
 	var placing = true
 	var ability
@@ -168,6 +153,8 @@ func _on_ability_queue(ability_name):
 	add_child(ability)
 	
 func _on_tile_destroyed(cell_pos: Vector2i):
+	if cell_pos.x < 0 || cell_pos.y < 0 || cell_pos.x >= columns || cell_pos.y >= rows:
+		return
 	print("tile destroyed called")
 	var tile = tiles[cell_pos.x][cell_pos.y]
 	clear_tile(tile)
@@ -199,26 +186,80 @@ func enter_build_mode():
 				tile.destroy_bomb()
 				bomb_tiles.erase(tile)
 
-func on_building_placed(building_world_pos: Vector2, type: BuildingData.Type):
+func on_building_placed(building_world_pos: Vector2, building: BaseBuilding):
+	building.id = total_building_count
+	var type = building.type
+	var id = building.id
 	placing = false
+	total_building_count += 1
 	var data = BuildingData.data[type]
 	var size = data["size"]
 	if !stairs_placed:
 		stairs_placed = type == BuildingData.Type.STAIRCASE
+	
+	if data["population_cost"] > 0:
+		get_parent().population -= data["population_cost"]
+	
+	if data["stone_cost"] > 0:
+		get_parent().stone -= data["stone_cost"]
+	
+	if type == BuildingData.Type.WORKSHOP:
+		get_parent().ability_destroy_max += 1
+	
+	if data["steel_cost"] > 0:
+		get_parent().steel -= data["steel_cost"]
 	
 	var world_positions_to_update = get_world_positions_in_area(building_world_pos, size)
 	for world_pos in world_positions_to_update:
 		var cell_pos = tilemap.local_to_map(tilemap.to_local(world_pos))
 		var tile = tiles[cell_pos.x][cell_pos.y]
 		tile.has_building = true
+		tile.building_id = id
+	
+	buildings_by_id[id] = building
+	
+	
 	if type == BuildingData.Type.WONDER:
 		wonder_placed.emit()
 
-func next_level():
+func collect_resources():
 	placing = false
 	clearing_tile = false
-	get_parent().next_level()
-	hide()
+	var directions = [Vector2i.LEFT, Vector2i.RIGHT, Vector2i.UP, Vector2i.DOWN]
+	var tiles_to_collect_from = {}
+	for id in buildings_by_id.keys():
+		var building = buildings_by_id[id]
+		var type = building.type
+
+		if type == BuildingData.Type.MINECART:
+
+			var cell_pos = tilemap.local_to_map(tilemap.to_local(building.global_position))
+			for direction in directions:
+				var check_cell = cell_pos + direction
+				if check_cell.x < 0 || check_cell.y < 0 || check_cell.x >= columns || check_cell.y >= rows:
+					continue
+				var tile = tiles[check_cell.x][check_cell.y]
+				if tile.has_building and !tiles_to_collect_from.has(tile.building_id):
+					tiles_to_collect_from[tile.building_id] = tile
+			
+	for tile_id in tiles_to_collect_from.keys():
+		var adjacent_type = buildings_by_id[tile_id].type
+		var data = BuildingData.data[adjacent_type]
+		
+		var stone_cost = data["stone_cost"]
+		var population_cost = data["population_cost"]
+		var steel_cost = data["steel_cost"]
+		
+		# TODO - animate this
+		if stone_cost < 0: # negative costs are resource gains
+			get_parent().stone -= stone_cost
+		
+		if population_cost < 0:
+			get_parent().population -= population_cost
+		
+		if steel_cost < 0:
+			get_parent().steel -= steel_cost
+				
 	
 func clear_tile(tile: BoardTile):
 	if tile.is_flagged:
@@ -322,7 +363,7 @@ func can_place_at_position(world_pos: Vector2, size: int):
 	var places_to_check = get_world_positions_in_area(world_pos, size)
 	for pos in places_to_check:
 		var cell_pos = tilemap.local_to_map(tilemap.to_local(pos))
-		if cell_pos.x < 0 || cell_pos.x >= columns || cell_pos.y < 0 || cell_pos.y > rows:
+		if cell_pos.x < 0 || cell_pos.x >= columns || cell_pos.y < 0 || cell_pos.y >= rows:
 			return false
 		var tile = tiles[cell_pos.x][cell_pos.y]
 		if !(tilemap.get_cell_tile_data(0, cell_pos) == null && !tile.is_bomb && !tile.has_building):

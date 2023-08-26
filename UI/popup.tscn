@@ -1,10 +1,11 @@
-[gd_scene load_steps=6 format=3 uid="uid://doi658hn04jhv"]
+[gd_scene load_steps=7 format=3 uid="uid://doi658hn04jhv"]
 
 [ext_resource type="Texture2D" uid="uid://d0o6bpct5y38h" path="res://Assets/UI/Popup.png" id="1_ohmxe"]
 [ext_resource type="Theme" uid="uid://b6iv3a38m6uhb" path="res://UI.tres" id="1_u8v58"]
 [ext_resource type="Script" path="res://UI/popup.gd" id="2_p5i3d"]
 [ext_resource type="Texture2D" uid="uid://du5p0tvlhojks" path="res://Assets/UI/PopIcon.png" id="4_tfbb0"]
 [ext_resource type="Texture2D" uid="uid://ca5lct0ctr37m" path="res://Assets/UI/StoneIcon.png" id="5_abpn8"]
+[ext_resource type="Texture2D" uid="uid://byetswoeyw7gd" path="res://Assets/UI/steeldownscaledicon.png" id="6_sbile"]
 
 [node name="Popup" type="NinePatchRect"]
 offset_right = 200.0
@@ -35,9 +36,10 @@ layout_mode = 0
 offset_left = 10.0
 offset_top = 40.0
 offset_right = 188.0
-offset_bottom = 66.0
+offset_bottom = 88.0
 theme_override_font_sizes/normal_font_size = 16
 text = "Grants 3 Population"
+scroll_active = false
 
 [node name="Costs" type="HBoxContainer" parent="."]
 layout_mode = 0
@@ -78,6 +80,23 @@ expand_mode = 2
 stretch_mode = 4
 
 [node name="Label" type="Label" parent="Costs/StoneBox"]
+layout_mode = 2
+text = "5"
+vertical_alignment = 2
+
+[node name="SteelBox" type="HBoxContainer" parent="Costs"]
+layout_mode = 2
+size_flags_vertical = 0
+theme_override_constants/separation = 0
+
+[node name="Steel" type="TextureRect" parent="Costs/SteelBox"]
+modulate = Color(0, 0, 0, 1)
+layout_mode = 2
+texture = ExtResource("6_sbile")
+expand_mode = 2
+stretch_mode = 4
+
+[node name="Label" type="Label" parent="Costs/SteelBox"]
 layout_mode = 2
 text = "5"
 vertical_alignment = 2

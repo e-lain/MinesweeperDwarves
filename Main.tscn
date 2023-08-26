@@ -178,7 +178,6 @@ theme_override_styles/focus = SubResource("StyleBoxTexture_p42ak")
 text = "Descend..."
 
 [node name="BuildMenu" type="Control" parent="CanvasLayer"]
-visible = false
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -207,24 +206,24 @@ info_popup = NodePath("../../StaircasePopup")
 type = 2
 resources_source = NodePath("../../../..")
 
-[node name="House" parent="CanvasLayer/BuildMenu/Page1" node_paths=PackedStringArray("info_popup", "resources_source") instance=ExtResource("3_22qjw")]
+[node name="Minecart" parent="CanvasLayer/BuildMenu/Page1" node_paths=PackedStringArray("info_popup", "resources_source") instance=ExtResource("3_22qjw")]
 visible = true
 layout_mode = 2
 info_popup = NodePath("../../HousePopup")
+type = 5
+resources_source = NodePath("../../../..")
+
+[node name="House" parent="CanvasLayer/BuildMenu/Page1" node_paths=PackedStringArray("info_popup", "resources_source") instance=ExtResource("3_22qjw")]
+visible = true
+layout_mode = 2
+info_popup = NodePath("../../QuarryPopup")
 resources_source = NodePath("../../../..")
 
 [node name="Quarry" parent="CanvasLayer/BuildMenu/Page1" node_paths=PackedStringArray("info_popup", "resources_source") instance=ExtResource("3_22qjw")]
 visible = true
 layout_mode = 2
-info_popup = NodePath("../../QuarryPopup")
-type = 1
-resources_source = NodePath("../../../..")
-
-[node name="Workshop" parent="CanvasLayer/BuildMenu/Page1" node_paths=PackedStringArray("info_popup", "resources_source") instance=ExtResource("3_22qjw")]
-visible = true
-layout_mode = 2
 info_popup = NodePath("../../WorkshopPopup")
-type = 3
+type = 1
 resources_source = NodePath("../../../..")
 
 [node name="Page2" type="VBoxContainer" parent="CanvasLayer/BuildMenu"]
@@ -239,10 +238,17 @@ offset_left = -97.0
 offset_bottom = 299.0
 metadata/_edit_use_anchors_ = true
 
-[node name="Wonder" parent="CanvasLayer/BuildMenu/Page2" node_paths=PackedStringArray("info_popup", "resources_source") instance=ExtResource("3_22qjw")]
+[node name="Workshop" parent="CanvasLayer/BuildMenu/Page2" node_paths=PackedStringArray("info_popup", "resources_source") instance=ExtResource("3_22qjw")]
 visible = true
 layout_mode = 2
 info_popup = NodePath("../../StaircasePopup")
+type = 3
+resources_source = NodePath("../../../..")
+
+[node name="Wonder" parent="CanvasLayer/BuildMenu/Page2" node_paths=PackedStringArray("info_popup", "resources_source") instance=ExtResource("3_22qjw")]
+visible = true
+layout_mode = 2
+info_popup = NodePath("../../QuarryPopup")
 type = 4
 resources_source = NodePath("../../../..")
 
@@ -288,17 +294,17 @@ offset_bottom = 249.0
 visible = false
 layout_mode = 0
 offset_left = 736.0
-offset_top = 328.0
+offset_top = 267.0
 offset_right = 936.0
-offset_bottom = 428.0
+offset_bottom = 367.0
 
 [node name="WorkshopPopup" parent="CanvasLayer/BuildMenu" instance=ExtResource("7_703se")]
 visible = false
 layout_mode = 0
 offset_left = 736.0
-offset_top = 492.0
+offset_top = 435.0
 offset_right = 936.0
-offset_bottom = 592.0
+offset_bottom = 535.0
 
 [node name="PageUpButton" type="Button" parent="CanvasLayer/BuildMenu"]
 layout_mode = 0
@@ -488,9 +494,10 @@ offset_bottom = 84.1503
 [connection signal="pressed" from="CanvasLayer/UI/EndLevelBtn" to="." method="_on_end_level_btn_pressed"]
 [connection signal="pressed" from="CanvasLayer/UI/NextFloorBtn" to="." method="_on_next_floor_btn_pressed"]
 [connection signal="build" from="CanvasLayer/BuildMenu/Page1/Staircase" to="." method="build"]
+[connection signal="build" from="CanvasLayer/BuildMenu/Page1/Minecart" to="." method="build"]
 [connection signal="build" from="CanvasLayer/BuildMenu/Page1/House" to="." method="build"]
 [connection signal="build" from="CanvasLayer/BuildMenu/Page1/Quarry" to="." method="build"]
-[connection signal="build" from="CanvasLayer/BuildMenu/Page1/Workshop" to="." method="build"]
+[connection signal="build" from="CanvasLayer/BuildMenu/Page2/Workshop" to="." method="build"]
 [connection signal="build" from="CanvasLayer/BuildMenu/Page2/Wonder" to="." method="build"]
 [connection signal="pressed" from="CanvasLayer/BuildMenu/PageUpButton" to="." method="_on_page_up_button_pressed"]
 [connection signal="pressed" from="CanvasLayer/BuildMenu/PageDownButton" to="." method="_on_page_down_button_pressed"]
