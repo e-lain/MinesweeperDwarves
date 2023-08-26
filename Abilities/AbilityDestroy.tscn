@@ -14,7 +14,7 @@ texture_margin_bottom = 16.0
 axis_stretch_horizontal = 2
 axis_stretch_vertical = 2
 
-[node name="Destroy" type="PanelContainer"]
+[node name="Destroy2" type="PanelContainer"]
 theme_override_styles/panel = SubResource("StyleBoxTexture_pepr0")
 script = ExtResource("2_2p5aj")
 
