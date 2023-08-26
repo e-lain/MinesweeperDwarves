@@ -36,7 +36,10 @@ func _on_mouse_entered():
 	info_popup.visible = true
 	info_popup.set_data(type)
 	var stairs_placed = resources_source.stairs_placed()
-	if  type == BuildingData.Type.STAIRCASE && stairs_placed && !get_parent().get_parent().get_parent().get_parent().help_text_is_overriden:
+	if !stairs_placed && type != BuildingData.Type.STAIRCASE:
+		get_parent().get_parent().get_parent().get_parent().help_text_is_overriden = true
+		get_parent().get_parent().get_parent().get_parent().help_text_bar.text = "Need to build staircase first!"
+	elif  type == BuildingData.Type.STAIRCASE && stairs_placed && !get_parent().get_parent().get_parent().get_parent().help_text_is_overriden:
 		get_parent().get_parent().get_parent().get_parent().help_text_is_overriden = true
 		get_parent().get_parent().get_parent().get_parent().help_text_bar.text = "Staircase is already built. Only one staircase can be built per floor"
 
@@ -44,6 +47,8 @@ func _on_mouse_exited():
 	info_popup.visible = false
 	var stairs_placed = resources_source.stairs_placed()
 	if type == BuildingData.Type.STAIRCASE && stairs_placed:
+		get_parent().get_parent().get_parent().get_parent().help_text_is_overriden = false
+	elif !stairs_placed && type != BuildingData.Type.STAIRCASE:
 		get_parent().get_parent().get_parent().get_parent().help_text_is_overriden = false
 
 
