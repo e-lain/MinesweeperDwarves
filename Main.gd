@@ -136,6 +136,7 @@ func next_level():
 	depth += 1
 	generate_board(depth)
 	enter_build_mode_button.show()
+	_on_page_up_button_pressed()
 
 func _on_end_level_btn_pressed():
 	if get_current_board().build_mode == false:
