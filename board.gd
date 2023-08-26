@@ -112,13 +112,13 @@ func _process(delta):
 	#if tiles_uncovered == total_tiles - bomb_count:
 	#	enter_build_mode()
 	#	print("TODO: LEVEL WIN! BUILD MODE ENGAGED")
-	if build_mode && placing:
-		get_parent().help_text_is_overriden = true
-		get_parent().help_text_bar.text = "Left-click on valid space to build. Right-click to cancel"
+	pass
 
 func _on_building_queue(type: BuildingData.Type):
 	if build_mode and !placing:
 		placing = true
+		get_parent().help_text_is_overriden = true
+		get_parent().help_text_bar.text = "Left-click on valid space to build. Right-click to cancel"
 		var building = building_prefab.instantiate()
 		add_child(building)
 		building.set_type(type)
@@ -190,6 +190,7 @@ func enter_build_mode():
 				bomb_tiles.erase(tile)
 
 func on_building_placed(building_world_pos: Vector2, building: BaseBuilding):
+	get_parent().help_text_is_overriden = false
 	building.id = total_building_count
 	var type = building.type
 	var id = building.id

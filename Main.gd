@@ -49,6 +49,7 @@ signal queue_ability(ability_name)
 signal queue_building(building_type: BuildingData.Type)
 
 func generate_board(difficulty: int):
+	help_text_is_overriden = false
 	# Reset all ability counts
 	ability_destroy = ability_destroy_max
 	ability_armor = ability_armor_max
@@ -125,7 +126,6 @@ func ability(ability_name):
 			return
 		elif boards[len(boards)-1].flags < 1:
 			print("can't use dowse, out of flags")
-			# TODO: Notify the player that all flags are used, or just gray out ability?
 			return
 		
 	boards[len(boards)-1]._on_ability_queue(ability_name)
@@ -212,6 +212,8 @@ func on_wonder_placed():
 	get_tree().paused = true
 
 func on_workshop_placed():
+	boards[len(boards)-1].placing = false
+	help_text_is_overriden = false
 	choose_active.show()
 	greyout.show()
 	get_tree().paused = true

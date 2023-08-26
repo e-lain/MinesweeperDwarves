@@ -47,7 +47,6 @@ func _on_control_gui_input(event):
 				print("Stairs already placed!")
 			if can_place() && in_bounds:
 				placed = true
-				get_parent().get_parent().help_text_is_overriden = false
 				get_parent().on_building_placed(global_position, self)
 
 				sprite.material = null

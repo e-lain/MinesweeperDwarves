@@ -42,7 +42,9 @@ func _on_mouse_entered():
 
 func _on_mouse_exited():
 	info_popup.visible = false
-	get_parent().get_parent().get_parent().get_parent().help_text_is_overriden = false
+	var stairs_placed = resources_source.stairs_placed()
+	if type == BuildingData.Type.STAIRCASE && stairs_placed:
+		get_parent().get_parent().get_parent().get_parent().help_text_is_overriden = false
 
 
 func _on_gui_input(event):
