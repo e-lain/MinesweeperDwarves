@@ -46,10 +46,12 @@ func _on_control_gui_input(event):
 				print("Stairs already placed!")
 			if can_place() && in_bounds:
 				placed = true
+				get_parent().get_parent().help_text_is_overriden = false
 				get_parent().on_building_placed(global_position, self)
 
 				sprite.material = null
 				return
 		if event.is_action_pressed("right_click"):
 			get_parent().placing = false
+			get_parent().get_parent().help_text_is_overriden = false
 			queue_free()
