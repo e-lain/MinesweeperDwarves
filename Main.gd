@@ -120,7 +120,7 @@ func ability(ability_name):
 			# TODO: Notify the player that all flags are used, or just gray out ability?
 			return
 		
-	queue_ability.emit(ability_name)
+	boards[len(boards)-1]._on_ability_queue(ability_name)
 
 func build(type: BuildingData.Type):
 	print("func build, building_name: ", type)
