@@ -7,9 +7,9 @@ signal wonder_placed
 @export var grid_line_prefab: PackedScene = preload("res://Prefabs/GridLine.tscn")
 @onready var tilemap: TileMap = $TileMap
 
-static var total_building_count = 0
+var total_building_count = 0
 
-var building_prefab = preload("res://Buildings/Building.tscn")
+var building_prefab = preload("res://Buildings/BaseBuilding.tscn")
 
 var Destroy = preload("res://Abilities/Destroy.tscn")
 
@@ -114,7 +114,7 @@ func _on_building_queue(type: BuildingData.Type):
 		placing = true
 		var building = building_prefab.instantiate()
 		add_child(building)
-		building.type = type
+		building.set_type(type)
 
 func _on_ability_queue(ability_name):
 	var placing = true
@@ -156,7 +156,8 @@ func enter_build_mode():
 			if tile.label:
 				tile.label.queue_free()
 
-func on_building_placed(building_world_pos: Vector2, building: Building):
+func on_building_placed(building_world_pos: Vector2, building: BaseBuilding):
+	building.id = total_building_count
 	var type = building.type
 	var id = building.id
 	placing = false
@@ -175,9 +176,8 @@ func on_building_placed(building_world_pos: Vector2, building: Building):
 	if type == BuildingData.Type.WORKSHOP:
 		get_parent().ability_destroy_max += 1
 	
-# TODO: fixme
-#	if data["steel_cost"] > 0:
-#		get_parent().steel -= data["steel"]
+	if data["steel_cost"] > 0:
+		get_parent().steel -= data["steel_cost"]
 	
 	var world_positions_to_update = get_world_positions_in_area(building_world_pos, size)
 	for world_pos in world_positions_to_update:
@@ -218,7 +218,7 @@ func collect_resources():
 		
 		var stone_cost = data["stone_cost"]
 		var population_cost = data["population_cost"]
-		#var steel_cost = data["steel_cost"]
+		var steel_cost = data["steel_cost"]
 		
 		# TODO - animate this
 		if stone_cost < 0: # negative costs are resource gains
@@ -227,8 +227,8 @@ func collect_resources():
 		if population_cost < 0:
 			get_parent().population -= population_cost
 		
-#				if steel_cost < 0:
-#					get_parent().steel -= steel_cost
+		if steel_cost < 0:
+			get_parent().steel -= steel_cost
 				
 	
 func clear_tile(tile: BoardTile):
