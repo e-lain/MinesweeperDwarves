@@ -1,4 +1,4 @@
-[gd_scene load_steps=23 format=3 uid="uid://iqvlmmwy7d46"]
+[gd_scene load_steps=24 format=3 uid="uid://iqvlmmwy7d46"]
 
 [ext_resource type="Script" path="res://Main.gd" id="1_t2km6"]
 [ext_resource type="Theme" uid="uid://b6iv3a38m6uhb" path="res://UI.tres" id="2_b2qml"]
@@ -17,6 +17,7 @@
 [ext_resource type="Texture2D" uid="uid://7an4owy3gbe2" path="res://Assets/UI/ArrowUp.png" id="11_gm014"]
 [ext_resource type="PackedScene" uid="uid://cbn0lpatmkt08" path="res://UI/MineHitPopup.tscn" id="12_4reet"]
 [ext_resource type="Texture2D" uid="uid://cugy8vitkf3fg" path="res://Assets/UI/ArrowDown.png" id="12_hutn7"]
+[ext_resource type="PackedScene" uid="uid://dc8igqfayfl61" path="res://Abilities/AbilityArmor.tscn" id="16_hhtyy"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_p42ak"]
 texture = ExtResource("6_nia6k")
@@ -378,6 +379,14 @@ offset_right = 1092.0
 offset_bottom = 209.0
 info_popup = NodePath("../DestroyPopup")
 
+[node name="Armor" parent="CanvasLayer/AbilityMenu" node_paths=PackedStringArray("info_popup") instance=ExtResource("16_hhtyy")]
+layout_mode = 0
+offset_left = 932.0
+offset_top = 208.0
+offset_right = 1092.0
+offset_bottom = 369.0
+info_popup = NodePath("../ArmorPopup")
+
 [node name="DestroyPopup" parent="CanvasLayer/AbilityMenu" instance=ExtResource("7_703se")]
 visible = false
 layout_mode = 0
@@ -385,6 +394,14 @@ offset_left = 737.0
 offset_top = 75.0
 offset_right = 937.0
 offset_bottom = 175.0
+
+[node name="ArmorPopup" parent="CanvasLayer/AbilityMenu" instance=ExtResource("7_703se")]
+visible = false
+layout_mode = 0
+offset_left = 736.0
+offset_top = 224.0
+offset_right = 936.0
+offset_bottom = 324.0
 
 [node name="ColorRect" type="ColorRect" parent="CanvasLayer"]
 visible = false

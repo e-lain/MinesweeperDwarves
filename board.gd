@@ -20,6 +20,7 @@ var placing: bool = false
 
 # Ability usage toggles
 var clearing_tile: bool = false
+var armor_active: bool = false
 
 var rows = 6
 var columns = 6
@@ -123,6 +124,11 @@ func _on_ability_queue(ability_name):
 		print("SIGNAL RECEIVED TO USE DESTROY ABILITY")
 		ability = Destroy.instantiate()
 		clearing_tile = true
+	elif ability_name == "armor":
+		print("SIGNAL RECEIVED TO USE ARMOR ABILITY")
+		placing = false
+		armor_active = true
+		return
 	add_child(ability)
 	
 func _on_tile_destroyed(cell_pos: Vector2i):
@@ -137,12 +143,12 @@ func _on_tile_uncovered(cell_pos: Vector2i):
 	if tile.is_flagged:
 		return
 	
-	if tile.is_bomb:
-		get_parent().population -= 1
-		
+	if tile.is_bomb && !armor_active:
+		get_parent().population -= 1	
 		explode_mine()
 		
-		print("TODO: THE PLAYER HAS LOST, BUILD MODE ENGAGED")
+	if armor_active:
+		armor_active = false
 	
 	uncover_tile(tile)
 	update_shadows()
@@ -155,6 +161,8 @@ func enter_build_mode():
 		for tile in row:
 			if tile.label:
 				tile.label.queue_free()
+			if tile.is_bomb:
+				tile.destroy_bomb()
 
 func on_building_placed(building_world_pos: Vector2, building: BaseBuilding):
 	building.id = total_building_count
