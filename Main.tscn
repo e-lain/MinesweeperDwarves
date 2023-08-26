@@ -890,6 +890,8 @@ text = "Click when you are done excavating the floor, and flagging bombs.
 You will be awarded steel for bombs correctly flagged.
 Build mode will begin"
 
+[connection signal="mouse_entered" from="CanvasLayer/UI/EndLevelBtn" to="." method="_on_end_level_btn_mouse_entered"]
+[connection signal="mouse_exited" from="CanvasLayer/UI/EndLevelBtn" to="." method="_on_end_level_btn_mouse_exited"]
 [connection signal="pressed" from="CanvasLayer/UI/EndLevelBtn" to="." method="_on_end_level_btn_pressed"]
 [connection signal="pressed" from="CanvasLayer/UI/NextFloorBtn" to="." method="_on_next_floor_btn_pressed"]
 [connection signal="build" from="CanvasLayer/BuildMenu/Page1/Staircase" to="." method="build"]

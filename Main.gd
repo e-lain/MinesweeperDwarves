@@ -16,6 +16,7 @@ extends Node2D
 @onready var help_overlay_play = $CanvasLayer/HelpOverlayPlay
 @onready var help_overlay_build = $CanvasLayer/HelpOverlayBuild
 @onready var help_text_bar = $CanvasLayer/UI/ContextLabel
+var help_text_is_overriden: bool = false
 
 @onready var next_floor_button = $CanvasLayer/UI/NextFloorBtn
 
@@ -99,7 +100,8 @@ func _process(delta):
 		else:
 			next_floor_button.hide()
 	
-	help_text_bar.text = "Press \'H\' for help overlay"
+	if !help_text_is_overriden:
+		help_text_bar.text = "Press \'H\' for help overlay"
 
 func ability(ability_name):
 	print("func ability, ability_name: ", ability_name)
@@ -231,3 +233,14 @@ func _input(event):
 			help_overlay_play.visible = !help_overlay_play.visible
 		elif boards[len(boards)-1].build_mode == true:
 			help_overlay_build.visible = !help_overlay_build.visible
+
+
+func _on_end_level_btn_mouse_entered():
+	if boards[len(boards)-1].tiles_uncovered < 1:
+		# TODO add sfx feedback
+		help_text_is_overriden = true
+		help_text_bar.text = "Can't enter build mode until at least one tile is cleared!"
+
+
+func _on_end_level_btn_mouse_exited():
+	help_text_is_overriden = false
