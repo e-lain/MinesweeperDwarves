@@ -15,6 +15,7 @@ extends Node2D
 
 @onready var help_overlay_play = $CanvasLayer/HelpOverlayPlay
 @onready var help_overlay_build = $CanvasLayer/HelpOverlayBuild
+@onready var help_text_bar = $CanvasLayer/UI/ContextLabel
 
 @onready var next_floor_button = $CanvasLayer/UI/NextFloorBtn
 
@@ -97,6 +98,8 @@ func _process(delta):
 			next_floor_button.show()
 		else:
 			next_floor_button.hide()
+	
+	help_text_bar.text = "Press \'H\' for help overlay"
 
 func ability(ability_name):
 	print("func ability, ability_name: ", ability_name)
