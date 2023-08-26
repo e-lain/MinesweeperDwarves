@@ -236,7 +236,7 @@ func _input(event):
 
 
 func _on_end_level_btn_mouse_entered():
-	if boards[len(boards)-1].tiles_uncovered < 1:
+	if enter_build_mode_button.disabled && !help_text_is_overriden:
 		# TODO add sfx feedback
 		help_text_is_overriden = true
 		help_text_bar.text = "Can't enter build mode until at least one tile is cleared!"

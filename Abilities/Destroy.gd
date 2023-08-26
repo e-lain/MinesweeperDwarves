@@ -12,10 +12,13 @@ var size: int = 1
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	get_parent().placing = true
+	get_parent().get_parent().help_text_is_overriden = true
 
 func _process(delta):
+	get_parent().get_parent().help_text_bar.text = "Left-click on valid tile to clear it. If it has a bomb, you will not be harmed. Right-click to cancel"
 	if get_parent().get_parent().ability_destroy < 1:
 		get_parent().placing = false
+		get_parent().get_parent().help_text_is_overriden = false
 		queue_free()
 	if !placed:
 		var mouse = get_parent().get_local_mouse_position()
@@ -47,4 +50,5 @@ func _input(event):
 		if event.is_action_pressed("right_click"):
 			get_parent().placing = false
 			get_parent().clearing_tile = false
+			get_parent().get_parent().help_text_is_overriden = false
 			queue_free()
