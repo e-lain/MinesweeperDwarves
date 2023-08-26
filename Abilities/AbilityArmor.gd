@@ -25,6 +25,7 @@ func _on_gui_input(event):
 	if event is InputEventMouseButton:
 		if event.is_action_pressed("left_click") && use_count > 0:
 			print("armor ability clicked")
+			SoundManager.play_armor()
 			get_parent().get_parent().get_parent().ability("armor")
 
 func _on_mouse_entered():

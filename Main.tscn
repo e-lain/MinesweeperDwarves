@@ -498,11 +498,11 @@ anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -143.0
 offset_top = -83.0
-offset_right = 56.9999
-offset_bottom = 63.0
+offset_right = 57.0
+offset_bottom = 111.0
 grow_horizontal = 2
 grow_vertical = 2
-rotation = -0.0543328
+rotation = -0.0227148
 
 [node name="PopulationBox" parent="CanvasLayer/MineHitPopup" index="2"]
 offset_left = 74.7352

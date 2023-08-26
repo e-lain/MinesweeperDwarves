@@ -42,6 +42,8 @@ func can_place():
 func _on_control_gui_input(event):
 	if event is InputEventMouseButton && !placed:
 		if event.is_action_pressed("left_click"):
+			if !can_place():
+				SoundManager.play_negative()
 			if type == BuildingData.Type.STAIRCASE and get_parent().stairs_placed:
 				get_parent().get_parent().help_text_bar.text = "Stairs already placed! Can't have more than one staircase per floor"
 				print("Stairs already placed!")

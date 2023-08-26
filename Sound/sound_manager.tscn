@@ -1,0 +1,51 @@
+[gd_scene load_steps=25 format=3 uid="uid://cmx188rp4gtpl"]
+
+[ext_resource type="Script" path="res://Sound/sound_manager.gd" id="1_2lxws"]
+[ext_resource type="AudioStream" uid="uid://d2qd7h0634ine" path="res://Sound/Rock Debris/Rock Debris Small 05short.wav" id="2_u684t"]
+[ext_resource type="AudioStream" uid="uid://b1h02moiwo31a" path="res://Sound/Village_Ambient_Music_Calm_Non_Intrusive_Loop.wav" id="2_vv6po"]
+[ext_resource type="AudioStream" uid="uid://bcix8cotsptvs" path="res://Sound/Rock Debris/Rock Debris Small 07short.wav" id="3_e0vrr"]
+[ext_resource type="AudioStream" uid="uid://euocbteccewq" path="res://Sound/Matches Foley 2_3.wav" id="4_uqvlq"]
+[ext_resource type="AudioStream" uid="uid://cb8lxosjoduvp" path="res://Sound/Matches Foley 1_1.wav" id="5_n65cg"]
+[ext_resource type="AudioStream" uid="uid://cmehwrui51v1t" path="res://Sound/Paper Sounds/ScrollOpen1.mp3" id="6_p70n7"]
+[ext_resource type="AudioStream" uid="uid://2k1eckr5pl6o" path="res://Sound/Paper Sounds/TurnPage1short.wav" id="7_r4kb0"]
+[ext_resource type="AudioStream" uid="uid://cmw5qmkhmts5r" path="res://Sound/PlaceBuilding/Build 1_1.wav" id="8_6ki1k"]
+[ext_resource type="AudioStream" uid="uid://bcutycecpwp78" path="res://Sound/PlaceBuilding/Build 1_2.wav" id="9_a3r4w"]
+[ext_resource type="AudioStream" uid="uid://cit16q07in2j7" path="res://Sound/PlaceBuilding/Build 1_3.wav" id="10_yp7u3"]
+[ext_resource type="AudioStream" uid="uid://bmqcgdq1t52y" path="res://Sound/PlaceBuilding/Build 2_1.wav" id="11_6m1l0"]
+[ext_resource type="AudioStream" uid="uid://dp4qqm4ep8cch" path="res://Sound/launch_2.wav" id="12_booka"]
+[ext_resource type="AudioStream" uid="uid://nc1lh8pc4y3x" path="res://Sound/Negative 1_2.wav" id="12_eim5r"]
+[ext_resource type="AudioStream" uid="uid://dfb5jqhkmo6uh" path="res://Sound/Gear Metal 1.wav" id="12_r3po4"]
+[ext_resource type="AudioStream" uid="uid://dxq1t7tixc7fp" path="res://Sound/Gear Metal 2.wav" id="13_4miv5"]
+[ext_resource type="AudioStream" uid="uid://dgy6k6ld5o1x8" path="res://Sound/launch_3.wav" id="13_igm0l"]
+[ext_resource type="AudioStream" uid="uid://ndg4cirqxw1j" path="res://Sound/Neutral Event 04.wav" id="13_tdkpi"]
+[ext_resource type="AudioStream" uid="uid://d2l6to3o3kpxq" path="res://Sound/Armor UI 06.wav" id="14_bhybm"]
+[ext_resource type="AudioStream" uid="uid://cbd1arldc16ir" path="res://Sound/Blacksmith 1_4.wav" id="15_80aeb"]
+[ext_resource type="AudioStream" uid="uid://dp02yu2fh47y" path="res://Sound/Blacksmith 1_2.wav" id="17_1qpwp"]
+[ext_resource type="AudioStream" uid="uid://cda1lqiy5lexo" path="res://Sound/Blacksmith 1_3.wav" id="18_a61du"]
+[ext_resource type="AudioStream" uid="uid://bfhofi4dgsd7w" path="res://Sound/Harp_hit_1.wav" id="22_dj5af"]
+[ext_resource type="AudioStream" uid="uid://d04iwwpld6nun" path="res://Sound/Harp_hit_2.wav" id="23_1nlk5"]
+
+[node name="SoundManager" type="Node"]
+process_mode = 3
+script = ExtResource("1_2lxws")
+uncover_tile_sounds = Array[AudioStream]([ExtResource("2_u684t"), ExtResource("3_e0vrr"), ExtResource("4_uqvlq"), ExtResource("5_n65cg")])
+page_turn_sounds = Array[AudioStream]([ExtResource("6_p70n7"), ExtResource("7_r4kb0")])
+building_placement_sounds = Array[AudioStream]([ExtResource("8_6ki1k"), ExtResource("9_a3r4w"), ExtResource("10_yp7u3"), ExtResource("11_6m1l0")])
+explosions = Array[AudioStream]([ExtResource("12_booka"), ExtResource("13_igm0l")])
+negative = Array[AudioStream]([ExtResource("12_eim5r")])
+positive = Array[AudioStream]([ExtResource("13_tdkpi")])
+flag_sounds = Array[AudioStream]([ExtResource("6_p70n7"), ExtResource("7_r4kb0")])
+crane_sounds = Array[AudioStream]([ExtResource("12_r3po4"), ExtResource("13_4miv5")])
+armor_sounds = Array[AudioStream]([ExtResource("14_bhybm"), ExtResource("17_1qpwp"), ExtResource("18_a61du"), ExtResource("15_80aeb")])
+dowse_sounds = Array[AudioStream]([ExtResource("22_dj5af"), ExtResource("23_1nlk5")])
+
+[node name="BGMPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("2_vv6po")
+autoplay = true
+bus = &"Music"
+
+[node name="SFXPlayer" type="AudioStreamPlayer" parent="."]
+bus = &"SFX"
+
+[node name="SFXPlayer2" type="AudioStreamPlayer" parent="."]
+bus = &"SFX"

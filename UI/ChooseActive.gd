@@ -26,17 +26,24 @@ func toggled(button, button_pressed):
 		currently_pressed = button
 
 func _on_crane_button_toggled(button_pressed):
+	if button_pressed:
+		SoundManager.play_crane()
 	toggled(crane_button, button_pressed)
 	desc_label.text = "Crane: Safely Remove Tile"
 
+
 func _on_armor_button_toggled(button_pressed):
+	if button_pressed:
+		SoundManager.play_armor()
 	toggled(armor_button, button_pressed)
 	desc_label.text = "Active Armor: Take No Damage When Uncovering Next Tile"
 
 func _on_scanner_button_toggled(button_pressed):
-	toggled(scanner_button, button_pressed)
 	if button_pressed:
-		desc_label.text = "Dowsing Rod: Reveal A Random Unflagged Bomb"
+		SoundManager.play_dowse()
+	toggled(scanner_button, button_pressed)
+	desc_label.text = "Dowsing Rod: Reveal A Random Unflagged Bomb"
+		
 
 func _on_confirm_buton_pressed():
 	if currently_pressed != null:

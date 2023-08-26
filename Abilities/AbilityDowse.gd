@@ -25,6 +25,7 @@ func _on_gui_input(event):
 	if event is InputEventMouseButton:
 		if event.is_action_pressed("left_click") && use_count > 0:
 			print("dowse ability clicked")
+			SoundManager.play_dowse()
 			get_parent().get_parent().get_parent().ability("dowse")
 
 func _on_mouse_entered():

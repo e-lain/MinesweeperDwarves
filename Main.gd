@@ -156,6 +156,7 @@ func _on_end_level_btn_pressed():
 
 func on_mine_animation_complete():
 	get_tree().paused = true
+	SoundManager.play_negative()
 	if population > 0:
 		mine_hit_popup.visible = true
 		greyout.visible = true
@@ -172,12 +173,14 @@ func _on_mine_hit_restart_level_pressed():
 
 
 func _on_page_up_button_pressed():
+	SoundManager.play_page_turn_sound()
 	page_one.show()
 	page_down.disabled = false
 	page_two.hide()
 	page_up.disabled = true
 
 func _on_page_down_button_pressed():
+	SoundManager.play_page_turn_sound()
 	page_one.hide()
 	page_down.disabled = true
 	page_two.show()
@@ -207,6 +210,7 @@ func _on_loss_restart_button_pressed():
 	get_tree().reload_current_scene()  # TODO: GO TO TITLE SCREEN
 
 func on_wonder_placed():
+	SoundManager.play_positive()
 	you_win.show()
 	greyout.show()
 	get_tree().paused = true

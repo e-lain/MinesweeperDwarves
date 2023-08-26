@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://dxq1t7tixc7fp"
+path="res://.godot/imported/Gear Metal 2.wav-ca9dc94f577bf5c1cb80809c442b571a.sample"
+
+[deps]
+
+source_file="res://Sound/Gear Metal 2.wav"
+dest_files=["res://.godot/imported/Gear Metal 2.wav-ca9dc94f577bf5c1cb80809c442b571a.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=0

@@ -168,11 +168,13 @@ func _on_tile_uncovered(cell_pos: Vector2i):
 		return
 	
 	if tile.is_bomb && !armor_active:
-		get_parent().population -= 1	
+		get_parent().population -= 1
 		explode_mine()
 		
 	if armor_active:
 		armor_active = false
+	
+	SoundManager.play_uncover_tile_sound()
 	
 	uncover_tile(tile)
 	update_shadows()
@@ -218,6 +220,8 @@ func on_building_placed(building_world_pos: Vector2, building: BaseBuilding):
 		tile.building_id = id
 	
 	buildings_by_id[id] = building
+	
+	SoundManager.play_building_placement_sound()
 	
 		
 	if type == BuildingData.Type.WORKSHOP:
@@ -303,6 +307,8 @@ func uncover_tile(tile: BoardTile):
 
 func explode_mine():
 	# TODO: play an animation and emit signal when it finishes
+	SoundManager.play_explosion_sound()
+
 	mine_animation_complete.emit()
 
 func get_adjacent_tiles(tile: BoardTile) -> Array[BoardTile]:
@@ -343,6 +349,8 @@ func _on_flag_toggled(cell_pos: Vector2i):
 	elif tile.is_flagged && tile.is_bomb:
 		bombs_found -= 1
 	
+	if !tile.is_flagged:
+		SoundManager.play_flag_sound()
 	print("bombs found: ", bombs_found)
 	tile.toggle_flag()
 
