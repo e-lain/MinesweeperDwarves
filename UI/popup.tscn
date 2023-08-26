@@ -23,7 +23,7 @@ script = ExtResource("2_p5i3d")
 [node name="NameLabel" type="RichTextLabel" parent="."]
 layout_mode = 2
 anchor_right = 0.85
-anchor_bottom = 0.28
+anchor_bottom = 0.32
 offset_left = 10.0
 offset_top = 13.0
 offset_right = 11.0
@@ -37,15 +37,15 @@ offset_left = 10.0
 offset_top = 40.0
 offset_right = 188.0
 offset_bottom = 88.0
-theme_override_font_sizes/normal_font_size = 16
+theme_override_font_sizes/normal_font_size = 28
 text = "Grants 3 Population"
 scroll_active = false
 
 [node name="Costs" type="HBoxContainer" parent="."]
 layout_mode = 0
-offset_left = 90.0
+offset_left = 60.0
 offset_top = 65.0
-offset_right = 188.0
+offset_right = 192.0
 offset_bottom = 105.0
 theme_override_constants/separation = 6
 alignment = 2
