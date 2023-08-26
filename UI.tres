@@ -8,5 +8,5 @@ Button/fonts/font = ExtResource("1_2yecv")
 Label/colors/font_color = Color(0, 0, 0, 1)
 Label/fonts/font = ExtResource("1_2yecv")
 RichTextLabel/colors/default_color = Color(0, 0, 0, 1)
-RichTextLabel/font_sizes/normal_font_size = 20
+RichTextLabel/font_sizes/normal_font_size = 25
 RichTextLabel/fonts/normal_font = ExtResource("1_2yecv")

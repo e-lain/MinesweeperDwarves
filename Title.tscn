@@ -1,0 +1,50 @@
+[gd_scene load_steps=4 format=3 uid="uid://bn3fb1r6c0upa"]
+
+[ext_resource type="Script" path="res://Title.gd" id="1_1tpif"]
+[ext_resource type="Theme" uid="uid://b6iv3a38m6uhb" path="res://UI.tres" id="1_k2e4r"]
+[ext_resource type="Texture2D" uid="uid://dtcx71mlo5m38" path="res://Assets/UI/TitleScreen.png" id="1_qaah5"]
+
+[node name="Title" type="Node2D"]
+script = ExtResource("1_1tpif")
+
+[node name="Control" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+theme = ExtResource("1_k2e4r")
+
+[node name="TextureRect" type="TextureRect" parent="Control"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+texture = ExtResource("1_qaah5")
+
+[node name="Title" type="Label" parent="Control"]
+layout_mode = 0
+offset_left = 448.0
+offset_right = 1280.0
+offset_bottom = 448.0
+theme_override_font_sizes/font_size = 50
+text = "Demo Dwarves: City Sweeper"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Button" type="Button" parent="Control"]
+layout_mode = 0
+offset_left = 800.0
+offset_top = 320.0
+offset_right = 928.0
+offset_bottom = 384.0
+text = "START"
+
+[node name="Help" type="Label" parent="Control"]
+layout_mode = 0
+offset_left = 624.0
+offset_top = 272.0
+offset_right = 1112.0
+offset_bottom = 294.0
+text = "Press 'H' at any time in-game to display the help overlay!"
+horizontal_alignment = 1
+
+[connection signal="pressed" from="Control/Button" to="." method="_on_button_pressed"]
