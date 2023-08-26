@@ -1,0 +1,30 @@
+[gd_scene load_steps=5 format=3 uid="uid://c740iaqqf4l83"]
+
+[ext_resource type="Script" path="res://Buildings/Wonder.gd" id="1_nfcj8"]
+[ext_resource type="Material" uid="uid://nqpwbe45b8cn" path="res://Shaders/InvalidBuildingPlacement.tres" id="2_qwi8n"]
+[ext_resource type="Texture2D" uid="uid://te50q3hpxrqb" path="res://Assets/Buildings/WonderFlattenedDownscaled.png" id="3_qfi6d"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ynpqt"]
+size = Vector2(306, 304)
+
+[node name="Wonder" type="Node2D"]
+script = ExtResource("1_nfcj8")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+material = ExtResource("2_qwi8n")
+texture = ExtResource("3_qfi6d")
+centered = false
+
+[node name="Area2D" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+position = Vector2(159, 160)
+shape = SubResource("RectangleShape2D_ynpqt")
+
+[node name="Control" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 320.0
+offset_bottom = 320.0
+
+[connection signal="gui_input" from="Control" to="." method="_on_control_gui_input"]
