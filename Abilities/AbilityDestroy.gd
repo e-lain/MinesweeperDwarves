@@ -29,7 +29,7 @@ func _on_gui_input(event):
 
 func _on_mouse_entered():
 	info_popup.visible = true
-	info_popup.set_description("Engineer's Workshop", "Safely Remove Tile")
+	info_popup.set_description("Crane", "Safely Remove Tile")
 
 func _on_mouse_exited():
 	info_popup.visible = false

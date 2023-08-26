@@ -18,13 +18,15 @@ extends Node2D
 @onready var game_over = $CanvasLayer/GameOver
 @onready var you_win = $CanvasLayer/YouWin
 
+@onready var choose_active = $CanvasLayer/ChooseActive
+
 var Board = preload("res://board.tscn")
 
 var build_mode: bool = false
 
 var depth = 0
-var population = 3
-var stone = 8
+var population = 300
+var stone = 800
 var steel = 3
  
 var ability_destroy_max = 0
@@ -63,6 +65,7 @@ func generate_board(difficulty: int):
 	b.create_grid_lines()
 	b.mine_animation_complete.connect(on_mine_animation_complete)
 	b.wonder_placed.connect(on_wonder_placed)
+	b.workshop_placed.connect(on_workshop_placed)
 	boards.push_back(b)
 
 # Called when the node enters the scene tree for the first time.
@@ -131,6 +134,7 @@ func _on_end_level_btn_pressed():
 		print("ALREADY IN BUILD MODE")
 
 func on_mine_animation_complete():
+	get_tree().paused = true
 	if population > 0:
 		mine_hit_popup.visible = true
 		greyout.visible = true
@@ -143,6 +147,7 @@ func _on_mine_hit_restart_level_pressed():
 	greyout.visible = false
 	get_current_board().queue_free()
 	generate_board(depth)
+	get_tree().paused = false
 
 
 func _on_page_up_button_pressed():
@@ -173,11 +178,31 @@ func on_resource_collection_complete():
 	next_level()
 
 func _on_win_restart_button_pressed():
+	get_tree().paused = false
 	get_tree().reload_current_scene() # TODO: GO TO TITLE SCREEN
 
 func _on_loss_restart_button_pressed():
+	get_tree().paused = false
 	get_tree().reload_current_scene()  # TODO: GO TO TITLE SCREEN
 
 func on_wonder_placed():
 	you_win.show()
 	greyout.show()
+	get_tree().paused = true
+
+func on_workshop_placed():
+	choose_active.show()
+	greyout.show()
+	get_tree().paused = true
+
+
+func _on_choose_active_ability_chosen(ability_name):
+	choose_active.hide()
+	greyout.hide()
+	get_tree().paused = false
+	if ability_name == "crane":
+		ability_destroy_max += 1
+	elif ability_name == "armor":
+		ability_armor_max += 1
+#	elif ability_name == "scanner":
+#		ability_scanner_max += 1

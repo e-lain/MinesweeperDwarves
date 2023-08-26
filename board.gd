@@ -3,6 +3,7 @@ class_name Board
 
 signal mine_animation_complete
 signal wonder_placed
+signal workshop_placed
 
 @export var grid_line_prefab: PackedScene = preload("res://Prefabs/GridLine.tscn")
 @onready var tilemap: TileMap = $TileMap
@@ -181,9 +182,6 @@ func on_building_placed(building_world_pos: Vector2, building: BaseBuilding):
 	if data["stone_cost"] > 0:
 		get_parent().stone -= data["stone_cost"]
 	
-	if type == BuildingData.Type.WORKSHOP:
-		get_parent().ability_destroy_max += 1
-	
 	if data["steel_cost"] > 0:
 		get_parent().steel -= data["steel_cost"]
 	
@@ -196,8 +194,10 @@ func on_building_placed(building_world_pos: Vector2, building: BaseBuilding):
 	
 	buildings_by_id[id] = building
 	
-	
-	if type == BuildingData.Type.WONDER:
+		
+	if type == BuildingData.Type.WORKSHOP:
+		workshop_placed.emit()
+	elif type == BuildingData.Type.WONDER:
 		wonder_placed.emit()
 
 func collect_resources():

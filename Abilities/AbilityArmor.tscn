@@ -2,7 +2,7 @@
 
 [ext_resource type="Texture2D" uid="uid://j7h3rx30o7hw" path="res://Assets/UI/DottedLine9Patch.png" id="1_1iy5d"]
 [ext_resource type="Script" path="res://Abilities/AbilityArmor.gd" id="2_ijdns"]
-[ext_resource type="Texture2D" uid="uid://cc3lp6aajlndv" path="res://Assets/UI/oldsteeldownscaled.png" id="3_iucc0"]
+[ext_resource type="Texture2D" uid="uid://psmsytq01kbf" path="res://Assets/UI/steelbarriericon.png" id="3_n2rwt"]
 [ext_resource type="Theme" uid="uid://b6iv3a38m6uhb" path="res://UI.tres" id="4_06i5x"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_pepr0"]
@@ -23,7 +23,7 @@ layout_mode = 2
 
 [node name="TextureRect" type="TextureRect" parent="MarginContainer"]
 layout_mode = 2
-texture = ExtResource("3_iucc0")
+texture = ExtResource("3_n2rwt")
 
 [node name="Uses" type="Label" parent="."]
 layout_mode = 2

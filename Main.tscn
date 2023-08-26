@@ -1,4 +1,4 @@
-[gd_scene load_steps=24 format=3 uid="uid://iqvlmmwy7d46"]
+[gd_scene load_steps=25 format=3 uid="uid://iqvlmmwy7d46"]
 
 [ext_resource type="Script" path="res://Main.gd" id="1_t2km6"]
 [ext_resource type="Theme" uid="uid://b6iv3a38m6uhb" path="res://UI.tres" id="2_b2qml"]
@@ -18,6 +18,7 @@
 [ext_resource type="PackedScene" uid="uid://cbn0lpatmkt08" path="res://UI/MineHitPopup.tscn" id="12_4reet"]
 [ext_resource type="Texture2D" uid="uid://cugy8vitkf3fg" path="res://Assets/UI/ArrowDown.png" id="12_hutn7"]
 [ext_resource type="PackedScene" uid="uid://dc8igqfayfl61" path="res://Abilities/AbilityArmor.tscn" id="16_hhtyy"]
+[ext_resource type="PackedScene" uid="uid://bqrac1jbrmwcd" path="res://UI/ChooseActive.tscn" id="17_r6xie"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_p42ak"]
 texture = ExtResource("6_nia6k")
@@ -412,7 +413,16 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0, 0, 0, 0.333333)
 
+[node name="ChooseActive" parent="CanvasLayer" instance=ExtResource("17_r6xie")]
+process_mode = 2
+visible = false
+offset_left = 300.0
+offset_top = 72.0
+offset_right = 300.0
+offset_bottom = 72.0
+
 [node name="GameOver" parent="CanvasLayer" instance=ExtResource("7_wj57j")]
+process_mode = 2
 visible = false
 anchors_preset = 8
 anchor_left = 0.5
@@ -430,6 +440,7 @@ grow_vertical = 2
 text = "Return To Title Screen"
 
 [node name="YouWin" parent="CanvasLayer" instance=ExtResource("7_wj57j")]
+process_mode = 2
 visible = false
 anchors_preset = 8
 anchor_left = 0.5
@@ -453,6 +464,7 @@ text = "The dwarves live happily"
 text = "Return To Title Screen"
 
 [node name="MineHitPopup" parent="CanvasLayer" instance=ExtResource("12_4reet")]
+process_mode = 2
 visible = false
 anchors_preset = 8
 anchor_left = 0.5
@@ -484,6 +496,7 @@ offset_bottom = 84.1503
 [connection signal="build" from="CanvasLayer/BuildMenu/Page2/Wonder" to="." method="build"]
 [connection signal="pressed" from="CanvasLayer/BuildMenu/PageUpButton" to="." method="_on_page_up_button_pressed"]
 [connection signal="pressed" from="CanvasLayer/BuildMenu/PageDownButton" to="." method="_on_page_down_button_pressed"]
+[connection signal="ability_chosen" from="CanvasLayer/ChooseActive" to="." method="_on_choose_active_ability_chosen"]
 [connection signal="pressed" from="CanvasLayer/GameOver/Panel/RestartButton" to="." method="_on_loss_restart_button_pressed"]
 [connection signal="pressed" from="CanvasLayer/YouWin/Panel/RestartButton" to="." method="_on_win_restart_button_pressed"]
 [connection signal="pressed" from="CanvasLayer/MineHitPopup/Button" to="." method="_on_mine_hit_restart_level_pressed"]

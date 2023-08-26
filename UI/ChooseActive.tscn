@@ -1,0 +1,229 @@
+[gd_scene load_steps=17 format=3 uid="uid://bqrac1jbrmwcd"]
+
+[ext_resource type="Theme" uid="uid://b6iv3a38m6uhb" path="res://UI.tres" id="1_lcuwf"]
+[ext_resource type="Texture2D" uid="uid://d0o6bpct5y38h" path="res://Assets/UI/Popup.png" id="2_ary4l"]
+[ext_resource type="Script" path="res://UI/ChooseActive.gd" id="2_o1hpf"]
+[ext_resource type="Texture2D" uid="uid://b8udsrx8dm05v" path="res://Assets/Buildings/EngineerWorkshopBuildingDownscale.png" id="3_0ajp2"]
+[ext_resource type="Texture2D" uid="uid://j7h3rx30o7hw" path="res://Assets/UI/DottedLine9Patch.png" id="3_6valu"]
+[ext_resource type="Texture2D" uid="uid://k6po4d3bukag" path="res://Assets/UI/CraneUI.png" id="5_vges5"]
+[ext_resource type="Texture2D" uid="uid://psmsytq01kbf" path="res://Assets/UI/steelbarriericon.png" id="6_utf3q"]
+[ext_resource type="Texture2D" uid="uid://b45mofyiujm71" path="res://Assets/UI/dowsingrodicon.png" id="7_jp4t4"]
+[ext_resource type="StyleBox" uid="uid://cs0uiigi7qlev" path="res://UI/InnerButtonStyle.tres" id="8_le01e"]
+[ext_resource type="StyleBox" uid="uid://d1t3tpmhbhut8" path="res://UI/HoveredInnerButtonStyle.tres" id="9_yaxl6"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_bn4so"]
+texture = ExtResource("2_ary4l")
+texture_margin_left = 9.0
+texture_margin_top = 37.0
+texture_margin_right = 11.0
+texture_margin_bottom = 12.0
+axis_stretch_horizontal = 2
+axis_stretch_vertical = 2
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_fq166"]
+texture = ExtResource("3_6valu")
+texture_margin_left = 15.0
+texture_margin_top = 18.0
+texture_margin_right = 18.0
+texture_margin_bottom = 17.0
+axis_stretch_horizontal = 1
+axis_stretch_vertical = 1
+region_rect = Rect2(0, 0, 89, 89)
+modulate_color = Color(1, 1, 1, 0.501961)
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_avher"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_y4hag"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_vbl3o"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_45tex"]
+texture = ExtResource("3_6valu")
+texture_margin_left = 15.0
+texture_margin_top = 18.0
+texture_margin_right = 18.0
+texture_margin_bottom = 17.0
+axis_stretch_horizontal = 1
+axis_stretch_vertical = 1
+region_rect = Rect2(0, 0, 89, 89)
+modulate_color = Color(1, 1, 1, 0.466667)
+
+[node name="ChooseActive" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+theme = ExtResource("1_lcuwf")
+script = ExtResource("2_o1hpf")
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 0
+offset_right = 576.0
+offset_bottom = 567.0
+theme_override_styles/panel = SubResource("StyleBoxTexture_bn4so")
+
+[node name="Header" type="Label" parent="Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 11.0
+offset_bottom = 11.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 28
+text = "Workshop Constructed!"
+horizontal_alignment = 1
+
+[node name="TextureRect" type="TextureRect" parent="Panel"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -96.0
+offset_top = -234.5
+offset_right = 96.0
+offset_bottom = -42.5
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("3_0ajp2")
+
+[node name="Label" type="Label" parent="Panel"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.1
+anchor_right = 0.9
+anchor_bottom = 1.0
+offset_top = 248.0
+offset_bottom = 248.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 20
+text = "Select an ability to gain an extra use of on each floor"
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="CraneButton" type="Button" parent="Panel"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -259.0
+offset_top = -2.5
+offset_right = -98.0
+offset_bottom = 160.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/icon_normal_color = Color(0, 0, 0, 0.517647)
+theme_override_colors/icon_pressed_color = Color(0, 0, 0, 1)
+theme_override_colors/icon_hover_color = Color(0, 0, 0, 1)
+theme_override_colors/icon_hover_pressed_color = Color(0, 0, 0, 1)
+theme_override_colors/icon_focus_color = Color(0, 0, 0, 0.517647)
+theme_override_colors/icon_disabled_color = Color(0, 0, 0, 0.419608)
+theme_override_styles/normal = SubResource("StyleBoxTexture_fq166")
+theme_override_styles/hover = ExtResource("8_le01e")
+theme_override_styles/pressed = ExtResource("8_le01e")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_avher")
+toggle_mode = true
+icon = ExtResource("5_vges5")
+
+[node name="ArmorButton" type="Button" parent="Panel"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -80.0
+offset_top = -2.5
+offset_right = 81.0
+offset_bottom = 160.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/icon_normal_color = Color(0, 0, 0, 0.517647)
+theme_override_colors/icon_pressed_color = Color(0, 0, 0, 1)
+theme_override_colors/icon_hover_color = Color(0, 0, 0, 1)
+theme_override_colors/icon_hover_pressed_color = Color(0, 0, 0, 1)
+theme_override_colors/icon_focus_color = Color(0, 0, 0, 0.517647)
+theme_override_colors/icon_disabled_color = Color(0, 0, 0, 0.392157)
+theme_override_styles/normal = SubResource("StyleBoxTexture_fq166")
+theme_override_styles/hover = ExtResource("8_le01e")
+theme_override_styles/pressed = ExtResource("8_le01e")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_y4hag")
+toggle_mode = true
+icon = ExtResource("6_utf3q")
+
+[node name="ScannerButton" type="Button" parent="Panel"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 99.0
+offset_top = -2.5
+offset_right = 260.0
+offset_bottom = 160.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/icon_normal_color = Color(0, 0, 0, 0.517647)
+theme_override_colors/icon_pressed_color = Color(0, 0, 0, 1)
+theme_override_colors/icon_hover_color = Color(0, 0, 0, 1)
+theme_override_colors/icon_hover_pressed_color = Color(0, 0, 0, 1)
+theme_override_colors/icon_focus_color = Color(0, 0, 0, 0.517647)
+theme_override_colors/icon_disabled_color = Color(0, 0, 0, 0.423529)
+theme_override_styles/normal = SubResource("StyleBoxTexture_fq166")
+theme_override_styles/hover = ExtResource("8_le01e")
+theme_override_styles/pressed = ExtResource("8_le01e")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_vbl3o")
+toggle_mode = true
+icon = ExtResource("7_jp4t4")
+
+[node name="SelectedDescriptionLabel" type="Label" parent="Panel"]
+visible = false
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -108.0
+offset_bottom = -89.0
+grow_horizontal = 2
+grow_vertical = 0
+text = "Crane: Safely Remove a Tile"
+horizontal_alignment = 1
+
+[node name="ConfirmButon" type="Button" parent="Panel"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -38.5
+offset_top = -73.0
+offset_right = 38.5
+offset_bottom = -19.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_pressed_color = Color(0, 0, 0, 1)
+theme_override_colors/font_hover_color = Color(0, 0, 0, 1)
+theme_override_colors/font_focus_color = Color(0, 0, 0, 1)
+theme_override_colors/font_hover_pressed_color = Color(0, 0, 0, 1)
+theme_override_colors/font_disabled_color = Color(0, 0, 0, 0.368627)
+theme_override_font_sizes/font_size = 24
+theme_override_styles/normal = ExtResource("8_le01e")
+theme_override_styles/hover = ExtResource("9_yaxl6")
+theme_override_styles/pressed = ExtResource("9_yaxl6")
+theme_override_styles/disabled = SubResource("StyleBoxTexture_45tex")
+theme_override_styles/focus = ExtResource("8_le01e")
+disabled = true
+text = "Confirm"
+
+[connection signal="toggled" from="Panel/CraneButton" to="." method="_on_crane_button_toggled"]
+[connection signal="toggled" from="Panel/ArmorButton" to="." method="_on_armor_button_toggled"]
+[connection signal="toggled" from="Panel/ScannerButton" to="." method="_on_scanner_button_toggled"]
+[connection signal="pressed" from="Panel/ConfirmButon" to="." method="_on_confirm_buton_pressed"]
