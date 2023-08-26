@@ -35,9 +35,10 @@ layout_mode = 0
 offset_left = 10.0
 offset_top = 40.0
 offset_right = 188.0
-offset_bottom = 66.0
+offset_bottom = 88.0
 theme_override_font_sizes/normal_font_size = 16
 text = "Grants 3 Population"
+scroll_active = false
 
 [node name="Costs" type="HBoxContainer" parent="."]
 layout_mode = 0

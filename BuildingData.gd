@@ -5,7 +5,8 @@ enum Type {
 	QUARRY,
 	STAIRCASE,
 	WORKSHOP,
-	WONDER
+	WONDER,
+	MINECART,
 }
 
 static var data = {
@@ -15,6 +16,7 @@ static var data = {
 		"description": "Gain 2 Population",
 		"stone_cost": 10,
 		"population_cost": -2,
+		"steel_cost": 0,
 		"size": 2,
 		"icon_path": "res://Assets/Buildings/HouseBuildingDownscaled.png"
 	},
@@ -24,6 +26,7 @@ static var data = {
 		"description": "Gain 4 Stone",
 		"stone_cost": -4,
 		"population_cost": 0,
+		"steel_cost": 0,
 		"size": 2,
 		"icon_path": "res://Assets/Buildings/MiningBuildingDownscale.png"
 	},
@@ -33,15 +36,17 @@ static var data = {
 		"description": "Descend to next floor",
 		"stone_cost": 0,
 		"population_cost": 0,
+		"steel_cost": 0,
 		"size": 1,
 		"icon_path": "res://Assets/Buildings/StairsDown.png"
 	},
 	Type.WORKSHOP: {
 		"type": Type.WORKSHOP,
 		"name": "Engineer's Workshop",
-		"description": "Gain Ability to Destroy Tiles ",
-		"stone_cost": 50,
-		"population_cost": 3,
+		"description": "Gain Active Ability Charge",
+		"stone_cost": 10,
+		"population_cost": 2,
+		"steel_cost": 0,
 		"size": 3,
 		"icon_path": "res://Assets/Buildings/EngineerWorkshopBuildingDownscale.png"
 	},
@@ -51,7 +56,18 @@ static var data = {
 		"description": "Win the Game",
 		"stone_cost": 100,
 		"population_cost": 5,
+		"steel_cost": 0,
 		"size": 5,
 		"icon_path": "res://Assets/UI/WonderUIIcon.png"
 	},
+	Type.MINECART: {
+		"type": Type.MINECART,
+		"name": "Minecart",
+		"description": "Collect Resources of Adjacent Buildings",
+		"stone_cost": 0,
+		"population_cost": 0,
+		"steel_cost": 1,
+		"size": 1,
+		"icon_path": "res://Assets/Buildings/minecart downscaled.png"
+	}
 }

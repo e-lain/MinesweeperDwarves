@@ -1,4 +1,5 @@
 extends PanelContainer
+class_name ToolbarBuilding
 
 signal build(type: BuildingData.Type)
 

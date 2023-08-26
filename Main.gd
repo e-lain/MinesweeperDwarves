@@ -22,8 +22,8 @@ var Board = preload("res://board.tscn")
 var build_mode: bool = false
 
 var depth = 0
-var population = 3
-var stone = 0
+var population = 500
+var stone = 500
  
 var ability_destroy_max = 0
 var ability_destroy = 0
@@ -70,8 +70,8 @@ func _process(delta):
 	stone_label.text = "x %d" % [stone]
 	depth_label.text = "Depth: %d" % [depth + 1]
 	
-	if boards[len(boards)-1]:
-		if boards[len(boards)-1].tiles_uncovered == 0:
+	if get_current_board():
+		if get_current_board().tiles_uncovered == 0:
 			enter_build_mode_button.disabled = true
 		else:
 			enter_build_mode_button.disabled = false
@@ -93,7 +93,7 @@ func build(type: BuildingData.Type):
 	queue_building.emit(type)
 
 func next_level():
-	var cur_board = boards[len(boards) - 1]
+	var cur_board = get_current_board()
 	cur_board.placing = false
 	cur_board.clearing_tile = false
 	cur_board.hide()	
@@ -104,8 +104,8 @@ func next_level():
 	enter_build_mode_button.show()
 
 func _on_end_level_btn_pressed():
-	if boards[len(boards)-1].build_mode == false:
-		boards[len(boards)-1].enter_build_mode()
+	if get_current_board().build_mode == false:
+		get_current_board().enter_build_mode()
 		enter_build_mode_button.hide()
 		print("MANUALLY ENTERING BUILD MODE")
 	else:
@@ -122,7 +122,7 @@ func on_mine_animation_complete():
 func _on_mine_hit_restart_level_pressed():
 	mine_hit_popup.visible = false
 	greyout.visible = false
-	boards[boards.size() - 1].queue_free()
+	get_current_board().queue_free()
 	generate_board(depth)
 
 
@@ -140,10 +140,17 @@ func _on_page_down_button_pressed():
 
 
 func stairs_placed():
-	return boards[boards.size() - 1].stairs_placed
+	return get_current_board().stairs_placed
 
+func get_current_board():
+	return boards[boards.size() - 1]
 
 func _on_next_floor_btn_pressed():
+	get_current_board().collect_resources()
+	# TODO: animate this
+	on_resource_collection_complete()
+
+func on_resource_collection_complete():
 	next_level()
 
 func _on_win_restart_button_pressed():

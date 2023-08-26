@@ -1,5 +1,7 @@
 extends Node2D
+class_name Building
 
+@export var type: BuildingData.Type : set = _set_type
 @onready var sprite: Sprite2D = $Sprite2D
 var building_placement_material: ShaderMaterial = preload("res://Shaders/InvalidBuildingPlacement.tres")
 
@@ -7,11 +9,17 @@ const TILE_SIZE = 64
 
 var placed: bool = false
 var in_bounds: bool = false
-var size: int = 1
 
-# Called when the node enters the scene tree for the first time.
-func _ready():
-	pass
+var id: int
+var size: int
+
+func _set_type(value):
+	type = value
+	size = BuildingData.data[type]["size"]
+	sprite.texture = load(BuildingData.data[type]["icon_path"])
+
+func get_data():
+	BuildingData.data[type]
 
 func _process(delta):
 	if !placed:
@@ -36,9 +44,13 @@ func can_place():
 func _on_control_gui_input(event):
 	if event is InputEventMouseButton && !placed:
 		if event.is_action_pressed("left_click"):
+			if type == BuildingData.Type.STAIRCASE and get_parent().stairs_placed:
+				print("Stairs already placed!")
 			if can_place() && in_bounds:
 				placed = true
-				get_parent().on_building_placed(global_position, BuildingData.Type.HOUSE)
+				id = Board.total_building_count
+				get_parent().on_building_placed(global_position, self)
+				
 				sprite.material = null
 				return
 		if event.is_action_pressed("right_click"):

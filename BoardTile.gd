@@ -13,6 +13,7 @@ var is_flagged: bool = false
 var is_bomb: bool = false
 
 var has_building: bool = false
+var building_id: int
 
 var label
 var flag
