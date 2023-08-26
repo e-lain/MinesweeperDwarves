@@ -179,6 +179,7 @@ theme_override_styles/focus = SubResource("StyleBoxTexture_p42ak")
 text = "Descend..."
 
 [node name="BuildMenu" type="Control" parent="CanvasLayer"]
+visible = false
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -502,6 +503,205 @@ offset_left = 74.7352
 offset_top = 62.1503
 offset_right = 110.735
 offset_bottom = 84.1503
+
+[node name="HelpOverlayPlay" type="Control" parent="CanvasLayer"]
+visible = false
+layout_mode = 3
+anchors_preset = 0
+offset_right = 1280.0
+offset_bottom = 720.0
+theme = ExtResource("2_b2qml")
+
+[node name="Label2" type="Label" parent="CanvasLayer/HelpOverlayPlay"]
+layout_mode = 0
+offset_left = 8.0
+offset_top = 8.0
+offset_right = 92.0
+offset_bottom = 30.0
+text = "Resource Panel - All resources listed here are spent on buildings"
+
+[node name="Arrow" type="Sprite2D" parent="CanvasLayer/HelpOverlayPlay"]
+position = Vector2(184, 56)
+rotation = -2.03505
+scale = Vector2(0.970588, 1.03333)
+texture = ExtResource("11_gm014")
+
+[node name="Arrow8" type="Sprite2D" parent="CanvasLayer/HelpOverlayPlay"]
+position = Vector2(1024, 24)
+rotation = -1.67552
+scale = Vector2(0.970588, 1.03333)
+texture = ExtResource("11_gm014")
+
+[node name="Arrow9" type="Sprite2D" parent="CanvasLayer/HelpOverlayPlay"]
+position = Vector2(1112, 120)
+rotation = -1.67552
+scale = Vector2(0.970588, 1.03333)
+texture = ExtResource("11_gm014")
+
+[node name="Arrow10" type="Sprite2D" parent="CanvasLayer/HelpOverlayPlay"]
+position = Vector2(1112, 272)
+rotation = -1.67552
+scale = Vector2(0.970588, 1.03333)
+texture = ExtResource("11_gm014")
+
+[node name="Arrow11" type="Sprite2D" parent="CanvasLayer/HelpOverlayPlay"]
+position = Vector2(1112, 448)
+rotation = -1.67552
+scale = Vector2(0.970588, 1.03333)
+texture = ExtResource("11_gm014")
+
+[node name="Arrow12" type="Sprite2D" parent="CanvasLayer/HelpOverlayPlay"]
+position = Vector2(936, 624)
+rotation = -1.67552
+scale = Vector2(1.71549, 1.82599)
+texture = ExtResource("11_gm014")
+
+[node name="Arrow3" type="Sprite2D" parent="CanvasLayer/HelpOverlayPlay"]
+position = Vector2(184, 128)
+rotation = -2.03505
+scale = Vector2(0.970588, 1.03333)
+texture = ExtResource("11_gm014")
+
+[node name="Arrow4" type="Sprite2D" parent="CanvasLayer/HelpOverlayPlay"]
+position = Vector2(184, 192)
+rotation = -2.03505
+scale = Vector2(0.970588, 1.03333)
+texture = ExtResource("11_gm014")
+
+[node name="Arrow5" type="Sprite2D" parent="CanvasLayer/HelpOverlayPlay"]
+position = Vector2(184, 288)
+rotation = -2.03505
+scale = Vector2(0.970588, 1.03333)
+texture = ExtResource("11_gm014")
+
+[node name="Arrow6" type="Sprite2D" parent="CanvasLayer/HelpOverlayPlay"]
+position = Vector2(184, 344)
+rotation = -2.03505
+scale = Vector2(0.970588, 1.03333)
+texture = ExtResource("11_gm014")
+
+[node name="Arrow2" type="Sprite2D" parent="CanvasLayer/HelpOverlayPlay"]
+position = Vector2(80, 40)
+rotation = -3.59014
+scale = Vector2(0.970588, 0.864604)
+texture = ExtResource("11_gm014")
+
+[node name="Arrow7" type="Sprite2D" parent="CanvasLayer/HelpOverlayPlay"]
+position = Vector2(112, 624)
+rotation = -3.59014
+scale = Vector2(0.970588, 0.864604)
+texture = ExtResource("11_gm014")
+
+[node name="Label" type="Label" parent="CanvasLayer/HelpOverlayPlay"]
+layout_mode = 0
+offset_left = 208.0
+offset_top = 40.0
+offset_right = 765.0
+offset_bottom = 72.0
+text = "Population - Hitting a mine reduces this by 1. When you run out of population, you lose the game
+A resource for some buildings too"
+
+[node name="Label8" type="Label" parent="CanvasLayer/HelpOverlayPlay"]
+layout_mode = 0
+offset_left = 1040.0
+offset_right = 1597.0
+offset_bottom = 66.0
+text = "Uses can be obtained by building an
+engineer's workshop. Number of uses
+refreshes every level"
+
+[node name="Label9" type="Label" parent="CanvasLayer/HelpOverlayPlay"]
+layout_mode = 0
+offset_left = 1128.0
+offset_top = 72.0
+offset_right = 1685.0
+offset_bottom = 138.0
+text = "Clear Tile - Click on
+a covered tile. Uncovers
+and clears the tile,
+even if there was a bomb
+there!"
+
+[node name="Label10" type="Label" parent="CanvasLayer/HelpOverlayPlay"]
+layout_mode = 0
+offset_left = 1128.0
+offset_top = 224.0
+offset_right = 1685.0
+offset_bottom = 334.0
+text = "Active Armor - Click to
+activate. Grants you
+immunity for the next tile
+you click on (bombs will
+not damage you)"
+
+[node name="Label11" type="Label" parent="CanvasLayer/HelpOverlayPlay"]
+layout_mode = 0
+offset_left = 1128.0
+offset_top = 392.0
+offset_right = 1685.0
+offset_bottom = 502.0
+text = "Dowsing Rod - Click to use.
+Automagically flags a
+random bomb on the
+board for you!"
+
+[node name="Label12" type="Label" parent="CanvasLayer/HelpOverlayPlay"]
+layout_mode = 0
+offset_left = 968.0
+offset_top = 568.0
+offset_right = 1525.0
+offset_bottom = 722.0
+text = "Explore the depths by playing good 'ol minesweeper!
+The more space you clear, the more space you'll have
+to build. The more bombs you correctly flag, the more
+steel you'll have to build with. Left-click a tile to
+reveal it. Right-click a tile to flag it as a bomb.
+Flagged tiles can be unflagged if you change your
+mind"
+
+[node name="Label3" type="Label" parent="CanvasLayer/HelpOverlayPlay"]
+layout_mode = 0
+offset_left = 208.0
+offset_top = 104.0
+offset_right = 765.0
+offset_bottom = 127.0
+text = "Stone - Gained from building and harvesting quaries. Used for almost all buildings"
+
+[node name="Label4" type="Label" parent="CanvasLayer/HelpOverlayPlay"]
+layout_mode = 0
+offset_left = 208.0
+offset_top = 168.0
+offset_right = 765.0
+offset_bottom = 191.0
+text = "Steel - One gained per bomb correctly flagged when \"Build Mode\" is initiated. Very important.
+Used to build minecarts, which are needed to harvest resources from buildings"
+
+[node name="Label5" type="Label" parent="CanvasLayer/HelpOverlayPlay"]
+layout_mode = 0
+offset_left = 208.0
+offset_top = 264.0
+offset_right = 765.0
+offset_bottom = 308.0
+text = "How many levels deep you are. Hitting mines doesn't add to this count, clumsy fellow!"
+
+[node name="Label6" type="Label" parent="CanvasLayer/HelpOverlayPlay"]
+layout_mode = 0
+offset_left = 208.0
+offset_top = 328.0
+offset_right = 765.0
+offset_bottom = 372.0
+text = "You are given an amount equal to the number of bombs on the floor. Right-click a tile to flag it as having
+ a mine. When build mode starts, you are awarded with a steel if you are correct!"
+
+[node name="Label7" type="Label" parent="CanvasLayer/HelpOverlayPlay"]
+layout_mode = 0
+offset_left = 8.0
+offset_top = 544.0
+offset_right = 392.0
+offset_bottom = 610.0
+text = "Click when you are done excavating the floor, and flagging bombs.
+You will be awarded steel for bombs correctly flagged.
+Build mode will begin"
 
 [connection signal="pressed" from="CanvasLayer/UI/EndLevelBtn" to="." method="_on_end_level_btn_pressed"]
 [connection signal="pressed" from="CanvasLayer/UI/NextFloorBtn" to="." method="_on_next_floor_btn_pressed"]

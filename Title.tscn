@@ -44,7 +44,16 @@ offset_left = 624.0
 offset_top = 272.0
 offset_right = 1112.0
 offset_bottom = 294.0
-text = "Press 'H' at any time in-game to display the help overlay!"
+text = "Press 'H' key at any time in-game to display the help overlay!"
 horizontal_alignment = 1
+
+[node name="Help2" type="Label" parent="Control"]
+layout_mode = 0
+offset_left = 624.0
+offset_top = 408.0
+offset_right = 1112.0
+offset_bottom = 430.0
+text = "If you do not know how to play minesweeper, check the game page description for some
+helpful links. Don't worry, it's easy!"
 
 [connection signal="pressed" from="Control/Button" to="." method="_on_button_pressed"]

@@ -13,6 +13,8 @@ extends Node2D
 @onready var page_up = $CanvasLayer/BuildMenu/PageUpButton
 @onready var page_down = $CanvasLayer/BuildMenu/PageDownButton
 
+@onready var help_overlay_play = $CanvasLayer/HelpOverlayPlay
+
 @onready var next_floor_button = $CanvasLayer/UI/NextFloorBtn
 
 @onready var game_over = $CanvasLayer/GameOver
@@ -218,3 +220,8 @@ func _on_choose_active_ability_chosen(ability_name):
 		ability_armor_max += 1
 	elif ability_name == "scanner":
 		ability_dowse_max += 1
+		
+func _input(event):
+	if event is InputEventKey and Input.is_key_label_pressed(KEY_H):
+		if boards[len(boards)-1].build_mode == false:
+			help_overlay_play.visible = !help_overlay_play.visible
