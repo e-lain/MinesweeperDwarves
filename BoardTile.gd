@@ -63,5 +63,6 @@ func get_position():
 
 func destroy_bomb():
 	if bomb != null:
+		is_bomb = false
 		bomb.queue_free()
 		bomb = null

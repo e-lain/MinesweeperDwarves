@@ -30,6 +30,9 @@ var steel = 3
 var ability_destroy_max = 0
 var ability_destroy = 0
 
+var ability_armor_max = 0
+var ability_armor = 0
+
 var boards = [] # Note, some of these may be null references because we queue_free() boards that have hit a bomb
 
 signal queue_ability(ability_name)
@@ -38,6 +41,7 @@ signal queue_building(building_type: BuildingData.Type)
 func generate_board(difficulty: int):
 	# Reset all ability counts
 	ability_destroy = ability_destroy_max
+	ability_armor = ability_armor_max
 	
 	var b = Board.instantiate()
 	add_child(b)
@@ -89,7 +93,18 @@ func ability(ability_name):
 	print("func ability, ability_name: ", ability_name)
 	if ability_name == "destroy" && ability_destroy < 1:
 		print("can't use destroy, out of uses")
+		# TODO: User feedback when abilities are out of uses
 		return
+	elif ability_name == "armor":
+		if boards[len(boards)-1].armor_active:
+			# Prevent player from stacking armor uses on a single turn
+			# TODO: Notify the player armor is already active
+			return
+		elif ability_armor < 1:
+			print("can't use armor, out of uses")
+			return
+		else:
+			ability_armor -= 1
 	queue_ability.emit(ability_name)
 
 func build(type: BuildingData.Type):
