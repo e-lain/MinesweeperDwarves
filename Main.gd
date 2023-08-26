@@ -14,6 +14,7 @@ extends Node2D
 @onready var page_down = $CanvasLayer/BuildMenu/PageDownButton
 
 @onready var help_overlay_play = $CanvasLayer/HelpOverlayPlay
+@onready var help_overlay_build = $CanvasLayer/HelpOverlayBuild
 
 @onready var next_floor_button = $CanvasLayer/UI/NextFloorBtn
 
@@ -225,3 +226,5 @@ func _input(event):
 	if event is InputEventKey and Input.is_key_label_pressed(KEY_H):
 		if boards[len(boards)-1].build_mode == false:
 			help_overlay_play.visible = !help_overlay_play.visible
+		elif boards[len(boards)-1].build_mode == true:
+			help_overlay_build.visible = !help_overlay_build.visible

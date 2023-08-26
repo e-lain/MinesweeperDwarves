@@ -504,6 +504,186 @@ offset_top = 62.1503
 offset_right = 110.735
 offset_bottom = 84.1503
 
+[node name="HelpOverlayBuild" type="Control" parent="CanvasLayer"]
+visible = false
+layout_mode = 3
+anchors_preset = 0
+offset_right = 1280.0
+offset_bottom = 720.0
+theme = ExtResource("2_b2qml")
+
+[node name="Label2" type="Label" parent="CanvasLayer/HelpOverlayBuild"]
+layout_mode = 0
+offset_left = 8.0
+offset_top = 8.0
+offset_right = 92.0
+offset_bottom = 30.0
+text = "Resource Panel - All resources listed here are spent on buildings"
+
+[node name="Arrow" type="Sprite2D" parent="CanvasLayer/HelpOverlayBuild"]
+position = Vector2(184, 56)
+rotation = -2.03505
+scale = Vector2(0.970588, 1.03333)
+texture = ExtResource("11_gm014")
+
+[node name="Arrow8" type="Sprite2D" parent="CanvasLayer/HelpOverlayBuild"]
+position = Vector2(1120, 16)
+rotation = -1.67552
+scale = Vector2(0.970588, 1.03333)
+texture = ExtResource("11_gm014")
+
+[node name="Arrow9" type="Sprite2D" parent="CanvasLayer/HelpOverlayBuild"]
+position = Vector2(1112, 120)
+rotation = -1.67552
+scale = Vector2(0.970588, 1.03333)
+texture = ExtResource("11_gm014")
+
+[node name="Arrow12" type="Sprite2D" parent="CanvasLayer/HelpOverlayBuild"]
+position = Vector2(936, 648)
+rotation = -1.67552
+scale = Vector2(1.71549, 1.59789)
+texture = ExtResource("11_gm014")
+
+[node name="Arrow3" type="Sprite2D" parent="CanvasLayer/HelpOverlayBuild"]
+position = Vector2(184, 128)
+rotation = -2.03505
+scale = Vector2(0.970588, 1.03333)
+texture = ExtResource("11_gm014")
+
+[node name="Arrow4" type="Sprite2D" parent="CanvasLayer/HelpOverlayBuild"]
+position = Vector2(184, 192)
+rotation = -2.03505
+scale = Vector2(0.970588, 1.03333)
+texture = ExtResource("11_gm014")
+
+[node name="Arrow5" type="Sprite2D" parent="CanvasLayer/HelpOverlayBuild"]
+position = Vector2(184, 288)
+rotation = -2.03505
+scale = Vector2(0.970588, 1.03333)
+texture = ExtResource("11_gm014")
+
+[node name="Arrow6" type="Sprite2D" parent="CanvasLayer/HelpOverlayBuild"]
+position = Vector2(184, 344)
+rotation = -2.03505
+scale = Vector2(0.970588, 1.03333)
+texture = ExtResource("11_gm014")
+
+[node name="Arrow2" type="Sprite2D" parent="CanvasLayer/HelpOverlayBuild"]
+position = Vector2(80, 40)
+rotation = -3.59014
+scale = Vector2(0.970588, 0.864604)
+texture = ExtResource("11_gm014")
+
+[node name="Arrow7" type="Sprite2D" parent="CanvasLayer/HelpOverlayBuild"]
+position = Vector2(112, 624)
+rotation = -3.59014
+scale = Vector2(0.970588, 0.864604)
+texture = ExtResource("11_gm014")
+
+[node name="Label" type="Label" parent="CanvasLayer/HelpOverlayBuild"]
+layout_mode = 0
+offset_left = 208.0
+offset_top = 40.0
+offset_right = 765.0
+offset_bottom = 72.0
+text = "Population - Hitting a mine reduces this by 1. When you run out of population, you lose the game
+A resource for some buildings too"
+
+[node name="Label8" type="Label" parent="CanvasLayer/HelpOverlayBuild"]
+layout_mode = 0
+offset_left = 1144.0
+offset_right = 1352.0
+offset_bottom = 66.0
+text = "Click these arrows to
+change pages"
+
+[node name="Label9" type="Label" parent="CanvasLayer/HelpOverlayBuild"]
+layout_mode = 0
+offset_left = 1128.0
+offset_top = 72.0
+offset_right = 1685.0
+offset_bottom = 138.0
+text = "Hover mouse over building
+to see description and cost.
+
+Mouse over the board for
+a UI outline detailed valid
+placement locations.
+Left-click to place it,
+Right-click to cancel
+
+IMPORTANT - Build the
+'Beer Hall' building on the 
+second page to win the
+game.
+
+IMPORTANT - The stairs
+MUST be built first before
+any other building can be
+built
+
+IMPORTANT - Houses and
+quaries MUST be directly
+adjhacent to a minecart
+in order for any resources
+to be gained from them"
+
+[node name="Label12" type="Label" parent="CanvasLayer/HelpOverlayBuild"]
+layout_mode = 0
+offset_left = 960.0
+offset_top = 616.0
+offset_right = 1517.0
+offset_bottom = 770.0
+text = "Use your available resources to build structures, and
+harvest from them. Resources gained are credited once
+the level is ended. IMPORTANT - houses and quaries 
+need to be placed directly adjacent to a minecart for
+the output resources to be harvested!"
+
+[node name="Label3" type="Label" parent="CanvasLayer/HelpOverlayBuild"]
+layout_mode = 0
+offset_left = 208.0
+offset_top = 104.0
+offset_right = 765.0
+offset_bottom = 127.0
+text = "Stone - Gained from building and harvesting quaries. Used for almost all buildings"
+
+[node name="Label4" type="Label" parent="CanvasLayer/HelpOverlayBuild"]
+layout_mode = 0
+offset_left = 208.0
+offset_top = 168.0
+offset_right = 765.0
+offset_bottom = 191.0
+text = "Steel - One gained per bomb correctly flagged when \"Build Mode\" is initiated. Very important.
+Used to build minecarts, which are needed to harvest resources from buildings"
+
+[node name="Label5" type="Label" parent="CanvasLayer/HelpOverlayBuild"]
+layout_mode = 0
+offset_left = 208.0
+offset_top = 264.0
+offset_right = 765.0
+offset_bottom = 308.0
+text = "How many levels deep you are. Hitting mines doesn't add to this count, clumsy fellow!"
+
+[node name="Label6" type="Label" parent="CanvasLayer/HelpOverlayBuild"]
+layout_mode = 0
+offset_left = 208.0
+offset_top = 328.0
+offset_right = 765.0
+offset_bottom = 372.0
+text = "You are given an amount equal to the number of bombs on the floor. Right-click a tile to flag it as having
+ a mine. When build mode starts, you are awarded with a steel if you are correct!"
+
+[node name="Label7" type="Label" parent="CanvasLayer/HelpOverlayBuild"]
+layout_mode = 0
+offset_left = 8.0
+offset_top = 544.0
+offset_right = 392.0
+offset_bottom = 610.0
+text = "Click when you are done building. Any resources able to be
+harvested will be credited, and the next floor will begin.
+All resources carry over to the next floor"
+
 [node name="HelpOverlayPlay" type="Control" parent="CanvasLayer"]
 visible = false
 layout_mode = 3
@@ -618,9 +798,10 @@ offset_right = 1685.0
 offset_bottom = 138.0
 text = "Clear Tile - Click on
 a covered tile. Uncovers
-and clears the tile,
+and clears the selected tile,
 even if there was a bomb
-there!"
+there! Right-click to
+cancel"
 
 [node name="Label10" type="Label" parent="CanvasLayer/HelpOverlayPlay"]
 layout_mode = 0
