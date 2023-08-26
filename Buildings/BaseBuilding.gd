@@ -42,6 +42,8 @@ func can_place():
 func _on_control_gui_input(event):
 	if event is InputEventMouseButton && !placed:
 		if event.is_action_pressed("left_click"):
+			if !can_place():
+				SoundManager.play_negative()
 			if type == BuildingData.Type.STAIRCASE and get_parent().stairs_placed:
 				print("Stairs already placed!")
 			if can_place() && in_bounds:

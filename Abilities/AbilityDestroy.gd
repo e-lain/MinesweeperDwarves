@@ -25,6 +25,7 @@ func _on_gui_input(event):
 	if event is InputEventMouseButton:
 		if event.is_action_pressed("left_click") && use_count > 0:
 			print("destroy ability clicked")
+			SoundManager.play_crane()
 			get_parent().get_parent().get_parent().ability("destroy")
 
 func _on_mouse_entered():

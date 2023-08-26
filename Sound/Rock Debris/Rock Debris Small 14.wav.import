@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://5ostuxpbf4tf"
+path="res://.godot/imported/Rock Debris Small 14.wav-3c0c137a2a58216efea359b56c63281b.sample"
+
+[deps]
+
+source_file="res://Sound/Rock Debris/Rock Debris Small 14.wav"
+dest_files=["res://.godot/imported/Rock Debris Small 14.wav-3c0c137a2a58216efea359b56c63281b.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=0
