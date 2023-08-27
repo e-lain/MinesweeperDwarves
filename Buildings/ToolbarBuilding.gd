@@ -25,6 +25,7 @@ var clickable = true
 func _ready():
 	data = BuildingData.data[type]
 	texture_rect.texture = load(data["icon_path"])
+	info_popup.visible = false
 
 func _process(delta):
 	current_stone = resources_source.stone
@@ -35,7 +36,7 @@ func _process(delta):
 	stone_req = data["stone_cost"]
 	pop_req = data["population_cost"]
 	steel_req = data["steel_cost"]
-	if current_stone >= stone_req && current_pop >= pop_req && current_steel >= steel_req && ((type != BuildingData.Type.STAIRCASE && (stairs_placed || type == BuildingData.Type.WONDER)) || (type == BuildingData.Type.STAIRCASE && !stairs_placed)):
+	if current_stone >= stone_req && current_pop > pop_req && current_steel >= steel_req && ((type != BuildingData.Type.STAIRCASE && (stairs_placed || type == BuildingData.Type.WONDER)) || (type == BuildingData.Type.STAIRCASE && !stairs_placed)):
 		modulate = Color.WHITE
 		clickable = true
 	else:

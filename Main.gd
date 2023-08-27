@@ -8,6 +8,10 @@ extends Node2D
 @onready var greyout = $CanvasLayer/ColorRect
 @onready var enter_build_mode_button = $CanvasLayer/UI/EndLevelBtn
 
+@onready var destroy_popup = $CanvasLayer/AbilityMenu/DestroyPopup
+@onready var armor_popup = $CanvasLayer/AbilityMenu/ArmorPopup
+@onready var dowse_popup = $CanvasLayer/AbilityMenu/DowsePopup
+
 @onready var page_one = $CanvasLayer/BuildMenu/Page1
 @onready var page_two = $CanvasLayer/BuildMenu/Page2
 @onready var page_up = $CanvasLayer/BuildMenu/PageUpButton
@@ -52,6 +56,9 @@ signal queue_building(building_type: BuildingData.Type)
 
 func generate_board(difficulty: int):
 	help_text_is_overriden = false
+	destroy_popup.visible = false
+	armor_popup.visible = false
+	dowse_popup.visible = false
 	# Reset all ability counts
 	ability_destroy = ability_destroy_max
 	ability_armor = ability_armor_max

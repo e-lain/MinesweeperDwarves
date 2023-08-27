@@ -326,19 +326,21 @@ func clear_tile(tile: BoardTile):
 		tile.toggle_flag()
 	uncover_tile(tile)
 	update_shadows()
-	if get_parent().ability_destroy < 1:
-		clearing_tile = false
 
 func uncover_tile(tile: BoardTile):
 	tile.is_cover = false
 	tiles_uncovered += 1
 	tilemap.set_cells_terrain_connect(0, [tile.cell_position], 0, -1)
 	
-	if tile.is_bomb && !armor_active:
-		mine_exploded = true
+	if tile.is_bomb:
 		var bomb = tile.create_bomb()
-		bomb.animation_complete.connect(on_bomb_animation_complete)
+		if !armor_active && !clearing_tile:
+			mine_exploded = true
+			bomb.animation_complete.connect(on_bomb_animation_complete)
 		return
+	
+	if get_parent().ability_destroy < 1:
+		clearing_tile = false
 		
 	armor_active = false
 		
@@ -445,6 +447,8 @@ func can_use_ability_at_position(world_pos: Vector2, size: int):
 	var places_to_check = get_world_positions_in_area(world_pos, size)
 	for pos in places_to_check:
 		var cell_pos = tilemap.local_to_map(tilemap.to_local(pos))
+		if cell_pos.x >= columns || cell_pos.y >= rows || cell_pos.x < 0 || cell_pos.y < 0:
+			return false
 		var tile = tiles[cell_pos.x][cell_pos.y]
 		if tile.is_bomb && !tile.is_cover:
 			return false
