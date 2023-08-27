@@ -70,5 +70,14 @@ func _on_control_gui_input(event):
 func play_collection_animation(lifespan_seconds: float, icon_path: String):
 	var instance = collection_prefab.instantiate()
 	add_child(instance)
+	var amount = 0
+	var data = BuildingData.data[type]
+	if data["stone_cost"] < 0:
+		amount = "+" + str(-data["stone_cost"])
+	if data["steel_cost"] < 0:
+		amount = "+" + str(-data["steel_cost"])
+	if data["population_cost"] < 0:
+		amount = "+" + str(-data["population_cost"])
+	
 	instance.init(type, lifespan_seconds, icon_path)
 	instance.global_position = global_position + (Vector2(TILE_SIZE, TILE_SIZE) * size / 2.0) + Vector2(0, -16)

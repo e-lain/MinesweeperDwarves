@@ -241,7 +241,7 @@ func _input(event):
 
 func _on_end_level_btn_mouse_entered():
 	if enter_build_mode_button.disabled && !help_text_is_overriden:
-		# TODO add sfx feedback
+		SoundManager.play_negative()
 		help_text_is_overriden = true
 		help_text_bar.text = "Can't enter build mode until at least one tile is cleared!"
 
@@ -253,4 +253,5 @@ func on_building_collection_complete():
 	on_resource_collection_complete()
 
 func on_minesweeper_collection_complete():
-	on_resource_collection_complete()
+	pass
+#	on_resource_collection_complete()

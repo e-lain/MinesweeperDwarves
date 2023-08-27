@@ -12,6 +12,8 @@ signal workshop_placed
 @export var grid_line_prefab: PackedScene = preload("res://Prefabs/GridLine.tscn")
 @onready var tilemap: TileMap = $TileMap
 
+const collection_prefab = preload("res://UI/collection_effect.tscn")
+
 var total_building_count = 0
 
 var building_prefab = preload("res://Buildings/BaseBuilding.tscn")
@@ -186,16 +188,26 @@ func _on_tile_uncovered(cell_pos: Vector2i):
 
 func enter_build_mode():
 	get_parent().steel += bombs_found
-	build_mode = true
-	get_parent().build_mode = true
-	for row in tiles:
-		for tile in row:
-			if tile.label:
-				tile.label.queue_free()
-			if tile.is_bomb:
-				tile.destroy_bomb()
-				bomb_tiles.erase(tile)
-
+	
+	var has_steel_to_collect = false
+	for x in columns:
+		for y in rows:
+			var tile = tiles[x][y]
+			if tile.is_bomb && tile.is_flagged:
+				var instance = collection_prefab.instantiate()
+				add_child(instance)
+				instance.position = Vector2(tile.get_position()) + (Vector2(TILE_SIZE, TILE_SIZE) / 2.0) + Vector2(-16, -16)
+				instance.init(1, collection_lifespan_seconds,  "res://Assets/UI/steeldownscaledicon.png")
+				has_steel_to_collect = true
+	
+	if has_steel_to_collect:
+		var timer = get_tree().create_timer(collection_lifespan_seconds)
+		timer.timeout.connect(minesweeper_collection_complete)
+	else:
+		minesweeper_collection_complete()
+	
+	
+	
 func on_building_placed(building_world_pos: Vector2, building: BaseBuilding):
 	get_parent().help_text_is_overriden = false
 	building.id = total_building_count
@@ -292,6 +304,16 @@ func building_collection_complete():
 	on_building_collection_complete.emit()
 
 func minesweeper_collection_complete():
+	build_mode = true
+	get_parent().build_mode = true
+	for row in tiles:
+		for tile in row:
+			if tile.label:
+				tile.label.queue_free()
+			if tile.is_bomb:
+				tile.destroy_bomb()
+				bomb_tiles.erase(tile)
+
 	on_minesweeper_collection_complete.emit()
 
 func clear_tile(tile: BoardTile):
