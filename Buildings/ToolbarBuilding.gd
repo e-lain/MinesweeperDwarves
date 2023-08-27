@@ -25,6 +25,7 @@ var clickable = true
 func _ready():
 	data = BuildingData.data[type]
 	texture_rect.texture = load(data["icon_path"])
+	info_popup.visible = false
 
 func _process(delta):
 	current_stone = resources_source.stone
