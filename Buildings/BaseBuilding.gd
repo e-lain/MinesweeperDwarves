@@ -5,10 +5,15 @@ class_name BaseBuilding
 @onready var sprite: Sprite2D = $Sprite2D
 @onready var no_minecart_sprite: Sprite2D = $NoMinecart
 
+@onready var background_sprite: Sprite2D = $BG
+
 var building_placement_material: ShaderMaterial = preload("res://Shaders/InvalidBuildingPlacement.tres")
 
-const collection_prefab: PackedScene = preload("res://UI/collection_effect.tscn")
 
+const bg_offset := Vector2i(3, 3)
+
+
+const collection_prefab: PackedScene = preload("res://UI/collection_effect.tscn")
 
 const TILE_SIZE = 64
 
@@ -39,6 +44,17 @@ func _process(delta):
 				sprite.material = building_placement_material
 			else:
 				sprite.material = null
+		
+		if size == 1:
+			background_sprite.visible = false
+		else:
+			background_sprite.position = bg_offset
+			var cell_pos = get_parent().world_to_cell(global_position)
+			var region_x = bg_offset.x if cell_pos.x % 2 == 0 else 64 + bg_offset.x
+			var region_y = bg_offset.y if cell_pos.y % 2 == 0 else 64 + bg_offset.y
+			var region_w = size * TILE_SIZE - bg_offset.x * 2
+			var region_h = size * TILE_SIZE - bg_offset.y * 2
+			background_sprite.region_rect = Rect2(region_x, region_y, region_w, region_h)
 	
 	if placed && (type == BuildingData.Type.HOUSE || type == BuildingData.Type.QUARRY):
 		var next_to_minecart = get_parent().building_is_next_to_minecart(self) || get_parent().player_placing_minecart_next_to_building(self)

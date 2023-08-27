@@ -1,12 +1,21 @@
-[gd_scene load_steps=5 format=3 uid="uid://cv6moqrk0o3nj"]
+[gd_scene load_steps=6 format=3 uid="uid://cv6moqrk0o3nj"]
 
 [ext_resource type="Script" path="res://Buildings/BaseBuilding.gd" id="1_ghdmy"]
 [ext_resource type="Material" uid="uid://nqpwbe45b8cn" path="res://Shaders/InvalidBuildingPlacement.tres" id="2_8r5no"]
+[ext_resource type="Texture2D" uid="uid://dnsxe5dsaswqg" path="res://Assets/walltiles/newrockbg.png" id="2_gmm3c"]
 [ext_resource type="Texture2D" uid="uid://cq1p5ky2322w8" path="res://Assets/Buildings/StairsDown.png" id="3_e7n3w"]
 [ext_resource type="Texture2D" uid="uid://dbis5jfyeq0u6" path="res://Assets/UI/nominecart.png" id="4_wjvxv"]
 
 [node name="BaseBuilding" type="Node2D"]
 script = ExtResource("1_ghdmy")
+
+[node name="BG" type="Sprite2D" parent="."]
+modulate = Color(1, 1, 1, 0.803922)
+texture_repeat = 2
+texture = ExtResource("2_gmm3c")
+centered = false
+region_enabled = true
+region_rect = Rect2(0, 0, 64, 64)
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 material = ExtResource("2_8r5no")

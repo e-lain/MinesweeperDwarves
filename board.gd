@@ -48,6 +48,8 @@ var stairs_placed: bool = false
 
 var buildings_by_id := {}
 
+var mine_exploded = false
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	get_parent().queue_building.connect(_on_building_queue)
@@ -170,6 +172,8 @@ func _on_tile_destroyed(cell_pos: Vector2i):
 	clear_tile(tile)
 
 func _on_tile_uncovered(cell_pos: Vector2i):
+	if mine_exploded:
+		return
 	var tile = tiles[cell_pos.x][cell_pos.y]
 	if tile.is_flagged:
 		return
@@ -332,6 +336,7 @@ func uncover_tile(tile: BoardTile):
 	tilemap.set_cells_terrain_connect(0, [tile.cell_position], 0, -1)
 	
 	if tile.is_bomb:
+		mine_exploded = true
 		var bomb = tile.create_bomb()
 		bomb.animation_complete.connect(on_bomb_animation_complete)
 		return
@@ -357,6 +362,8 @@ func uncover_tile(tile: BoardTile):
 func explode_mine():
 	# TODO: play an animation and emit signal when it finishes
 	SoundManager.play_explosion_sound()
+
+	
 
 func on_bomb_animation_complete():
 	mine_animation_complete.emit()
@@ -483,3 +490,6 @@ func get_world_positions_in_area(origin_world_pos: Vector2, size: int) -> Array[
 			tiles.push_back(Vector2(origin_world_pos.x + x*TILE_SIZE, origin_world_pos.y + y*TILE_SIZE))
 	
 	return tiles
+
+func world_to_cell(world):
+	return tilemap.local_to_map(tilemap.to_local(world))
