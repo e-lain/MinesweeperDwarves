@@ -4,13 +4,9 @@
 [ext_resource type="Theme" uid="uid://b6iv3a38m6uhb" path="res://UI.tres" id="1_k2e4r"]
 [ext_resource type="Texture2D" uid="uid://dtcx71mlo5m38" path="res://Assets/UI/TitleScreen.png" id="1_qaah5"]
 [ext_resource type="StyleBox" uid="uid://cs0uiigi7qlev" path="res://UI/InnerButtonStyle.tres" id="4_prg3j"]
+[ext_resource type="FontFile" uid="uid://1xgfwqxyu633" path="res://alphabetized cassette tapes.ttf" id="4_u1wj3"]
 [ext_resource type="StyleBox" uid="uid://d1t3tpmhbhut8" path="res://UI/HoveredInnerButtonStyle.tres" id="5_5xhew"]
 [ext_resource type="Texture2D" uid="uid://bf0kqdtsnmfol" path="res://Assets/UI/Banner.png" id="6_51ii4"]
-
-[sub_resource type="SystemFont" id="SystemFont_23266"]
-font_names = PackedStringArray("Segoe Print")
-hinting = 2
-multichannel_signed_distance_field = true
 
 [node name="Title" type="Node2D"]
 script = ExtResource("1_1tpif")
@@ -34,19 +30,19 @@ offset_left = 452.0
 offset_top = -122.0
 offset_right = 1284.0
 offset_bottom = 326.0
-theme_override_fonts/font = SubResource("SystemFont_23266")
-theme_override_font_sizes/font_size = 67
-text = "Demo Dwarves:"
+theme_override_fonts/font = ExtResource("4_u1wj3")
+theme_override_font_sizes/font_size = 141
+text = "Demo Dwarves"
 horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="Title2" type="Label" parent="Control/Title"]
 layout_mode = 0
-offset_top = 79.0
+offset_top = 88.0
 offset_right = 832.0
-offset_bottom = 527.0
-theme_override_fonts/font = SubResource("SystemFont_23266")
-theme_override_font_sizes/font_size = 51
+offset_bottom = 536.0
+theme_override_fonts/font = ExtResource("4_u1wj3")
+theme_override_font_sizes/font_size = 91
 text = "City Sweeper"
 horizontal_alignment = 1
 vertical_alignment = 1
