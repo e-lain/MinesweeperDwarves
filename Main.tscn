@@ -588,19 +588,19 @@ theme_override_font_sizes/font_size = 25
 text = "Click these arrows to change pages"
 autowrap_mode = 2
 
-[node name="Label9" type="Label" parent="CanvasLayer/HelpOverlayBuild"]
+[node name="Label9" type="RichTextLabel" parent="CanvasLayer/HelpOverlayBuild"]
 layout_mode = 0
 offset_left = 1112.0
 offset_top = 64.0
 offset_right = 1280.0
 offset_bottom = 1429.0
-theme_override_font_sizes/font_size = 25
-text = "Hover mouse over building to see description and cost.
-Mouse over the board for a UI outline showing valid placement locations. Left-click to place it, Right-click to cancel
+theme_override_font_sizes/normal_font_size = 25
+bbcode_enabled = true
+text = "Hover mouse over building to see description and cost. Mouse over the board for a UI outline showing valid placement locations. Left-click to place it, Right-click to cancel
 
-IMPORTANT - Build the 'Beer Hall' building on the second page to win the game.
+[color=orange]IMPORTANT - Build the 'Beer Hall' building, located on the second page to win the game.[/color]
 
-IMPORTANT - The stairs MUST be built first before any other building can be built
+[color=red]IMPORTANT - The stairs MUST be built first before any other building can be built
 
 IMPORTANT - Houses and quaries MUST be directly adjacent to a minecart in order for any resources to be gained from them"
 autowrap_mode = 2
@@ -613,14 +613,14 @@ offset_right = 765.0
 offset_bottom = 127.0
 text = "Stone - Gained from building and harvesting quaries. Used for almost all buildings"
 
-[node name="Label4" type="Label" parent="CanvasLayer/HelpOverlayBuild"]
+[node name="Label4" type="RichTextLabel" parent="CanvasLayer/HelpOverlayBuild"]
 layout_mode = 0
 offset_left = 208.0
 offset_top = 168.0
 offset_right = 765.0
-offset_bottom = 191.0
-text = "Steel - One gained per bomb correctly flagged when \"Build Mode\" is initiated. Very important.
-Used to build minecarts, which are needed to harvest resources from buildings"
+offset_bottom = 269.0
+bbcode_enabled = true
+text = "Steel - One gained per bomb correctly flagged when \"Build Mode\" is initiated. [color=red]Used to build minecarts, which are needed to harvest resources from buildings[/color]"
 
 [node name="Label5" type="Label" parent="CanvasLayer/HelpOverlayBuild"]
 layout_mode = 0
@@ -630,33 +630,33 @@ offset_right = 765.0
 offset_bottom = 308.0
 text = "How many levels deep you are. Hitting mines doesn't add to this count, clumsy fellow!"
 
-[node name="Label6" type="Label" parent="CanvasLayer/HelpOverlayBuild"]
+[node name="Label6" type="RichTextLabel" parent="CanvasLayer/HelpOverlayBuild"]
 layout_mode = 0
 offset_left = 208.0
-offset_top = 328.0
-offset_right = 765.0
-offset_bottom = 372.0
+offset_top = 320.0
+offset_right = 915.0
+offset_bottom = 390.0
+bbcode_enabled = true
 text = "You are given an amount equal to the number of bombs on the floor. Right-click a tile to flag it as having
- a mine. When build mode starts, you are awarded with a steel if you are correct!"
+ a mine. [color=red]When build mode starts, you are awarded with a steel if you are correct![/color]"
 
-[node name="Label7" type="Label" parent="CanvasLayer/HelpOverlayBuild"]
+[node name="Label7" type="RichTextLabel" parent="CanvasLayer/HelpOverlayBuild"]
 layout_mode = 0
 offset_left = 8.0
 offset_top = 504.0
 offset_right = 420.0
 offset_bottom = 609.0
-text = "Click when you are done building. Any resources able to be
-harvested will be credited, and the next floor will begin.
-All resources carry over to the next floor"
+bbcode_enabled = true
+text = "Click when you are done building. [color=red]Resources gained from buildings on the floor will only be awarded once you press this button. All resources carry over to the next floor[/color]"
 
-[node name="Label" type="Label" parent="CanvasLayer/HelpOverlayBuild"]
+[node name="Label" type="RichTextLabel" parent="CanvasLayer/HelpOverlayBuild"]
 layout_mode = 0
 offset_left = 208.0
 offset_top = 32.0
 offset_right = 863.0
 offset_bottom = 102.0
-text = "Population - Hitting a mine reduces this by 1. When you run out of population, you lose the game
-A resource for some buildings too"
+bbcode_enabled = true
+text = "Population - [color=red]Hitting a mine reduces this by 1. When you run out of population, you lose the game.[/color] A resource for some buildings too"
 
 [node name="HelpOverlayPlay" type="Control" parent="CanvasLayer"]
 visible = false
@@ -745,22 +745,23 @@ rotation = -3.59014
 scale = Vector2(0.970588, 0.864604)
 texture = ExtResource("11_gm014")
 
-[node name="Label" type="Label" parent="CanvasLayer/HelpOverlayPlay"]
+[node name="Label" type="RichTextLabel" parent="CanvasLayer/HelpOverlayPlay"]
 layout_mode = 0
 offset_left = 208.0
 offset_top = 40.0
 offset_right = 765.0
-offset_bottom = 72.0
-text = "Population - Hitting a mine reduces this by 1. When you run out of population, you lose the game
-A resource for some buildings too"
+offset_bottom = 111.0
+bbcode_enabled = true
+text = "Population - [color=red]Hitting a mine reduces this by 1. When you run out of population, you lose the game.[/color] A resource for some buildings too"
 
-[node name="Label8" type="Label" parent="CanvasLayer/HelpOverlayPlay"]
+[node name="Label8" type="RichTextLabel" parent="CanvasLayer/HelpOverlayPlay"]
 layout_mode = 0
 offset_left = 1040.0
 offset_right = 1280.0
 offset_bottom = 87.0
-theme_override_font_sizes/font_size = 25
-text = "Obtained by building an engineer's workshop. Number of uses refreshes every level"
+theme_override_font_sizes/normal_font_size = 25
+bbcode_enabled = true
+text = "Obtained by building an engineer's workshop. [color=red]Number of uses refreshes every level[/color]"
 autowrap_mode = 2
 
 [node name="Label9" type="Label" parent="CanvasLayer/HelpOverlayPlay"]
@@ -811,14 +812,14 @@ offset_right = 765.0
 offset_bottom = 127.0
 text = "Stone - Gained from building and harvesting quaries. Used for almost all buildings"
 
-[node name="Label4" type="Label" parent="CanvasLayer/HelpOverlayPlay"]
+[node name="Label4" type="RichTextLabel" parent="CanvasLayer/HelpOverlayPlay"]
 layout_mode = 0
 offset_left = 208.0
 offset_top = 168.0
 offset_right = 765.0
-offset_bottom = 191.0
-text = "Steel - One gained per bomb correctly flagged when \"Build Mode\" is initiated. Very important.
-Used to build minecarts, which are needed to harvest resources from buildings"
+offset_bottom = 268.0
+bbcode_enabled = true
+text = "Steel - One gained per bomb correctly flagged when \"Build Mode\" is initiated. [color=red]Used to build minecarts, which are needed to harvest resources from buildings[/color]"
 
 [node name="Label5" type="Label" parent="CanvasLayer/HelpOverlayPlay"]
 layout_mode = 0
@@ -828,14 +829,14 @@ offset_right = 765.0
 offset_bottom = 308.0
 text = "How many levels deep you are. Hitting mines doesn't add to this count, clumsy fellow!"
 
-[node name="Label6" type="Label" parent="CanvasLayer/HelpOverlayPlay"]
+[node name="Label6" type="RichTextLabel" parent="CanvasLayer/HelpOverlayPlay"]
 layout_mode = 0
-offset_left = 208.0
-offset_top = 328.0
-offset_right = 765.0
-offset_bottom = 372.0
-text = "You are given an amount equal to the number of bombs on the floor. Right-click a tile to flag it as having
- a mine. When build mode starts, you are awarded with a steel if you are correct!"
+offset_left = 209.0
+offset_top = 308.0
+offset_right = 766.0
+offset_bottom = 421.0
+bbcode_enabled = true
+text = "You are given an amount equal to the number of bombs on the floor. Right-click a tile to flag it as having a mine. [color=red]When build mode starts, you are awarded with a steel if you are correct![/color]"
 
 [node name="Label7" type="Label" parent="CanvasLayer/HelpOverlayPlay"]
 layout_mode = 0
