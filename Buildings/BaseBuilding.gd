@@ -47,10 +47,10 @@ func _on_control_gui_input(event):
 			if !can_place():
 				SoundManager.play_negative()
 			if type == BuildingData.Type.STAIRCASE and get_parent().stairs_placed:
+				get_parent().get_parent().help_text_bar.text = "Stairs already placed! Can't have more than one staircase per floor"
 				print("Stairs already placed!")
 			if can_place() && in_bounds:
 				placed = true
-				get_parent().get_parent().help_text_is_overriden = false
 				get_parent().on_building_placed(global_position, self)
 
 				sprite.material = null

@@ -16,7 +16,7 @@ func _ready():
 
 func _process(delta):
 	get_parent().get_parent().help_text_bar.text = "Left-click on valid tile to clear it. If it has a bomb, you will not be harmed. Right-click to cancel"
-	if get_parent().get_parent().ability_destroy < 1:
+	if get_parent().get_parent().ability_destroy < 1 && visible:
 		get_parent().placing = false
 		get_parent().get_parent().help_text_is_overriden = false
 		queue_free()
