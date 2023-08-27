@@ -43,6 +43,8 @@ var ability_armor = 0
 var ability_dowse_max = 0
 var ability_dowse = 0
 
+var overlay_toggled: bool = false
+
 var boards = [] # Note, some of these may be null references because we queue_free() boards that have hit a bomb
 
 signal queue_ability(ability_name)
@@ -232,12 +234,20 @@ func _on_choose_active_ability_chosen(ability_name):
 		ability_dowse_max += 1
 		
 func _input(event):
-	if event is InputEventKey and Input.is_key_label_pressed(KEY_H):
+	if event is InputEventKey and Input.is_key_label_pressed(KEY_H):	
+		overlay_toggled = !overlay_toggled
+			
 		if boards[len(boards)-1].build_mode == false:
 			help_overlay_play.visible = !help_overlay_play.visible
 		elif boards[len(boards)-1].build_mode == true:
 			help_overlay_build.visible = !help_overlay_build.visible
-
+			
+		if overlay_toggled:
+			var new_color = Color.WHITE
+			new_color.a = 0.1
+			modulate = new_color
+		else:
+			modulate = Color.WHITE
 
 func _on_end_level_btn_mouse_entered():
 	if enter_build_mode_button.disabled && !help_text_is_overriden:
