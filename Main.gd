@@ -91,7 +91,7 @@ func generate_board(difficulty: int):
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	for key in BuildingData.data.keys():
-		load(BuildingData.data[key]["ïcon_path"])
+		load(BuildingData.data[key]["icon_path"])
 	
 	# place board in center with correct offset accounting for tile size and board size
 	generate_board(0)
