@@ -1,9 +1,13 @@
 extends Node2D
 class_name Board
 
+signal on_minesweeper_collection_complete
+signal on_building_collection_complete
 signal mine_animation_complete
 signal wonder_placed
 signal workshop_placed
+
+@export var collection_lifespan_seconds: float = 1.5
 
 @export var grid_line_prefab: PackedScene = preload("res://Prefabs/GridLine.tscn")
 @onready var tilemap: TileMap = $TileMap
@@ -234,7 +238,7 @@ func collect_resources():
 	for id in buildings_by_id.keys():
 		var building = buildings_by_id[id]
 		var type = building.type
-
+		
 		if type == BuildingData.Type.MINECART:
 
 			var cell_pos = tilemap.local_to_map(tilemap.to_local(building.global_position))
@@ -245,7 +249,9 @@ func collect_resources():
 				var tile = tiles[check_cell.x][check_cell.y]
 				if tile.has_building and !tiles_to_collect_from.has(tile.building_id):
 					tiles_to_collect_from[tile.building_id] = tile
-			
+	
+	
+	var collected_resources = false
 	for tile_id in tiles_to_collect_from.keys():
 		var adjacent_type = buildings_by_id[tile_id].type
 		var data = BuildingData.data[adjacent_type]
@@ -257,14 +263,30 @@ func collect_resources():
 		# TODO - animate this
 		if stone_cost < 0: # negative costs are resource gains
 			get_parent().stone -= stone_cost
+			buildings_by_id[tile_id].play_collection_animation(collection_lifespan_seconds, "res://Assets/UI/StoneIcon.png")
+			collected_resources = true
 		
 		if population_cost < 0:
 			get_parent().population -= population_cost
+			buildings_by_id[tile_id].play_collection_animation(collection_lifespan_seconds, "res://Assets/UI/PopIcon.png")
+			collected_resources = true
 		
 		if steel_cost < 0:
 			get_parent().steel -= steel_cost
-				
+			buildings_by_id[tile_id].play_collection_animation(collection_lifespan_seconds, "res://Assets/UI/steeldownscaledicon.png")
+			collected_resources = true
 	
+	if collected_resources:
+		var timer = get_tree().create_timer(collection_lifespan_seconds)
+		timer.timeout.connect(building_collection_complete)
+		SoundManager.play_collection()
+
+func building_collection_complete():
+	on_building_collection_complete.emit()
+
+func minesweeper_collection_complete():
+	on_minesweeper_collection_complete.emit()
+
 func clear_tile(tile: BoardTile):
 	if tile.is_flagged:
 		flags += 1

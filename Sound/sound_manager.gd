@@ -13,6 +13,8 @@ extends Node
 @export var armor_sounds: Array[AudioStream]
 @export var dowse_sounds: Array[AudioStream]
 
+@export var collection_sounds: Array[AudioStream]
+
 
 @onready var sfx_player = $SFXPlayer
 @onready var sfx_player2 = $SFXPlayer2
@@ -53,3 +55,6 @@ func play_crane():
 
 func play_dowse():
 	play_sound(dowse_sounds.pick_random())
+
+func play_collection():
+	play_sound(collection_sounds.pick_random())

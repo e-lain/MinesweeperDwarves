@@ -1,0 +1,40 @@
+[gd_scene load_steps=4 format=3 uid="uid://bqsniqcpm3p3g"]
+
+[ext_resource type="Script" path="res://UI/CollectionEffect.gd" id="1_1s7na"]
+[ext_resource type="Theme" uid="uid://b6iv3a38m6uhb" path="res://UI.tres" id="2_0i7kr"]
+[ext_resource type="Texture2D" uid="uid://du5p0tvlhojks" path="res://Assets/UI/PopIcon.png" id="3_tbs5j"]
+
+[node name="CollectionEffect" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+script = ExtResource("1_1s7na")
+speed = 60.0
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 0
+offset_left = -31.0
+offset_top = -20.0
+offset_right = 9.0
+offset_bottom = 19.0
+theme = ExtResource("2_0i7kr")
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_shadow_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 36
+text = "+5"
+
+[node name="TextureRect2" type="TextureRect" parent="."]
+layout_mode = 0
+offset_left = -19.0
+offset_top = -35.0
+offset_right = 43.0
+offset_bottom = 27.0
+texture = ExtResource("3_tbs5j")
+
+[node name="TextureRect" type="TextureRect" parent="."]
+modulate = Color(0, 0, 0, 1)
+layout_mode = 0
+offset_left = -17.0
+offset_top = -33.0
+offset_right = 40.0
+offset_bottom = 24.0
+texture = ExtResource("3_tbs5j")

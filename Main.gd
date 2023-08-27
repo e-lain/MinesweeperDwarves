@@ -75,6 +75,8 @@ func generate_board(difficulty: int):
 	b.mine_animation_complete.connect(on_mine_animation_complete)
 	b.wonder_placed.connect(on_wonder_placed)
 	b.workshop_placed.connect(on_workshop_placed)
+	b.on_building_collection_complete.connect(on_building_collection_complete)
+	b.on_minesweeper_collection_complete.connect(on_minesweeper_collection_complete)
 	boards.push_back(b)
 
 # Called when the node enters the scene tree for the first time.
@@ -193,8 +195,6 @@ func get_current_board():
 
 func _on_next_floor_btn_pressed():
 	get_current_board().collect_resources()
-	# TODO: animate this
-	on_resource_collection_complete()
 
 func on_resource_collection_complete():
 	next_level()
@@ -248,3 +248,9 @@ func _on_end_level_btn_mouse_entered():
 
 func _on_end_level_btn_mouse_exited():
 	help_text_is_overriden = false
+
+func on_building_collection_complete():
+	on_resource_collection_complete()
+
+func on_minesweeper_collection_complete():
+	on_resource_collection_complete()
