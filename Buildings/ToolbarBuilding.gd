@@ -8,6 +8,12 @@ signal build(type: BuildingData.Type)
 @export var resources_source: Node2D
 @onready var texture_rect: TextureRect = $MarginContainer/TextureRect
 
+var current_stone
+var current_pop
+
+var stone_req
+var pop_req
+
 var data
 
 var clickable = true
@@ -17,12 +23,12 @@ func _ready():
 	texture_rect.texture = load(data["icon_path"])
 
 func _process(delta):
-	var current_stone = resources_source.stone
-	var current_pop = resources_source.population
+	current_stone = resources_source.stone
+	current_pop = resources_source.population
 	var stairs_placed = resources_source.stairs_placed()
 	
-	var stone_req = data["stone_cost"]
-	var pop_req = data["population_cost"]
+	stone_req = data["stone_cost"]
+	pop_req = data["population_cost"]
 	if current_stone >= stone_req && current_pop >= pop_req && ((type != BuildingData.Type.STAIRCASE && stairs_placed) || (type == BuildingData.Type.STAIRCASE && !stairs_placed)):
 		modulate = Color.WHITE
 		clickable = true
@@ -42,6 +48,9 @@ func _on_mouse_entered():
 	elif  type == BuildingData.Type.STAIRCASE && stairs_placed && !get_parent().get_parent().get_parent().get_parent().help_text_is_overriden:
 		get_parent().get_parent().get_parent().get_parent().help_text_is_overriden = true
 		get_parent().get_parent().get_parent().get_parent().help_text_bar.text = "Staircase is already built. Only one staircase can be built per floor"
+	elif current_stone < stone_req || current_pop < pop_req:
+		get_parent().get_parent().get_parent().get_parent().help_text_is_overriden = true
+		get_parent().get_parent().get_parent().get_parent().help_text_bar.text = "Not enough resources to build"
 
 func _on_mouse_exited():
 	info_popup.visible = false
@@ -50,7 +59,8 @@ func _on_mouse_exited():
 		get_parent().get_parent().get_parent().get_parent().help_text_is_overriden = false
 	elif !stairs_placed && type != BuildingData.Type.STAIRCASE:
 		get_parent().get_parent().get_parent().get_parent().help_text_is_overriden = false
-
+	elif current_stone < stone_req || current_pop < pop_req:
+		get_parent().get_parent().get_parent().get_parent().help_text_is_overriden = false
 
 func _on_gui_input(event):
 	if event is InputEventMouseButton:
