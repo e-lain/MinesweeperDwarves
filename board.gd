@@ -22,6 +22,8 @@ const TILE_SIZE = 64
 
 var build_mode: bool = false
 var placing: bool = false
+var placing_type: BuildingData.Type
+var current_placing_instance: BaseBuilding
 
 # Ability usage toggles
 var clearing_tile: bool = false
@@ -118,11 +120,13 @@ func _process(delta):
 func _on_building_queue(type: BuildingData.Type):
 	if build_mode and !placing:
 		placing = true
+		placing_type = type
 		get_parent().help_text_is_overriden = true
 		get_parent().help_text_bar.text = "Left-click on valid space to build. Right-click to cancel"
 		var building = building_prefab.instantiate()
 		add_child(building)
 		building.set_type(type)
+		current_placing_instance = building
 
 func _on_ability_queue(ability_name):
 	var placing = true
@@ -418,6 +422,38 @@ func can_use_ability_at_position(world_pos: Vector2, size: int):
 			return false
 	return !can_place_at_position(world_pos, size)
 
+func building_is_next_to_minecart(building: BaseBuilding) -> bool:
+	var places_to_check = get_world_positions_in_area(building.global_position, building.size)
+	var offsets = [Vector2i.UP, Vector2i.DOWN, Vector2i.LEFT, Vector2i.RIGHT]	
+
+	for pos in places_to_check:
+		var cell_pos = tilemap.local_to_map(tilemap.to_local(pos))
+		for offset in offsets:
+			var check = cell_pos + offset
+			if check.x < 0 || check.x >= columns || check.y < 0 || check.y >= rows:
+				continue
+			var tile = tiles[check.x][check.y]
+			var other_building = buildings_by_id[tile.building_id]
+			if other_building.type == BuildingData.Type.MINECART:
+				return true
+	
+	return false
+
+func player_placing_minecart_next_to_building(building: BaseBuilding) -> bool:
+	if !placing || placing_type != BuildingData.Type.MINECART || current_placing_instance == null:
+		return false
+	
+	var minecart_cell_pos = tilemap.local_to_map(tilemap.to_local(current_placing_instance.global_position))
+	var offsets = [Vector2i.UP, Vector2i.DOWN, Vector2i.LEFT, Vector2i.RIGHT]
+	for offset in offsets:
+		var check = minecart_cell_pos + offset
+		if check.x < 0 || check.x >= columns || check.y < 0 || check.y >= rows:
+			continue
+		var tile = tiles[check.x][check.y]
+		if tile.building_id == building.id:
+			return true
+	return false
+	
 func get_world_positions_in_area(origin_world_pos: Vector2, size: int) -> Array[Vector2]:
 	var tiles: Array[Vector2] = []
 	for x in range(size):
