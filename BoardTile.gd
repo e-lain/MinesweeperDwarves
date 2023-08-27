@@ -54,10 +54,11 @@ func destroy_flag():
 		flag.queue_free()
 		flag = null
 
-func create_bomb():
+func create_bomb() -> Node2D:
 	bomb = bomb_prefab.instantiate()
 	label_parent.add_child(bomb)
 	bomb.position = get_position()
+	return bomb
 
 func get_position():
 	return cell_position * TILE_SIZE + Vector2i(TILE_SIZE / 2, TILE_SIZE / 2)

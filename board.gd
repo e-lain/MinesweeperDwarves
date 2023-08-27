@@ -280,6 +280,9 @@ func collect_resources():
 		var timer = get_tree().create_timer(collection_lifespan_seconds)
 		timer.timeout.connect(building_collection_complete)
 		SoundManager.play_collection()
+	else:
+		# TODO: Notify player if not collecting any resources??
+		building_collection_complete()
 
 func building_collection_complete():
 	on_building_collection_complete.emit()
@@ -303,7 +306,8 @@ func uncover_tile(tile: BoardTile):
 	tilemap.set_cells_terrain_connect(0, [tile.cell_position], 0, -1)
 	
 	if tile.is_bomb:
-		tile.create_bomb()
+		var bomb = tile.create_bomb()
+		bomb.animation_complete.connect(on_bomb_animation_complete)
 		return
 		
 	if tile.is_flagged:
@@ -328,6 +332,7 @@ func explode_mine():
 	# TODO: play an animation and emit signal when it finishes
 	SoundManager.play_explosion_sound()
 
+func on_bomb_animation_complete():
 	mine_animation_complete.emit()
 
 func get_adjacent_tiles(tile: BoardTile) -> Array[BoardTile]:
