@@ -521,9 +521,8 @@ theme = ExtResource("2_b2qml")
 [node name="Label2" type="Label" parent="CanvasLayer/HelpOverlayBuild"]
 layout_mode = 0
 offset_left = 8.0
-offset_top = 8.0
-offset_right = 92.0
-offset_bottom = 30.0
+offset_right = 466.0
+offset_bottom = 35.0
 text = "Resource Panel - All resources listed here are spent on buildings"
 
 [node name="Arrow" type="Sprite2D" parent="CanvasLayer/HelpOverlayBuild"]
@@ -539,15 +538,9 @@ scale = Vector2(0.970588, 1.03333)
 texture = ExtResource("11_gm014")
 
 [node name="Arrow9" type="Sprite2D" parent="CanvasLayer/HelpOverlayBuild"]
-position = Vector2(1112, 120)
+position = Vector2(1100.85, 120.331)
 rotation = -1.67552
-scale = Vector2(0.970588, 1.03333)
-texture = ExtResource("11_gm014")
-
-[node name="Arrow12" type="Sprite2D" parent="CanvasLayer/HelpOverlayBuild"]
-position = Vector2(936, 648)
-rotation = -1.67552
-scale = Vector2(1.71549, 1.59789)
+scale = Vector2(0.970588, 0.822232)
 texture = ExtResource("11_gm014")
 
 [node name="Arrow3" type="Sprite2D" parent="CanvasLayer/HelpOverlayBuild"]
@@ -598,53 +591,28 @@ A resource for some buildings too"
 [node name="Label8" type="Label" parent="CanvasLayer/HelpOverlayBuild"]
 layout_mode = 0
 offset_left = 1144.0
-offset_right = 1352.0
-offset_bottom = 66.0
-text = "Click these arrows to
-change pages"
+offset_right = 1280.0
+offset_bottom = 105.0
+theme_override_font_sizes/font_size = 25
+text = "Click these arrows to change pages"
+autowrap_mode = 2
 
 [node name="Label9" type="Label" parent="CanvasLayer/HelpOverlayBuild"]
 layout_mode = 0
-offset_left = 1128.0
-offset_top = 72.0
-offset_right = 1685.0
-offset_bottom = 138.0
-text = "Hover mouse over building
-to see description and cost.
+offset_left = 1112.0
+offset_top = 64.0
+offset_right = 1280.0
+offset_bottom = 1429.0
+theme_override_font_sizes/font_size = 25
+text = "Hover mouse over building to see description and cost.
+Mouse over the board for a UI outline showing valid placement locations. Left-click to place it, Right-click to cancel
 
-Mouse over the board for
-a UI outline detailed valid
-placement locations.
-Left-click to place it,
-Right-click to cancel
+IMPORTANT - Build the 'Beer Hall' building on the second page to win the game.
 
-IMPORTANT - Build the
-'Beer Hall' building on the 
-second page to win the
-game.
+IMPORTANT - The stairs MUST be built first before any other building can be built
 
-IMPORTANT - The stairs
-MUST be built first before
-any other building can be
-built
-
-IMPORTANT - Houses and
-quaries MUST be directly
-adjhacent to a minecart
-in order for any resources
-to be gained from them"
-
-[node name="Label12" type="Label" parent="CanvasLayer/HelpOverlayBuild"]
-layout_mode = 0
-offset_left = 960.0
-offset_top = 616.0
-offset_right = 1517.0
-offset_bottom = 770.0
-text = "Use your available resources to build structures, and
-harvest from them. Resources gained are credited once
-the level is ended. IMPORTANT - houses and quaries 
-need to be placed directly adjacent to a minecart for
-the output resources to be harvested!"
+IMPORTANT - Houses and quaries MUST be directly adjacent to a minecart in order for any resources to be gained from them"
+autowrap_mode = 2
 
 [node name="Label3" type="Label" parent="CanvasLayer/HelpOverlayBuild"]
 layout_mode = 0
@@ -683,9 +651,9 @@ text = "You are given an amount equal to the number of bombs on the floor. Right
 [node name="Label7" type="Label" parent="CanvasLayer/HelpOverlayBuild"]
 layout_mode = 0
 offset_left = 8.0
-offset_top = 544.0
-offset_right = 392.0
-offset_bottom = 610.0
+offset_top = 504.0
+offset_right = 420.0
+offset_bottom = 609.0
 text = "Click when you are done building. Any resources able to be
 harvested will be credited, and the next floor will begin.
 All resources carry over to the next floor"
@@ -701,9 +669,8 @@ theme = ExtResource("2_b2qml")
 [node name="Label2" type="Label" parent="CanvasLayer/HelpOverlayPlay"]
 layout_mode = 0
 offset_left = 8.0
-offset_top = 8.0
-offset_right = 92.0
-offset_bottom = 30.0
+offset_right = 466.0
+offset_bottom = 35.0
 text = "Resource Panel - All resources listed here are spent on buildings"
 
 [node name="Arrow" type="Sprite2D" parent="CanvasLayer/HelpOverlayPlay"]
@@ -739,7 +706,7 @@ texture = ExtResource("11_gm014")
 [node name="Arrow12" type="Sprite2D" parent="CanvasLayer/HelpOverlayPlay"]
 position = Vector2(936, 624)
 rotation = -1.67552
-scale = Vector2(1.71549, 1.82599)
+scale = Vector2(1.54255, 1.61031)
 texture = ExtResource("11_gm014")
 
 [node name="Arrow3" type="Sprite2D" parent="CanvasLayer/HelpOverlayPlay"]
@@ -790,61 +757,51 @@ A resource for some buildings too"
 [node name="Label8" type="Label" parent="CanvasLayer/HelpOverlayPlay"]
 layout_mode = 0
 offset_left = 1040.0
-offset_right = 1597.0
-offset_bottom = 66.0
-text = "Uses can be obtained by building an
-engineer's workshop. Number of uses
-refreshes every level"
+offset_right = 1280.0
+offset_bottom = 87.0
+theme_override_font_sizes/font_size = 25
+text = "Obtained by building an engineer's workshop. Number of uses refreshes every level"
+autowrap_mode = 2
 
 [node name="Label9" type="Label" parent="CanvasLayer/HelpOverlayPlay"]
 layout_mode = 0
 offset_left = 1128.0
 offset_top = 72.0
-offset_right = 1685.0
-offset_bottom = 138.0
-text = "Clear Tile - Click on
-a covered tile. Uncovers
-and clears the selected tile,
-even if there was a bomb
-there! Right-click to
-cancel"
+offset_right = 1280.0
+offset_bottom = 317.0
+theme_override_font_sizes/font_size = 25
+text = "Crane - Click on a covered tile. Uncovers and clears the selected tile, even if there was a bomb there! Right-click to cancel"
+autowrap_mode = 2
 
 [node name="Label10" type="Label" parent="CanvasLayer/HelpOverlayPlay"]
 layout_mode = 0
 offset_left = 1128.0
 offset_top = 224.0
-offset_right = 1685.0
-offset_bottom = 334.0
-text = "Active Armor - Click to
-activate. Grants you
-immunity for the next tile
-you click on (bombs will
-not damage you)"
+offset_right = 1280.0
+offset_bottom = 504.0
+theme_override_font_sizes/font_size = 25
+text = "Active Armor - Click to activate. Grants you immunity for the next tile you click on (bombs will not damage you)"
+autowrap_mode = 2
 
 [node name="Label11" type="Label" parent="CanvasLayer/HelpOverlayPlay"]
 layout_mode = 0
 offset_left = 1128.0
 offset_top = 392.0
-offset_right = 1685.0
-offset_bottom = 502.0
-text = "Dowsing Rod - Click to use.
-Automagically flags a
-random bomb on the
-board for you!"
+offset_right = 1280.0
+offset_bottom = 567.0
+theme_override_font_sizes/font_size = 25
+text = "Dowsing Rod - Click to use. Automagically flags a random bomb on the board for you!"
+autowrap_mode = 2
 
 [node name="Label12" type="Label" parent="CanvasLayer/HelpOverlayPlay"]
 layout_mode = 0
 offset_left = 968.0
-offset_top = 568.0
-offset_right = 1525.0
-offset_bottom = 722.0
-text = "Explore the depths by playing good 'ol minesweeper!
-The more space you clear, the more space you'll have
-to build. The more bombs you correctly flag, the more
-steel you'll have to build with. Left-click a tile to
-reveal it. Right-click a tile to flag it as a bomb.
-Flagged tiles can be unflagged if you change your
-mind"
+offset_top = 544.0
+offset_right = 1280.0
+offset_bottom = 824.0
+theme_override_font_sizes/font_size = 25
+text = "Explore the depths by playing good 'ol minesweeper! The more space you clear, the more space you'll have to build. The more bombs you correctly flag, the more steel you'll have to build with. Left-click a tile to reveal it. Right-click a tile to flag it as a bomb. Flagged tiles can be unflagged if you change your mind"
+autowrap_mode = 2
 
 [node name="Label3" type="Label" parent="CanvasLayer/HelpOverlayPlay"]
 layout_mode = 0
@@ -883,9 +840,9 @@ text = "You are given an amount equal to the number of bombs on the floor. Right
 [node name="Label7" type="Label" parent="CanvasLayer/HelpOverlayPlay"]
 layout_mode = 0
 offset_left = 8.0
-offset_top = 544.0
-offset_right = 392.0
-offset_bottom = 610.0
+offset_top = 512.0
+offset_right = 457.0
+offset_bottom = 617.0
 text = "Click when you are done excavating the floor, and flagging bombs.
 You will be awarded steel for bombs correctly flagged.
 Build mode will begin"
