@@ -447,6 +447,8 @@ func can_use_ability_at_position(world_pos: Vector2, size: int):
 	var places_to_check = get_world_positions_in_area(world_pos, size)
 	for pos in places_to_check:
 		var cell_pos = tilemap.local_to_map(tilemap.to_local(pos))
+		if cell_pos.x >= columns || cell_pos.y >= rows || cell_pos.x < 0 || cell_pos.y < 0:
+			return false
 		var tile = tiles[cell_pos.x][cell_pos.y]
 		if tile.is_bomb && !tile.is_cover:
 			return false
