@@ -3,6 +3,8 @@ class_name BaseBuilding
 
 @export var type: BuildingData.Type
 @onready var sprite: Sprite2D = $Sprite2D
+@onready var no_minecart_sprite: Sprite2D = $NoMinecart
+
 var building_placement_material: ShaderMaterial = preload("res://Shaders/InvalidBuildingPlacement.tres")
 
 const collection_prefab: PackedScene = preload("res://UI/collection_effect.tscn")
@@ -37,6 +39,11 @@ func _process(delta):
 				sprite.material = building_placement_material
 			else:
 				sprite.material = null
+	
+	if placed && (type == BuildingData.Type.HOUSE || type == BuildingData.Type.QUARRY):
+		var next_to_minecart = get_parent().building_is_next_to_minecart(self) || get_parent().player_placing_minecart_next_to_building(self)
+		no_minecart_sprite.visible = !next_to_minecart
+		sprite.modulate.a = 1 if next_to_minecart else 0.7 
 
 func can_place():
 	return get_parent().can_place_at_position(global_position, size)
