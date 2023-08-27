@@ -5,6 +5,8 @@ class_name BaseBuilding
 @onready var sprite: Sprite2D = $Sprite2D
 var building_placement_material: ShaderMaterial = preload("res://Shaders/InvalidBuildingPlacement.tres")
 
+const collection_prefab: PackedScene = preload("res://UI/collection_effect.tscn")
+
 
 const TILE_SIZE = 64
 
@@ -57,3 +59,9 @@ func _on_control_gui_input(event):
 			get_parent().placing = false
 			get_parent().get_parent().help_text_is_overriden = false
 			queue_free()
+
+func play_collection_animation(lifespan_seconds: float, icon_path: String):
+	var instance = collection_prefab.instantiate()
+	add_child(instance)
+	instance.init(type, lifespan_seconds, icon_path)
+	instance.global_position = global_position + (Vector2(TILE_SIZE, TILE_SIZE) * size / 2.0) + Vector2(0, -16)

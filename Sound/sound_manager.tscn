@@ -1,4 +1,4 @@
-[gd_scene load_steps=25 format=3 uid="uid://cmx188rp4gtpl"]
+[gd_scene load_steps=26 format=3 uid="uid://cmx188rp4gtpl"]
 
 [ext_resource type="Script" path="res://Sound/sound_manager.gd" id="1_2lxws"]
 [ext_resource type="AudioStream" uid="uid://d2qd7h0634ine" path="res://Sound/Rock Debris/Rock Debris Small 05short.wav" id="2_u684t"]
@@ -24,6 +24,7 @@
 [ext_resource type="AudioStream" uid="uid://cda1lqiy5lexo" path="res://Sound/Blacksmith 1_3.wav" id="18_a61du"]
 [ext_resource type="AudioStream" uid="uid://bfhofi4dgsd7w" path="res://Sound/Harp_hit_1.wav" id="22_dj5af"]
 [ext_resource type="AudioStream" uid="uid://d04iwwpld6nun" path="res://Sound/Harp_hit_2.wav" id="23_1nlk5"]
+[ext_resource type="AudioStream" uid="uid://dgphkqyc88vy1" path="res://Sound/Rock Debris/Rock Debris Small 01.wav" id="24_h2xa6"]
 
 [node name="SoundManager" type="Node"]
 process_mode = 3
@@ -38,6 +39,7 @@ flag_sounds = Array[AudioStream]([ExtResource("6_p70n7"), ExtResource("7_r4kb0")
 crane_sounds = Array[AudioStream]([ExtResource("12_r3po4"), ExtResource("13_4miv5")])
 armor_sounds = Array[AudioStream]([ExtResource("14_bhybm"), ExtResource("17_1qpwp"), ExtResource("18_a61du"), ExtResource("15_80aeb")])
 dowse_sounds = Array[AudioStream]([ExtResource("22_dj5af"), ExtResource("23_1nlk5")])
+collection_sounds = Array[AudioStream]([ExtResource("24_h2xa6")])
 
 [node name="BGMPlayer" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("2_vv6po")

@@ -3,8 +3,8 @@
 [ext_resource type="Script" path="res://Title.gd" id="1_1tpif"]
 [ext_resource type="Theme" uid="uid://b6iv3a38m6uhb" path="res://UI.tres" id="1_k2e4r"]
 [ext_resource type="Texture2D" uid="uid://dtcx71mlo5m38" path="res://Assets/UI/TitleScreen.png" id="1_qaah5"]
-[ext_resource type="StyleBox" path="res://UI/InnerButtonStyle.tres" id="4_prg3j"]
-[ext_resource type="StyleBox" path="res://UI/HoveredInnerButtonStyle.tres" id="5_5xhew"]
+[ext_resource type="StyleBox" uid="uid://cs0uiigi7qlev" path="res://UI/InnerButtonStyle.tres" id="4_prg3j"]
+[ext_resource type="StyleBox" uid="uid://d1t3tpmhbhut8" path="res://UI/HoveredInnerButtonStyle.tres" id="5_5xhew"]
 
 [node name="Title" type="Node2D"]
 script = ExtResource("1_1tpif")

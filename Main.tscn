@@ -18,7 +18,7 @@
 [ext_resource type="PackedScene" uid="uid://cbn0lpatmkt08" path="res://UI/MineHitPopup.tscn" id="12_4reet"]
 [ext_resource type="Texture2D" uid="uid://cugy8vitkf3fg" path="res://Assets/UI/ArrowDown.png" id="12_hutn7"]
 [ext_resource type="PackedScene" uid="uid://dc8igqfayfl61" path="res://Abilities/AbilityArmor.tscn" id="16_hhtyy"]
-[ext_resource type="PackedScene" path="res://UI/ChooseActive.tscn" id="17_r6xie"]
+[ext_resource type="PackedScene" uid="uid://bqrac1jbrmwcd" path="res://UI/ChooseActive.tscn" id="17_r6xie"]
 [ext_resource type="PackedScene" uid="uid://pv3mpwrce0vs" path="res://Abilities/AbilityDowse.tscn" id="17_sj1ur"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_p42ak"]
@@ -505,10 +505,10 @@ grow_vertical = 2
 rotation = -0.0227148
 
 [node name="PopulationBox" parent="CanvasLayer/MineHitPopup" index="2"]
-offset_left = 74.7352
-offset_top = 62.1503
-offset_right = 110.735
-offset_bottom = 84.1503
+offset_left = 74.4726
+offset_top = 73.7105
+offset_right = 125.473
+offset_bottom = 108.71
 
 [node name="HelpOverlayBuild" type="Control" parent="CanvasLayer"]
 visible = false
