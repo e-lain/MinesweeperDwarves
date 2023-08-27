@@ -63,6 +63,10 @@ offset_top = 408.0
 offset_right = 1179.0
 offset_bottom = 478.0
 text = "If you do not know how to play minesweeper, check the game page description
-for some helpful links. Don't worry, it's easy!"
+for some helpful links. Don't worry, it's easy!
+
+Clear space for your buildings by exploring each minesweeper board. Build structures
+to collect resources, and gain special abilities. Win the game by collecting enough resources to build the legendary dwarven BEER HALL"
+autowrap_mode = 2
 
 [connection signal="pressed" from="Control/Button" to="." method="_on_button_pressed"]
