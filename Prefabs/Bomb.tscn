@@ -1,6 +1,65 @@
-[gd_scene load_steps=2 format=3 uid="uid://c2ksbtfr3qqrh"]
+[gd_scene load_steps=6 format=3 uid="uid://c2ksbtfr3qqrh"]
 
 [ext_resource type="Texture2D" uid="uid://bdvgerrn8866d" path="res://Assets/Mine.png" id="1_26ngi"]
+[ext_resource type="Script" path="res://Prefabs/Bomb.gd" id="2_j28m6"]
+
+[sub_resource type="Animation" id="Animation_ak2gy"]
+resource_name = "Explode"
+length = 0.6
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:visible")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [true, false, true, false, true, false, true, false, true, false, true]
+}
+tracks/1/type = "method"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0.6),
+"transitions": PackedFloat32Array(1),
+"values": [{
+"args": [],
+"method": &"finish"
+}]
+}
+
+[sub_resource type="Animation" id="Animation_jgdeq"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:visible")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_3pgn4"]
+_data = {
+"Explode": SubResource("Animation_ak2gy"),
+"RESET": SubResource("Animation_jgdeq")
+}
 
 [node name="Bomb" type="Sprite2D"]
 texture = ExtResource("1_26ngi")
+script = ExtResource("2_j28m6")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+autoplay = "Explode"
+libraries = {
+"": SubResource("AnimationLibrary_3pgn4")
+}
