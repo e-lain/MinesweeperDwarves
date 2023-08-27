@@ -33,7 +33,7 @@ static var data = {
 	Type.STAIRCASE: {
 		"type": Type.STAIRCASE,
 		"name": "Staircase",
-		"description": "Descend to next floor",
+		"description": "Opens next floor and allows placing other buildings",
 		"stone_cost": 0,
 		"population_cost": 0,
 		"steel_cost": 0,

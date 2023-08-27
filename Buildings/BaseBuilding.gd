@@ -23,6 +23,8 @@ var in_bounds: bool = false
 var id: int
 var size: int
 
+var took_help_text_override = false
+
 func set_type(value):
 	type = value
 	size = BuildingData.data[type]["size"]
@@ -57,12 +59,26 @@ func _process(delta):
 			background_sprite.region_rect = Rect2(region_x, region_y, region_w, region_h)
 	
 	if placed && (type == BuildingData.Type.HOUSE || type == BuildingData.Type.QUARRY):
-		var next_to_minecart = get_parent().building_is_next_to_minecart(self) || get_parent().player_placing_minecart_next_to_building(self)
+		var next_to_minecart = next_to_minecart()
 		no_minecart_sprite.visible = !next_to_minecart
 		sprite.modulate.a = 1 if next_to_minecart else 0.7 
+		
+		var mouse_pos = get_local_mouse_position()
+		var mouse_in_bounds = mouse_pos.x >= 0 && mouse_pos.y >= 0 && mouse_pos.x < TILE_SIZE * size && mouse_pos.y < TILE_SIZE * size
+		if !next_to_minecart && !get_parent().get_parent().help_text_is_overriden && mouse_in_bounds:
+			get_parent().get_parent().help_text_bar.text = "Building will not earn resources when you descend to next floor. Build a minecart next to this building."
+			get_parent().get_parent().help_text_is_overriden = true
+			took_help_text_override = true
+		elif took_help_text_override && !mouse_in_bounds:
+			get_parent().get_parent().help_text_is_overriden = false
+			took_help_text_override = false
 
 func can_place():
 	return get_parent().can_place_at_position(global_position, size)
+
+func next_to_minecart() -> bool:
+	return get_parent().building_is_next_to_minecart(self) || get_parent().player_placing_minecart_next_to_building(self)
+
 
 func _on_control_gui_input(event):
 	if event is InputEventMouseButton && !placed:
@@ -95,5 +111,5 @@ func play_collection_animation(lifespan_seconds: float, icon_path: String):
 	if data["population_cost"] < 0:
 		amount = "+" + str(-data["population_cost"])
 	
-	instance.init(type, lifespan_seconds, icon_path)
+	instance.init(amount, lifespan_seconds, icon_path)
 	instance.global_position = global_position + (Vector2(TILE_SIZE, TILE_SIZE) * size / 2.0) + Vector2(0, -16)
