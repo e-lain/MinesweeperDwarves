@@ -22,8 +22,8 @@ func _process(delta):
 		modulate = new_color
 	else:
 		modulate = Color.WHITE
-		
-	if use_count > 0 && get_parent().get_parent().get_parent().boards[len(get_parent().get_parent().get_parent().boards)-1].armor_active && entered:
+
+	if get_parent().get_parent().get_parent().boards[len(get_parent().get_parent().get_parent().boards)-1].armor_active && entered:
 		get_parent().get_parent().get_parent().help_text_is_overriden = true
 		get_parent().get_parent().get_parent().help_text_bar.text = "Cannot activate again, active armor is already being used!"
 
@@ -45,5 +45,5 @@ func _on_mouse_entered():
 func _on_mouse_exited():
 	entered = false
 	info_popup.visible = false
-	if use_count > 0 && get_parent().get_parent().get_parent().boards[len(get_parent().get_parent().get_parent().boards)-1].armor_active:
+	if get_parent().get_parent().get_parent().boards[len(get_parent().get_parent().get_parent().boards)-1].armor_active:
 		get_parent().get_parent().get_parent().help_text_is_overriden = false
