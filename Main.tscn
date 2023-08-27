@@ -579,15 +579,6 @@ rotation = -3.59014
 scale = Vector2(0.970588, 0.864604)
 texture = ExtResource("11_gm014")
 
-[node name="Label" type="Label" parent="CanvasLayer/HelpOverlayBuild"]
-layout_mode = 0
-offset_left = 208.0
-offset_top = 40.0
-offset_right = 765.0
-offset_bottom = 72.0
-text = "Population - Hitting a mine reduces this by 1. When you run out of population, you lose the game
-A resource for some buildings too"
-
 [node name="Label8" type="Label" parent="CanvasLayer/HelpOverlayBuild"]
 layout_mode = 0
 offset_left = 1144.0
@@ -657,6 +648,15 @@ offset_bottom = 609.0
 text = "Click when you are done building. Any resources able to be
 harvested will be credited, and the next floor will begin.
 All resources carry over to the next floor"
+
+[node name="Label" type="Label" parent="CanvasLayer/HelpOverlayBuild"]
+layout_mode = 0
+offset_left = 208.0
+offset_top = 32.0
+offset_right = 863.0
+offset_bottom = 102.0
+text = "Population - Hitting a mine reduces this by 1. When you run out of population, you lose the game
+A resource for some buildings too"
 
 [node name="HelpOverlayPlay" type="Control" parent="CanvasLayer"]
 visible = false
