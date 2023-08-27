@@ -109,6 +109,8 @@ func _process(delta):
 		help_text_bar.text = "Press \'H\' for help overlay"
 
 func ability(ability_name):
+	if get_current_board().mine_exploded:
+		return
 	print("func ability, ability_name: ", ability_name)
 	if ability_name == "destroy" && ability_destroy < 1:
 		print("can't use destroy, out of uses")
