@@ -109,9 +109,6 @@ func set_bombs():
 			n += 1
 
 func _process(delta):
-	#if tiles_uncovered == total_tiles - bomb_count:
-	#	enter_build_mode()
-	#	print("TODO: LEVEL WIN! BUILD MODE ENGAGED")
 	pass
 
 func _on_building_queue(type: BuildingData.Type):
@@ -339,7 +336,10 @@ func _on_flag_toggled(cell_pos: Vector2i):
 	elif flags > 0:
 		flags -= 1
 	else:
-		# TODO: Notify player there are not enough flags left
+		get_parent().help_text_is_overriden = true
+		get_parent().help_text_bar.text = "All flags already placed, cannot place additional flags"
+		await get_tree().create_timer(1).timeout
+		get_parent().help_text_is_overriden = false
 		return
 		
 	if !tile.is_cover:
