@@ -289,7 +289,7 @@ layout_mode = 0
 offset_left = 736.0
 offset_top = 43.0
 offset_right = 936.0
-offset_bottom = 143.0
+offset_bottom = 152.0
 
 [node name="HousePopup" parent="CanvasLayer/BuildMenu" instance=ExtResource("7_703se")]
 visible = false
@@ -297,7 +297,7 @@ layout_mode = 0
 offset_left = 736.0
 offset_top = 149.0
 offset_right = 936.0
-offset_bottom = 249.0
+offset_bottom = 260.0
 
 [node name="QuarryPopup" parent="CanvasLayer/BuildMenu" instance=ExtResource("7_703se")]
 visible = false
@@ -305,7 +305,7 @@ layout_mode = 0
 offset_left = 736.0
 offset_top = 267.0
 offset_right = 936.0
-offset_bottom = 367.0
+offset_bottom = 377.0
 
 [node name="WorkshopPopup" parent="CanvasLayer/BuildMenu" instance=ExtResource("7_703se")]
 visible = false
@@ -313,7 +313,7 @@ layout_mode = 0
 offset_left = 736.0
 offset_top = 435.0
 offset_right = 936.0
-offset_bottom = 535.0
+offset_bottom = 543.0
 
 [node name="PageUpButton" type="Button" parent="CanvasLayer/BuildMenu"]
 layout_mode = 0
