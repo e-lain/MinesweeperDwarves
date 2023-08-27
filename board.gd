@@ -178,12 +178,11 @@ func _on_tile_uncovered(cell_pos: Vector2i):
 	if tile.is_flagged:
 		return
 	
-	if tile.is_bomb && !armor_active:
-		get_parent().population -= 1
-		explode_mine()
-		
-	if armor_active:
-		armor_active = false
+	if tile.is_bomb:
+		print("status of armor active: ", armor_active)
+		if !armor_active:
+			get_parent().population -= 1
+			explode_mine()
 	
 	SoundManager.play_uncover_tile_sound()
 	
@@ -335,11 +334,13 @@ func uncover_tile(tile: BoardTile):
 	tiles_uncovered += 1
 	tilemap.set_cells_terrain_connect(0, [tile.cell_position], 0, -1)
 	
-	if tile.is_bomb:
+	if tile.is_bomb && !armor_active:
 		mine_exploded = true
 		var bomb = tile.create_bomb()
 		bomb.animation_complete.connect(on_bomb_animation_complete)
 		return
+		
+	armor_active = false
 		
 	if tile.is_flagged:
 		flags += 1
@@ -362,8 +363,6 @@ func uncover_tile(tile: BoardTile):
 func explode_mine():
 	# TODO: play an animation and emit signal when it finishes
 	SoundManager.play_explosion_sound()
-
-	
 
 func on_bomb_animation_complete():
 	mine_animation_complete.emit()

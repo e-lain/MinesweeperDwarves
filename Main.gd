@@ -190,7 +190,6 @@ func _on_page_down_button_pressed():
 	page_two.show()
 	page_up.disabled = false
 
-
 func stairs_placed():
 	return get_current_board().stairs_placed
 
