@@ -483,3 +483,6 @@ func get_world_positions_in_area(origin_world_pos: Vector2, size: int) -> Array[
 			tiles.push_back(Vector2(origin_world_pos.x + x*TILE_SIZE, origin_world_pos.y + y*TILE_SIZE))
 	
 	return tiles
+
+func world_to_cell(world):
+	return tilemap.local_to_map(tilemap.to_local(world))
