@@ -149,7 +149,7 @@ func next_level():
 	var cur_board = get_current_board()
 	cur_board.placing = false
 	cur_board.clearing_tile = false
-	cur_board.hide()	
+	cur_board.queue_free()	
 	
 	print("MAIN SCENE RECEIVED NEXT LEVEL CALL")
 	depth += 1

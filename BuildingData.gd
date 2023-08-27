@@ -44,8 +44,8 @@ static var data = {
 		"type": Type.WORKSHOP,
 		"name": "Engineer's Workshop",
 		"description": "Gain Active Ability Charge",
-		"stone_cost": 10,
-		"population_cost": 2,
+		"stone_cost": 5,
+		"population_cost": 1,
 		"steel_cost": 0,
 		"size": 3,
 		"icon_path": "res://Assets/Buildings/EngineerWorkshopBuildingDownscale.png"
