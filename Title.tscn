@@ -96,4 +96,10 @@ offset_right = 1253.0
 offset_bottom = 347.0
 texture = ExtResource("6_51ii4")
 
+[node name="ColorRect" type="ColorRect" parent="."]
+offset_right = 1342.0
+offset_bottom = 733.0
+mouse_filter = 2
+color = Color(0.639216, 0.380392, 0.109804, 0.0627451)
+
 [connection signal="pressed" from="Control/Button" to="." method="_on_button_pressed"]
