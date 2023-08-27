@@ -326,19 +326,21 @@ func clear_tile(tile: BoardTile):
 		tile.toggle_flag()
 	uncover_tile(tile)
 	update_shadows()
-	if get_parent().ability_destroy < 1:
-		clearing_tile = false
 
 func uncover_tile(tile: BoardTile):
 	tile.is_cover = false
 	tiles_uncovered += 1
 	tilemap.set_cells_terrain_connect(0, [tile.cell_position], 0, -1)
 	
-	if tile.is_bomb && !armor_active:
-		mine_exploded = true
+	if tile.is_bomb:
 		var bomb = tile.create_bomb()
-		bomb.animation_complete.connect(on_bomb_animation_complete)
+		if !armor_active && !clearing_tile:
+			mine_exploded = true
+			bomb.animation_complete.connect(on_bomb_animation_complete)
 		return
+	
+	if get_parent().ability_destroy < 1:
+		clearing_tile = false
 		
 	armor_active = false
 		
