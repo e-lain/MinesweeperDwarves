@@ -280,6 +280,9 @@ func collect_resources():
 		var timer = get_tree().create_timer(collection_lifespan_seconds)
 		timer.timeout.connect(building_collection_complete)
 		SoundManager.play_collection()
+	else:
+		# TODO: Notify player if not collecting any resources??
+		building_collection_complete()
 
 func building_collection_complete():
 	on_building_collection_complete.emit()
