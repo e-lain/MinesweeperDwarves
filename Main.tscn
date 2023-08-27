@@ -1,4 +1,4 @@
-[gd_scene load_steps=26 format=3 uid="uid://iqvlmmwy7d46"]
+[gd_scene load_steps=27 format=3 uid="uid://iqvlmmwy7d46"]
 
 [ext_resource type="Script" path="res://Main.gd" id="1_t2km6"]
 [ext_resource type="Theme" uid="uid://b6iv3a38m6uhb" path="res://UI.tres" id="2_b2qml"]
@@ -20,6 +20,7 @@
 [ext_resource type="PackedScene" uid="uid://dc8igqfayfl61" path="res://Abilities/AbilityArmor.tscn" id="16_hhtyy"]
 [ext_resource type="PackedScene" uid="uid://bqrac1jbrmwcd" path="res://UI/ChooseActive.tscn" id="17_r6xie"]
 [ext_resource type="PackedScene" uid="uid://pv3mpwrce0vs" path="res://Abilities/AbilityDowse.tscn" id="17_sj1ur"]
+[ext_resource type="Texture2D" uid="uid://te50q3hpxrqb" path="res://Assets/Buildings/WonderFlattenedDownscaled.png" id="20_yhfny"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_p42ak"]
 texture = ExtResource("6_nia6k")
@@ -473,20 +474,46 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -191.0
-offset_top = -95.0
+offset_top = -38.0
 offset_right = -191.0
-offset_bottom = -95.0
+offset_bottom = -38.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="RichTextLabel" parent="CanvasLayer/YouWin/Panel" index="0"]
+[node name="Panel" parent="CanvasLayer/YouWin" index="0"]
+offset_left = -23.0
+offset_top = -206.0
+offset_right = 401.0
+offset_bottom = 278.0
+
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer/YouWin/Panel" index="0"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -160.0
+offset_top = -183.0
+offset_right = 160.0
+offset_bottom = 137.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("20_yhfny")
+
+[node name="RichTextLabel" parent="CanvasLayer/YouWin/Panel" index="1"]
 text = "[center][wave amp=20 freq=1.0]You Win![/wave][/center]"
 
-[node name="Label" parent="CanvasLayer/YouWin/Panel" index="1"]
+[node name="Label" parent="CanvasLayer/YouWin/Panel" index="2"]
+offset_top = 379.0
+offset_bottom = 379.0
 text = "The dwarves live happily"
 
-[node name="RestartButton" parent="CanvasLayer/YouWin/Panel" index="2"]
-text = "Return To Title Screen"
+[node name="RestartButton" parent="CanvasLayer/YouWin/Panel" index="3"]
+offset_left = -40.0
+offset_top = 167.0
+offset_right = 40.0
+offset_bottom = 234.0
 
 [node name="MineHitPopup" parent="CanvasLayer" instance=ExtResource("12_4reet")]
 process_mode = 2
@@ -849,8 +876,10 @@ You will be awarded steel for bombs correctly flagged.
 Build mode will begin"
 
 [node name="ColorRect2" type="ColorRect" parent="CanvasLayer"]
-offset_right = 1342.0
-offset_bottom = 733.0
+offset_left = 1.0
+offset_top = -42.0
+offset_right = 1343.0
+offset_bottom = 691.0
 mouse_filter = 2
 color = Color(0.639216, 0.380392, 0.109804, 0.0627451)
 
