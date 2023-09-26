@@ -54,6 +54,8 @@ var boards = [] # Note, some of these may be null references because we queue_fr
 signal queue_ability(ability_name)
 signal queue_building(building_type: BuildingData.Type)
 
+var icons = {}
+
 func generate_board(difficulty: int):
 	help_text_is_overriden = false
 	destroy_popup.visible = false
@@ -91,7 +93,7 @@ func generate_board(difficulty: int):
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	for key in BuildingData.data.keys():
-		load(BuildingData.data[key]["icon_path"])
+		icons[key] = load(BuildingData.data[key]["icon_path"])
 	
 	# place board in center with correct offset accounting for tile size and board size
 	generate_board(0)

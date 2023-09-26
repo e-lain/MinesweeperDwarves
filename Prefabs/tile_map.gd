@@ -4,7 +4,12 @@ signal uncovered(cell_pos: Vector2i)
 signal flag_toggled(cell_pos: Vector2i)
 signal destroyed(cell_pos: Vector2i)
 
+@export var default_behavior:bool = true
+
 func _input(event):
+	if !default_behavior:
+		return
+	
 	if event is InputEventMouseButton:
 		if event.is_action_pressed("left_click") && get_parent().clearing_tile:
 			event = make_input_local(event)

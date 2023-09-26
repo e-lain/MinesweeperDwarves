@@ -11,13 +11,14 @@ config_version=5
 [application]
 
 config/name="Minesweeper Dwarves"
-run/main_scene="res://Title.tscn"
+run/main_scene="res://UI/TestScene.tscn"
 config/features=PackedStringArray("4.1", "GL Compatibility")
 config/icon="res://icon.svg"
 
 [autoload]
 
 SoundManager="*res://Sound/sound_manager.tscn"
+PlatformUtil="*res://Scripts/PlatformUtil.gd"
 
 [display]
 
@@ -41,3 +42,4 @@ left_click={
 
 renderer/rendering_method="gl_compatibility"
 renderer/rendering_method.mobile="gl_compatibility"
+textures/vram_compression/import_etc2_astc=true

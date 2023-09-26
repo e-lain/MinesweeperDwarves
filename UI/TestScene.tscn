@@ -1,0 +1,27 @@
+[gd_scene load_steps=4 format=3 uid="uid://c58vqncraacyl"]
+
+[ext_resource type="Texture2D" uid="uid://dnsxe5dsaswqg" path="res://Assets/walltiles/newrockbg.png" id="1_3ysvq"]
+[ext_resource type="PackedScene" uid="uid://c7renurwmj3uy" path="res://Prefabs/tile_map.tscn" id="2_716rk"]
+[ext_resource type="Script" path="res://CameraController.gd" id="3_ubm7c"]
+
+[node name="TestScene" type="Node2D"]
+
+[node name="TextureRect" type="TextureRect" parent="."]
+z_index = -1
+texture_repeat = 2
+offset_left = -736.0
+offset_top = -419.0
+offset_right = 1824.0
+offset_bottom = 1021.0
+mouse_filter = 2
+texture = ExtResource("1_3ysvq")
+expand_mode = 1
+stretch_mode = 1
+
+[node name="TileMap" parent="." instance=ExtResource("2_716rk")]
+layer_0/tile_data = PackedInt32Array(0, 196608, 3, 65537, 0, 3, 65538, 65536, 3, 65539, 458752, 0, 131075, 262144, 3, 131076, 524288, 0, 196612, 196608, 2, 131077, 458752, 3, 65541, 262144, 0, 65542, 131072, 3, 393223, 0, 3, 393224, 65536, 3, 393225, 65536, 3, 393226, 65536, 3, 393227, 393216, 0, 458763, 0, 2, 458764, 131072, 2, 393228, 327680, 0, 393229, 458752, 3, 327693, 196608, 0, 196620, 0, 3, 196621, 65536, 3, 196622, 65536, 3, 196623, 458752, 3, 131087, 262144, 0, 131088, 131072, 3, 196625, 196608, 3, 524304, 0, 3, 524305, 458752, 3, 458769, 262144, 0, 458770, 458752, 3, 393234, 196608, 1, 327698, 196608, 0, 393218, 0, 3, 393219, 393216, 4, 458755, 0, 1, 524291, 0, 2, 524292, 65536, 2, 524293, 327680, 3, 524294, 65536, 3, 524295, 65536, 3, 524296, 131072, 3, 262147, 196608, 0, 327683, 262144, 2, 327684, 131072, 0, 393220, 131072, 1, 458756, 327680, 2, 458757, 131072, 0)
+default_behavior = false
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(640, 360)
+script = ExtResource("3_ubm7c")

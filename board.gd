@@ -129,7 +129,7 @@ func _on_building_queue(type: BuildingData.Type):
 		get_parent().help_text_bar.text = "Left-click on valid space to build. Right-click to cancel"
 		var building = building_prefab.instantiate()
 		add_child(building)
-		building.set_type(type)
+		building.set_type(type, get_parent().icons[type])
 		current_placing_instance = building
 
 func _on_ability_queue(ability_name):

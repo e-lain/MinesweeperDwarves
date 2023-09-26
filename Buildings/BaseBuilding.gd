@@ -25,10 +25,10 @@ var size: int
 
 var took_help_text_override = false
 
-func set_type(value):
+func set_type(value, icon):
 	type = value
 	size = BuildingData.data[type]["size"]
-	sprite.texture = load(BuildingData.data[type]["icon_path"])
+	sprite.texture = icon
 
 func _process(delta):
 	if !placed:
