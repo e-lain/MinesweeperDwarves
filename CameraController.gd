@@ -1,10 +1,11 @@
 extends Camera2D
 
 
-@export var min_zoom = 0.125
-@export var max_zoom = 4
+@export var min_zoom = 0.5
+@export var max_zoom = 2
 var zoom_sensitivity = 10
 var zoom_speed = 0.05
+var drag_speed = 2.0
 
 var events = {}
 var last_drag_distance = 0
@@ -21,7 +22,7 @@ func _unhandled_input(event):
 		if event is InputEventScreenDrag:
 			events[event.index] = event
 			if events.size() == 1:
-				position -= event.relative.rotated(rotation) * zoom.x
+				position -= event.relative.rotated(rotation) * (1/zoom.x) * drag_speed
 			elif events.size() == 2:
 				var drag_distance = events[0].position.distance_to(events[1].position)
 				if abs(drag_distance - last_drag_distance) > zoom_sensitivity:
