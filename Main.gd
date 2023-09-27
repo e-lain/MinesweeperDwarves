@@ -128,7 +128,7 @@ func ability(ability_name):
 		print("can't use destroy, out of uses")
 		return
 	elif ability_name == "armor":
-		if boards[len(boards)-1].armor_active:
+		if get_current_board().armor_active:
 			# Prevent player from stacking armor uses on a single turn
 			return
 		elif ability_armor < 1:
@@ -140,11 +140,11 @@ func ability(ability_name):
 		if ability_dowse < 1:
 			print("can't use dowse, out of uses")
 			return
-		elif boards[len(boards)-1].flags < 1:
+		elif get_current_board().flags < 1:
 			print("can't use dowse, out of flags")
 			return
 		
-	boards[len(boards)-1]._on_ability_queue(ability_name)
+	get_current_board()._on_ability_queue(ability_name)
 
 func build(type: BuildingData.Type):
 	print("func build, building_name: ", type)
@@ -229,7 +229,7 @@ func on_wonder_placed():
 	get_tree().paused = true
 
 func on_workshop_placed():
-	boards[len(boards)-1].placing = false
+	get_current_board().placing = false
 	help_text_is_overriden = false
 	choose_active.show()
 	greyout.show()
@@ -250,9 +250,9 @@ func _input(event):
 	if event is InputEventKey and Input.is_key_label_pressed(KEY_H):	
 		overlay_toggled = !overlay_toggled
 			
-		if boards[len(boards)-1].build_mode == false:
+		if get_current_board().build_mode == false:
 			help_overlay_play.visible = !help_overlay_play.visible
-		elif boards[len(boards)-1].build_mode == true:
+		elif get_current_board().build_mode == true:
 			help_overlay_build.visible = !help_overlay_build.visible
 			
 		if overlay_toggled:

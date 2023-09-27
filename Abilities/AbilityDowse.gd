@@ -14,7 +14,7 @@ func _ready():
 func _process(delta):
 	use_count = get_parent().get_parent().get_parent().ability_dowse
 	$Uses.text = str(use_count)
-	if use_count <= 0 || get_parent().get_parent().get_parent().boards[len(get_parent().get_parent().get_parent().boards)-1].flags < 1:
+	if use_count <= 0 || get_parent().get_parent().get_parent().get_current_board().flags < 1:
 		var new_color = Color.WHITE
 		new_color.a = 0.5
 		modulate = new_color
@@ -31,7 +31,7 @@ func _on_gui_input(event):
 func _on_mouse_entered():
 	info_popup.visible = true
 	info_popup.set_description("Dowse Tile", "Flag a random bomb")
-	if use_count > 0 && get_parent().get_parent().get_parent().boards[len(get_parent().get_parent().get_parent().boards)-1].flags < 1:
+	if use_count > 0 && get_parent().get_parent().get_parent().get_current_board().flags < 1:
 		get_parent().get_parent().get_parent().help_text_is_overriden = true
 		get_parent().get_parent().get_parent().help_text_bar.text = "Can't use dowse when there are no remaining flags to place."
 
