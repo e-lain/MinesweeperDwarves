@@ -49,7 +49,7 @@ var ability_dowse = 0
 
 var overlay_toggled: bool = false
 
-var boards = [] # Note, some of these may be null references because we queue_free() boards that have hit a bomb
+var current_board
 
 signal queue_ability(ability_name)
 signal queue_building(building_type: BuildingData.Type)
@@ -66,6 +66,10 @@ func generate_board(difficulty: int):
 	ability_armor = ability_armor_max
 	ability_dowse = ability_dowse_max 
 	var b = Board.instantiate()
+	if current_board:
+		current_board.queue_free()
+	current_board = b
+	
 	add_child(b)
 	
 	if difficulty == 0:
@@ -88,7 +92,6 @@ func generate_board(difficulty: int):
 	b.workshop_placed.connect(on_workshop_placed)
 	b.on_building_collection_complete.connect(on_building_collection_complete)
 	b.on_minesweeper_collection_complete.connect(on_minesweeper_collection_complete)
-	boards.push_back(b)
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -206,7 +209,7 @@ func stairs_placed():
 	return get_current_board().stairs_placed
 
 func get_current_board():
-	return boards[boards.size() - 1]
+	return current_board
 
 func _on_next_floor_btn_pressed():
 	get_current_board().collect_resources()
