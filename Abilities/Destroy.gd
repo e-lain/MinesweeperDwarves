@@ -1,6 +1,8 @@
 extends Node2D
 
 @onready var sprite: Sprite2D = $Sprite2D
+@onready var board = get_parent()
+@onready var main = board.get_parent()
 var building_placement_material: ShaderMaterial = preload("res://Shaders/InvalidBuildingPlacement.tres")
 
 const TILE_SIZE = 64
@@ -11,20 +13,20 @@ var size: int = 1
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	get_parent().placing = true
-	get_parent().get_parent().help_text_is_overriden = true
+	board.placing = true
+	main.help_text_is_overriden = true
 
 func _process(delta):
-	get_parent().get_parent().help_text_bar.text = "Left-click on valid tile to clear it. If it has a bomb, you will not be harmed. Right-click to cancel"
-	if get_parent().get_parent().ability_destroy < 1 && visible:
-		get_parent().placing = false
-		get_parent().get_parent().help_text_is_overriden = false
+	main.help_text_bar.text = "Left-click on valid tile to clear it. If it has a bomb, you will not be harmed. Right-click to cancel"
+	if main.ability_destroy < 1 && visible:
+		board.placing = false
+		main.help_text_is_overriden = false
 		queue_free()
 	if !placed:
-		var mouse = get_parent().get_local_mouse_position()
+		var mouse = board.get_local_mouse_position()
 		var snapped = Vector2(snapped(mouse.x-TILE_SIZE/2, TILE_SIZE), snapped(mouse.y-TILE_SIZE/2, TILE_SIZE))
 		position = snapped
-		if position.x <= 0 - TILE_SIZE || position.x >= TILE_SIZE * get_parent().rows || position.y <= 0-TILE_SIZE || position.y >= TILE_SIZE * get_parent().columns:
+		if position.x <= 0 - TILE_SIZE || position.x >= TILE_SIZE * board.rows || position.y <= 0-TILE_SIZE || position.y >= TILE_SIZE * board.columns:
 			self.hide()
 			in_bounds = false
 		else:
@@ -37,18 +39,18 @@ func _process(delta):
 				sprite.material = null
 
 func can_place():
-	if get_parent().get_parent().ability_destroy < 1:
+	if main.ability_destroy < 1:
 		return false
-	return get_parent().can_use_ability_at_position(global_position, size) #Ability usage validity is opposite of building placement validity
+	return board.can_use_ability_at_position(global_position, size) #Ability usage validity is opposite of building placement validity
 
 func _input(event):
 	if event is InputEventMouseButton && !placed:
 		if event.is_action_pressed("left_click"):
 			if can_place() && in_bounds:
-				get_parent().get_parent().ability_destroy -= 1
+				main.ability_destroy -= 1
 				print("USED DESTROY ABILITY")
 		if event.is_action_pressed("right_click"):
-			get_parent().placing = false
-			get_parent().clearing_tile = false
-			get_parent().get_parent().help_text_is_overriden = false
+			board.placing = false
+			board.clearing_tile = false
+			main.help_text_is_overriden = false
 			queue_free()

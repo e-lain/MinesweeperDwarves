@@ -1,7 +1,7 @@
 extends PanelContainer
 
-
 @export var info_popup: BuildingInfoPopup
+@export var main: Node2D
 
 var use_count = 0
 
@@ -12,9 +12,9 @@ func _ready():
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
-	use_count = get_parent().get_parent().get_parent().ability_dowse
+	use_count = main.ability_dowse
 	$Uses.text = str(use_count)
-	if use_count <= 0 || get_parent().get_parent().get_parent().get_current_board().flags < 1:
+	if use_count <= 0 || main.get_current_board().flags < 1:
 		var new_color = Color.WHITE
 		new_color.a = 0.5
 		modulate = new_color
@@ -26,16 +26,16 @@ func _on_gui_input(event):
 		if event.is_action_pressed("left_click") && use_count > 0:
 			print("dowse ability clicked")
 			SoundManager.play_dowse()
-			get_parent().get_parent().get_parent().ability("dowse")
+			main.ability("dowse")
 
 func _on_mouse_entered():
 	info_popup.visible = true
 	info_popup.set_description("Dowse Tile", "Flag a random bomb")
-	if use_count > 0 && get_parent().get_parent().get_parent().get_current_board().flags < 1:
-		get_parent().get_parent().get_parent().help_text_is_overriden = true
-		get_parent().get_parent().get_parent().help_text_bar.text = "Can't use dowse when there are no remaining flags to place."
+	if use_count > 0 && main.get_current_board().flags < 1:
+		main.help_text_is_overriden = true
+		main.help_text_bar.text = "Can't use dowse when there are no remaining flags to place."
 
 func _on_mouse_exited():
 	info_popup.visible = false
-	if get_parent().get_parent().get_parent().help_text_is_overriden:
-		get_parent().get_parent().get_parent().help_text_is_overriden = false
+	if main.help_text_is_overriden:
+		main.help_text_is_overriden = false

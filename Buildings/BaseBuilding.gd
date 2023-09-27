@@ -7,6 +7,9 @@ class_name BaseBuilding
 
 @onready var background_sprite: Sprite2D = $BG
 
+@onready var board = get_parent()
+@onready var main = board.get_parent()
+
 var building_placement_material: ShaderMaterial = preload("res://Shaders/InvalidBuildingPlacement.tres")
 
 
@@ -32,10 +35,10 @@ func set_type(value, icon):
 
 func _process(delta):
 	if !placed:
-		var mouse = get_parent().get_local_mouse_position()
+		var mouse = board.get_local_mouse_position()
 		var snapped = Vector2(snapped(mouse.x-TILE_SIZE/2, TILE_SIZE), snapped(mouse.y-TILE_SIZE/2, TILE_SIZE))
 		position = snapped
-		if position.x <= 0 - TILE_SIZE || position.x >= TILE_SIZE * get_parent().rows || position.y <= 0-TILE_SIZE || position.y >= TILE_SIZE * get_parent().columns:
+		if position.x <= 0 - TILE_SIZE || position.x >= TILE_SIZE * board.rows || position.y <= 0-TILE_SIZE || position.y >= TILE_SIZE * board.columns:
 			self.hide()
 			in_bounds = false
 		else:
@@ -51,7 +54,7 @@ func _process(delta):
 			background_sprite.visible = false
 		else:
 			background_sprite.position = bg_offset
-			var cell_pos = get_parent().world_to_cell(global_position)
+			var cell_pos = board.world_to_cell(global_position)
 			var region_x = bg_offset.x if cell_pos.x % 2 == 0 else 64 + bg_offset.x
 			var region_y = bg_offset.y if cell_pos.y % 2 == 0 else 64 + bg_offset.y
 			var region_w = size * TILE_SIZE - bg_offset.x * 2
@@ -65,19 +68,19 @@ func _process(delta):
 		
 		var mouse_pos = get_local_mouse_position()
 		var mouse_in_bounds = mouse_pos.x >= 0 && mouse_pos.y >= 0 && mouse_pos.x < TILE_SIZE * size && mouse_pos.y < TILE_SIZE * size
-		if !next_to_minecart && !get_parent().get_parent().help_text_is_overriden && mouse_in_bounds:
-			get_parent().get_parent().help_text_bar.text = "Building will not earn resources when you descend to next floor. Build a minecart next to this building."
-			get_parent().get_parent().help_text_is_overriden = true
+		if !next_to_minecart && !main.help_text_is_overriden && mouse_in_bounds:
+			main.help_text_bar.text = "Building will not earn resources when you descend to next floor. Build a minecart next to this building."
+			main.help_text_is_overriden = true
 			took_help_text_override = true
 		elif took_help_text_override && !mouse_in_bounds:
-			get_parent().get_parent().help_text_is_overriden = false
+			main.help_text_is_overriden = false
 			took_help_text_override = false
 
 func can_place():
-	return get_parent().can_place_at_position(global_position, size)
+	return board.can_place_at_position(global_position, size)
 
 func next_to_minecart() -> bool:
-	return get_parent().building_is_next_to_minecart(self) || get_parent().player_placing_minecart_next_to_building(self)
+	return board.building_is_next_to_minecart(self) || board.player_placing_minecart_next_to_building(self)
 
 
 func _on_control_gui_input(event):
@@ -85,18 +88,18 @@ func _on_control_gui_input(event):
 		if event.is_action_pressed("left_click"):
 			if !can_place():
 				SoundManager.play_negative()
-			if type == BuildingData.Type.STAIRCASE and get_parent().stairs_placed:
-				get_parent().get_parent().help_text_bar.text = "Stairs already placed! Can't have more than one staircase per floor"
+			if type == BuildingData.Type.STAIRCASE and board.stairs_placed:
+				main.help_text_bar.text = "Stairs already placed! Can't have more than one staircase per floor"
 				print("Stairs already placed!")
 			if can_place() && in_bounds:
 				placed = true
-				get_parent().on_building_placed(global_position, self)
+				board.on_building_placed(global_position, self)
 
 				sprite.material = null
 				return
 		if event.is_action_pressed("right_click"):
-			get_parent().placing = false
-			get_parent().get_parent().help_text_is_overriden = false
+			board.placing = false
+			main.help_text_is_overriden = false
 			queue_free()
 
 func play_collection_animation(lifespan_seconds: float, icon_path: String):

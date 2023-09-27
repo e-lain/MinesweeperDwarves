@@ -186,7 +186,7 @@ offset_bottom = 722.0
 text = "Press 'H' for help overlay"
 horizontal_alignment = 1
 
-[node name="BuildMenu" type="Control" parent="CanvasLayer"]
+[node name="BuildMenu" type="Control" parent="CanvasLayer" node_paths=PackedStringArray("main")]
 visible = false
 layout_mode = 3
 anchors_preset = 15
@@ -197,6 +197,7 @@ grow_vertical = 2
 mouse_filter = 2
 theme = ExtResource("2_b2qml")
 script = ExtResource("4_4yfy1")
+main = NodePath("../..")
 
 [node name="Page1" type="VBoxContainer" parent="CanvasLayer/BuildMenu"]
 layout_mode = 1
@@ -353,13 +354,14 @@ theme_override_styles/disabled = SubResource("StyleBoxEmpty_bthxj")
 theme_override_styles/focus = SubResource("StyleBoxEmpty_bthxj")
 icon = ExtResource("12_hutn7")
 
-[node name="AbilityMenu" type="Control" parent="CanvasLayer"]
+[node name="AbilityMenu" type="Control" parent="CanvasLayer" node_paths=PackedStringArray("main")]
 layout_mode = 3
 anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
 theme = ExtResource("2_b2qml")
 script = ExtResource("9_3lmso")
+main = NodePath("../..")
 
 [node name="Label" type="Label" parent="CanvasLayer/AbilityMenu"]
 layout_mode = 0
@@ -382,29 +384,32 @@ Cost - blah
 
 Wow this is a building, pretty neat"
 
-[node name="Destroy" parent="CanvasLayer/AbilityMenu" node_paths=PackedStringArray("info_popup") instance=ExtResource("10_bm3kx")]
+[node name="Destroy" parent="CanvasLayer/AbilityMenu" node_paths=PackedStringArray("main", "info_popup") instance=ExtResource("10_bm3kx")]
 layout_mode = 0
 offset_left = 932.0
 offset_top = 48.0
 offset_right = 1092.0
 offset_bottom = 209.0
+main = NodePath("../../..")
 info_popup = NodePath("../DestroyPopup")
 
-[node name="Armor" parent="CanvasLayer/AbilityMenu" node_paths=PackedStringArray("info_popup") instance=ExtResource("16_hhtyy")]
+[node name="Armor" parent="CanvasLayer/AbilityMenu" node_paths=PackedStringArray("main", "info_popup") instance=ExtResource("16_hhtyy")]
 layout_mode = 0
 offset_left = 932.0
 offset_top = 208.0
 offset_right = 1092.0
 offset_bottom = 369.0
+main = NodePath("../../..")
 info_popup = NodePath("../ArmorPopup")
 
-[node name="Dowse" parent="CanvasLayer/AbilityMenu" node_paths=PackedStringArray("info_popup") instance=ExtResource("17_sj1ur")]
+[node name="Dowse" parent="CanvasLayer/AbilityMenu" node_paths=PackedStringArray("info_popup", "main") instance=ExtResource("17_sj1ur")]
 layout_mode = 0
 offset_left = 933.0
 offset_top = 370.0
 offset_right = 1092.0
 offset_bottom = 531.0
 info_popup = NodePath("../DowsePopup")
+main = NodePath("../../..")
 
 [node name="DestroyPopup" parent="CanvasLayer/AbilityMenu" instance=ExtResource("7_703se")]
 visible = false
