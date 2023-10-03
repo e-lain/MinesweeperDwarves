@@ -7,6 +7,8 @@ enum Type {
 	WORKSHOP,
 	WONDER,
 	MINECART,
+	LAVA,
+	FORGE
 }
 
 static var data = {
@@ -69,5 +71,25 @@ static var data = {
 		"steel_cost": 1,
 		"size": 1,
 		"icon_path": "res://Assets/Buildings/minecart downscaled.png"
+	},
+	Type.LAVA: {
+		"type": Type.LAVA,
+		"name": "Lava Moat",
+		"description": "Needs to be adjacent to build a Forge. Can only connect to other Lava tiles",
+		"stone_cost": 3,
+		"population_cost": 0,
+		"steel_cost": 0,
+		"size": 1,
+		"icon_path": "res://Assets/Buildings/lava.png"
+	},
+	Type.FORGE: {
+		"type": Type.FORGE,
+		"name": "Forge",
+		"description": "Needs to be built adjacent to a Lava Moat. Gain ___",
+		"stone_cost": 5,
+		"population_cost": 0,
+		"steel_cost": 1,
+		"size": 1,
+		"icon_path": "res://Assets/Buildings/forge.png"
 	}
 }

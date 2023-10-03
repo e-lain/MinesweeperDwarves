@@ -168,7 +168,7 @@ func _on_tile_destroyed(cell_pos: Vector2i):
 	if cell_pos.x < 0 || cell_pos.y < 0 || cell_pos.x >= columns || cell_pos.y >= rows:
 		return
 	print("tile destroyed called")
-	var tile = tiles[cell_pos.x][cell_pos.y]
+	var tile = tiles[cell_pos.x][cell_pos.y] 
 	clear_tile(tile)
 
 func _on_tile_uncovered(cell_pos: Vector2i):
