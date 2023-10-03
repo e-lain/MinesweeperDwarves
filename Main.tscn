@@ -10,8 +10,10 @@
 [ext_resource type="Texture2D" uid="uid://byetswoeyw7gd" path="res://Assets/UI/steeldownscaledicon.png" id="6_jm4fe"]
 [ext_resource type="Texture2D" uid="uid://d0o6bpct5y38h" path="res://Assets/UI/Popup.png" id="6_nia6k"]
 [ext_resource type="FontFile" uid="uid://m1fwnp6qsmnn" path="res://Assets/UI/Quikhand.ttf" id="6_rv3xe"]
+[ext_resource type="StyleBox" uid="uid://767un3ynwawo" path="res://UI/OuterButtonStyle.tres" id="7_2o6rd"]
 [ext_resource type="PackedScene" uid="uid://doi658hn04jhv" path="res://UI/popup.tscn" id="7_703se"]
 [ext_resource type="PackedScene" uid="uid://b8qmhoccrox3y" path="res://UI/GameOver.tscn" id="7_wj57j"]
+[ext_resource type="StyleBox" uid="uid://c5pcr2jlvlpd" path="res://UI/HoveredOuterButtonStyle.tres" id="8_pyn5i"]
 [ext_resource type="Script" path="res://AbilityMenu.gd" id="9_3lmso"]
 [ext_resource type="PackedScene" uid="uid://cp25vmlk0k3ck" path="res://Abilities/AbilityDestroy.tscn" id="10_bm3kx"]
 [ext_resource type="Texture2D" uid="uid://7an4owy3gbe2" path="res://Assets/UI/ArrowUp.png" id="11_gm014"]
@@ -21,25 +23,6 @@
 [ext_resource type="PackedScene" uid="uid://bqrac1jbrmwcd" path="res://UI/ChooseActive.tscn" id="17_r6xie"]
 [ext_resource type="PackedScene" uid="uid://pv3mpwrce0vs" path="res://Abilities/AbilityDowse.tscn" id="17_sj1ur"]
 [ext_resource type="Texture2D" uid="uid://te50q3hpxrqb" path="res://Assets/Buildings/WonderFlattenedDownscaled.png" id="20_yhfny"]
-
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_p42ak"]
-texture = ExtResource("6_nia6k")
-texture_margin_left = 8.0
-texture_margin_top = 11.0
-texture_margin_right = 10.0
-texture_margin_bottom = 13.0
-axis_stretch_horizontal = 2
-axis_stretch_vertical = 2
-
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_askgf"]
-texture = ExtResource("6_nia6k")
-texture_margin_left = 8.0
-texture_margin_top = 11.0
-texture_margin_right = 10.0
-texture_margin_bottom = 13.0
-axis_stretch_horizontal = 2
-axis_stretch_vertical = 2
-modulate_color = Color(0.721569, 0.721569, 0.721569, 1)
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_qk65p"]
 texture = ExtResource("6_nia6k")
@@ -153,11 +136,11 @@ offset_bottom = 703.0
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_colors/font_hover_color = Color(0, 0, 0, 1)
 theme_override_colors/font_disabled_color = Color(0.411765, 0.411765, 0.411765, 1)
-theme_override_styles/normal = SubResource("StyleBoxTexture_p42ak")
-theme_override_styles/hover = SubResource("StyleBoxTexture_askgf")
-theme_override_styles/pressed = SubResource("StyleBoxTexture_p42ak")
+theme_override_styles/normal = ExtResource("7_2o6rd")
+theme_override_styles/hover = ExtResource("8_pyn5i")
+theme_override_styles/pressed = ExtResource("7_2o6rd")
 theme_override_styles/disabled = SubResource("StyleBoxTexture_qk65p")
-theme_override_styles/focus = SubResource("StyleBoxTexture_p42ak")
+theme_override_styles/focus = ExtResource("7_2o6rd")
 text = "To Build Mode"
 
 [node name="NextFloorBtn" type="Button" parent="CanvasLayer/UI"]
@@ -170,11 +153,11 @@ offset_bottom = 703.0
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_colors/font_hover_color = Color(0, 0, 0, 1)
 theme_override_colors/font_disabled_color = Color(0.411765, 0.411765, 0.411765, 1)
-theme_override_styles/normal = SubResource("StyleBoxTexture_p42ak")
-theme_override_styles/hover = SubResource("StyleBoxTexture_askgf")
-theme_override_styles/pressed = SubResource("StyleBoxTexture_p42ak")
+theme_override_styles/normal = ExtResource("7_2o6rd")
+theme_override_styles/hover = ExtResource("8_pyn5i")
+theme_override_styles/pressed = ExtResource("7_2o6rd")
 theme_override_styles/disabled = SubResource("StyleBoxTexture_qk65p")
-theme_override_styles/focus = SubResource("StyleBoxTexture_p42ak")
+theme_override_styles/focus = ExtResource("7_2o6rd")
 text = "Descend..."
 
 [node name="ContextLabel" type="Label" parent="CanvasLayer/UI"]
