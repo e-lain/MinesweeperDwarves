@@ -2,7 +2,7 @@
 
 [ext_resource type="Texture2D" uid="uid://dnsxe5dsaswqg" path="res://Assets/walltiles/newrockbg.png" id="1_3ysvq"]
 [ext_resource type="PackedScene" uid="uid://c7renurwmj3uy" path="res://Prefabs/tile_map.tscn" id="2_716rk"]
-[ext_resource type="Script" path="res://CameraController.gd" id="3_ubm7c"]
+[ext_resource type="Script" path="res://Scripts/CameraController.gd" id="3_1h2lf"]
 [ext_resource type="Theme" uid="uid://b6iv3a38m6uhb" path="res://UI.tres" id="4_73m8v"]
 [ext_resource type="Script" path="res://UI/ResponsiveUI.gd" id="4_onpto"]
 [ext_resource type="Texture2D" uid="uid://ca5lct0ctr37m" path="res://Assets/UI/StoneIcon.png" id="5_x43sq"]
@@ -103,7 +103,7 @@ default_behavior = false
 
 [node name="Camera2D" type="Camera2D" parent="."]
 position = Vector2(640, 360)
-script = ExtResource("3_ubm7c")
+script = ExtResource("3_1h2lf")
 
 [node name="ResponsiveUI" type="CanvasLayer" parent="."]
 script = ExtResource("4_onpto")
