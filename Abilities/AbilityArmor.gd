@@ -32,7 +32,7 @@ func _on_gui_input(event):
 		if event.is_action_pressed("left_click") && use_count > 0:
 			print("armor ability clicked")
 			SoundManager.play_armor()
-			main.ability("armor")
+			main.ability(AbilityData.Type.ARMOR)
 
 func _on_mouse_entered():
 	entered = true

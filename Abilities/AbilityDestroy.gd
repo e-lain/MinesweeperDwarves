@@ -26,7 +26,7 @@ func _on_gui_input(event):
 		if event.is_action_pressed("left_click") && use_count > 0:
 			print("destroy ability clicked")
 			SoundManager.play_crane()
-			main.ability("destroy")
+			main.ability(AbilityData.Type.DESTROY)
 
 func _on_mouse_entered():
 	info_popup.visible = true

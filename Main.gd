@@ -33,6 +33,7 @@ var Board = preload("res://board.tscn")
 
 var build_mode: bool = false
 
+var tier = 0
 var depth = 0
 var population = 3
 var stone = 8
@@ -51,7 +52,7 @@ var overlay_toggled: bool = false
 
 var current_board
 
-signal queue_ability(ability_name)
+signal queue_ability(ability_name: AbilityData.Type)
 signal queue_building(building_type: BuildingData.Type)
 
 var icons = {}
@@ -73,15 +74,15 @@ func generate_board(difficulty: int):
 	add_child(b)
 	
 	if difficulty == 0:
-		b.init_board(6,6,4)
+		b.init_board(6,6,4,0)
 	elif difficulty == 1:
-		b.init_board(7,7,5)
+		b.init_board(7,7,5,0)
 	elif difficulty == 2:
-		b.init_board(8,8,7)
+		b.init_board(8,8,7,0)
 	elif difficulty == 3:
-		b.init_board(9,9,9)
+		b.init_board(9,9,9,0)
 	else:
-		b.init_board(10,10,10)
+		b.init_board(10,10,10,0)
 		
 	var center = get_viewport_rect().size/2
 	var offset = Vector2(center.x-(b.rows * b.TILE_SIZE/2), center.y-(b.columns * b.TILE_SIZE/2))
@@ -123,14 +124,14 @@ func _process(delta):
 	if !help_text_is_overriden:
 		help_text_bar.text = "Press \'H\' for help overlay"
 
-func ability(ability_name):
+func ability(ability_name: AbilityData.Type):
 	if get_current_board().mine_exploded:
 		return
 	print("func ability, ability_name: ", ability_name)
-	if ability_name == "destroy" && ability_destroy < 1:
+	if ability_name == AbilityData.Type.DESTROY && ability_destroy < 1:
 		print("can't use destroy, out of uses")
 		return
-	elif ability_name == "armor":
+	elif ability_name == AbilityData.Type.ARMOR:
 		if get_current_board().armor_active:
 			# Prevent player from stacking armor uses on a single turn
 			return
@@ -139,7 +140,7 @@ func ability(ability_name):
 			return
 		else:
 			ability_armor -= 1
-	elif ability_name == "dowse":
+	elif ability_name == AbilityData.Type.DOWSE:
 		if ability_dowse < 1:
 			print("can't use dowse, out of uses")
 			return

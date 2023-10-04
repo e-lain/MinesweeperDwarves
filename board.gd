@@ -22,6 +22,8 @@ var Destroy = preload("res://Abilities/Destroy.tscn")
 
 const TILE_SIZE = 64
 
+var ability_controller
+
 var build_mode: bool = false
 var placing: bool = false
 var placing_type: BuildingData.Type
@@ -31,6 +33,7 @@ var current_placing_instance: BaseBuilding
 var clearing_tile: bool = false
 var armor_active: bool = false
 
+var tier = 0
 var rows = 6
 var columns = 6
 var bomb_count = 4
@@ -52,6 +55,9 @@ var mine_exploded = false
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	ability_controller = AbilityController.new()
+	add_child(ability_controller)
+	
 	get_parent().queue_building.connect(_on_building_queue)
 	get_parent().queue_ability.connect(_on_ability_queue)
 	randomize()
@@ -60,7 +66,7 @@ func _ready():
 	tilemap.uncovered.connect(_on_tile_uncovered)
 	tilemap.flag_toggled.connect(_on_flag_toggled)
 	
-func init_board(rows: int, cols: int, bombs: int):
+func init_board(rows: int, cols: int, bombs: int, tier: int):
 	get_parent().build_mode = false
 	
 	self.rows = rows
@@ -132,37 +138,8 @@ func _on_building_queue(type: BuildingData.Type):
 		building.set_type(type, get_parent().icons[type])
 		current_placing_instance = building
 
-func _on_ability_queue(ability_name):
-	var placing = true
-	var ability
-	if ability_name == "destroy" && get_parent().ability_destroy > 0:
-		print("SIGNAL RECEIVED TO USE DESTROY ABILITY")
-		ability = Destroy.instantiate()
-		clearing_tile = true
-	elif ability_name == "armor":
-		print("SIGNAL RECEIVED TO USE ARMOR ABILITY")
-		placing = false
-		armor_active = true
-		return
-	elif ability_name == "dowse":
-		print("SIGNAL RECEIVED TO USE DOWSE ABILITY")
-		get_parent().ability_dowse -= 1
-		placing = false
-		if bomb_tiles.size() > 0:
-			var picked = false
-			while !picked:
-				print("bomb tiles: ", bomb_tiles)
-				randomize()
-				var rand_index:int = randi() % bomb_tiles.size()
-				if !bomb_tiles[rand_index].is_flagged:
-					bomb_tiles[rand_index].toggle_flag()
-					bombs_found += 1
-					print("bombs found: ", bombs_found)
-					flags -= 1
-					picked = true
-					return
-		return
-	add_child(ability)
+func _on_ability_queue(ability_name: AbilityData.Type):
+	ability_controller.activate_ability(ability_name)
 	
 func _on_tile_destroyed(cell_pos: Vector2i):
 	if cell_pos.x < 0 || cell_pos.y < 0 || cell_pos.x >= columns || cell_pos.y >= rows:
@@ -208,8 +185,6 @@ func enter_build_mode():
 		timer.timeout.connect(minesweeper_collection_complete)
 	else:
 		minesweeper_collection_complete()
-	
-	
 	
 func on_building_placed(building_world_pos: Vector2, building: BaseBuilding):
 	get_parent().help_text_is_overriden = false
