@@ -1,21 +1,20 @@
-[gd_scene load_steps=28 format=3 uid="uid://iqvlmmwy7d46"]
+[gd_scene load_steps=27 format=3 uid="uid://iqvlmmwy7d46"]
 
 [ext_resource type="Script" path="res://Main.gd" id="1_t2km6"]
 [ext_resource type="Theme" uid="uid://b6iv3a38m6uhb" path="res://UI.tres" id="2_b2qml"]
 [ext_resource type="Script" path="res://Scripts/CameraController.gd" id="2_sxoug"]
 [ext_resource type="PackedScene" uid="uid://dmmp1otl8dakg" path="res://Buildings/ToolbarBuilding.tscn" id="3_22qjw"]
 [ext_resource type="Texture2D" uid="uid://c5ocuxxxsbgne" path="res://Assets/UI/UIMapBackgroundAndBorder.png" id="3_c74ye"]
-[ext_resource type="Script" path="res://BuildMenu.gd" id="4_4yfy1"]
+[ext_resource type="PackedScene" uid="uid://b6ey248b5lsvj" path="res://UI/ResponsiveUI.tscn" id="3_uhbjp"]
 [ext_resource type="Texture2D" uid="uid://du5p0tvlhojks" path="res://Assets/UI/PopIcon.png" id="4_wg3lp"]
 [ext_resource type="Texture2D" uid="uid://ca5lct0ctr37m" path="res://Assets/UI/StoneIcon.png" id="5_o2ngn"]
 [ext_resource type="Texture2D" uid="uid://byetswoeyw7gd" path="res://Assets/UI/steeldownscaledicon.png" id="6_jm4fe"]
 [ext_resource type="Texture2D" uid="uid://d0o6bpct5y38h" path="res://Assets/UI/Popup.png" id="6_nia6k"]
 [ext_resource type="FontFile" uid="uid://m1fwnp6qsmnn" path="res://Assets/UI/Quikhand.ttf" id="6_rv3xe"]
-[ext_resource type="StyleBox" path="res://UI/OuterButtonStyle.tres" id="7_2o6rd"]
+[ext_resource type="StyleBox" uid="uid://767un3ynwawo" path="res://UI/OuterButtonStyle.tres" id="7_2o6rd"]
 [ext_resource type="PackedScene" uid="uid://doi658hn04jhv" path="res://UI/popup.tscn" id="7_703se"]
 [ext_resource type="PackedScene" uid="uid://b8qmhoccrox3y" path="res://UI/GameOver.tscn" id="7_wj57j"]
-[ext_resource type="StyleBox" path="res://UI/HoveredOuterButtonStyle.tres" id="8_pyn5i"]
-[ext_resource type="Script" path="res://AbilityMenu.gd" id="9_3lmso"]
+[ext_resource type="StyleBox" uid="uid://c5pcr2jlvlpd" path="res://UI/HoveredOuterButtonStyle.tres" id="8_pyn5i"]
 [ext_resource type="PackedScene" uid="uid://cp25vmlk0k3ck" path="res://Abilities/AbilityDestroy.tscn" id="10_bm3kx"]
 [ext_resource type="Texture2D" uid="uid://7an4owy3gbe2" path="res://Assets/UI/ArrowUp.png" id="11_gm014"]
 [ext_resource type="PackedScene" uid="uid://cbn0lpatmkt08" path="res://UI/MineHitPopup.tscn" id="12_4reet"]
@@ -46,6 +45,10 @@ script = ExtResource("1_t2km6")
 position = Vector2(690, 360)
 script = ExtResource("2_sxoug")
 
+[node name="ResponsiveUICanvas" type="CanvasLayer" parent="."]
+
+[node name="ResponsiveUI" parent="ResponsiveUICanvas" instance=ExtResource("3_uhbjp")]
+
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
 [node name="UI" type="Control" parent="CanvasLayer"]
@@ -59,6 +62,7 @@ mouse_filter = 2
 theme = ExtResource("2_b2qml")
 
 [node name="TextureRect" type="TextureRect" parent="CanvasLayer/UI"]
+visible = false
 layout_mode = 0
 offset_right = 1280.0
 offset_bottom = 720.0
@@ -66,6 +70,7 @@ mouse_filter = 2
 texture = ExtResource("3_c74ye")
 
 [node name="Depth" type="Label" parent="CanvasLayer/UI"]
+visible = false
 layout_mode = 2
 offset_left = 45.0
 offset_top = 288.0
@@ -75,6 +80,7 @@ theme_override_font_sizes/font_size = 48
 text = "Depth: 0"
 
 [node name="Flags" type="Label" parent="CanvasLayer/UI"]
+visible = false
 layout_mode = 2
 offset_left = 47.0
 offset_top = 335.0
@@ -84,6 +90,7 @@ theme_override_font_sizes/font_size = 48
 text = "Flags: 0"
 
 [node name="Resources" type="VBoxContainer" parent="CanvasLayer/UI"]
+visible = false
 layout_mode = 0
 offset_left = 57.0
 offset_top = 52.0
@@ -130,6 +137,7 @@ theme_override_font_sizes/font_size = 48
 text = "x 3"
 
 [node name="EndLevelBtn" type="Button" parent="CanvasLayer/UI"]
+visible = false
 layout_mode = 0
 offset_left = 28.0
 offset_top = 638.0
@@ -163,6 +171,7 @@ theme_override_styles/focus = ExtResource("7_2o6rd")
 text = "Descend..."
 
 [node name="ContextLabel" type="Label" parent="CanvasLayer/UI"]
+visible = false
 layout_mode = 0
 offset_left = 263.0
 offset_top = 687.0
@@ -171,7 +180,7 @@ offset_bottom = 722.0
 text = "Press 'H' for help overlay"
 horizontal_alignment = 1
 
-[node name="BuildMenu" type="Control" parent="CanvasLayer" node_paths=PackedStringArray("main")]
+[node name="BuildMenu" type="Control" parent="CanvasLayer"]
 visible = false
 layout_mode = 3
 anchors_preset = 15
@@ -181,8 +190,6 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 theme = ExtResource("2_b2qml")
-script = ExtResource("4_4yfy1")
-main = NodePath("../..")
 
 [node name="Page1" type="VBoxContainer" parent="CanvasLayer/BuildMenu"]
 layout_mode = 1
@@ -339,14 +346,13 @@ theme_override_styles/disabled = SubResource("StyleBoxEmpty_bthxj")
 theme_override_styles/focus = SubResource("StyleBoxEmpty_bthxj")
 icon = ExtResource("12_hutn7")
 
-[node name="AbilityMenu" type="Control" parent="CanvasLayer" node_paths=PackedStringArray("main")]
+[node name="AbilityMenu" type="Control" parent="CanvasLayer"]
+visible = false
 layout_mode = 3
 anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
 theme = ExtResource("2_b2qml")
-script = ExtResource("9_3lmso")
-main = NodePath("../..")
 
 [node name="Label" type="Label" parent="CanvasLayer/AbilityMenu"]
 layout_mode = 0
@@ -877,9 +883,14 @@ offset_bottom = 2541.0
 mouse_filter = 2
 color = Color(0.639216, 0.380392, 0.109804, 0.0627451)
 
+[connection signal="ability_menu_item_pressed" from="ResponsiveUICanvas/ResponsiveUI" to="." method="_on_responsive_ui_ability_menu_item_pressed"]
+[connection signal="build_menu_item_pressed" from="ResponsiveUICanvas/ResponsiveUI" to="." method="_on_responsive_ui_build_menu_item_pressed"]
+[connection signal="cancel_placement_pressed" from="ResponsiveUICanvas/ResponsiveUI" to="." method="_on_responsive_ui_cancel_placement_pressed"]
+[connection signal="confirm_placement_pressed" from="ResponsiveUICanvas/ResponsiveUI" to="." method="_on_responsive_ui_confirm_placement_pressed"]
+[connection signal="descend_pressed" from="ResponsiveUICanvas/ResponsiveUI" to="." method="_on_responsive_ui_descend_pressed"]
+[connection signal="enter_build_mode_pressed" from="ResponsiveUICanvas/ResponsiveUI" to="." method="_on_responsive_ui_enter_build_mode_pressed"]
 [connection signal="mouse_entered" from="CanvasLayer/UI/EndLevelBtn" to="." method="_on_end_level_btn_mouse_entered"]
 [connection signal="mouse_exited" from="CanvasLayer/UI/EndLevelBtn" to="." method="_on_end_level_btn_mouse_exited"]
-[connection signal="pressed" from="CanvasLayer/UI/EndLevelBtn" to="." method="_on_end_level_btn_pressed"]
 [connection signal="pressed" from="CanvasLayer/UI/NextFloorBtn" to="." method="_on_next_floor_btn_pressed"]
 [connection signal="build" from="CanvasLayer/BuildMenu/Page1/Staircase" to="." method="build"]
 [connection signal="build" from="CanvasLayer/BuildMenu/Page1/Minecart" to="." method="build"]

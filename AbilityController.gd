@@ -8,7 +8,6 @@ class_name AbilityController
 var Destroy = preload("res://Abilities/Destroy.tscn")
 
 func activate_ability(ability_type: AbilityData.Type):
-	board.placing = true
 	match (ability_type):
 		AbilityData.Type.DOWSE:
 			ability_dowse()
@@ -24,7 +23,7 @@ func activate_ability(ability_type: AbilityData.Type):
 func ability_dowse():
 	print("SIGNAL RECEIVED TO USE DOWSE ABILITY")
 	main.ability_dowse -= 1
-	board.placing = false
+	board.complete_ability()
 	if board.bomb_tiles.size() > 0:
 		var picked = false
 		while !picked:
@@ -48,6 +47,6 @@ func ability_destroy():
 	
 func ability_armor():
 	print("SIGNAL RECEIVED TO USE ARMOR ABILITY")
-	board.placing = false
+	board.complete_ability()
 	board.armor_active = true
 	return

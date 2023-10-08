@@ -19,16 +19,16 @@ config/icon="res://icon.svg"
 
 SoundManager="*res://Sound/sound_manager.tscn"
 PlatformUtil="*res://Scripts/PlatformUtil.gd"
+DragOrZoomEventManager="*res://Scripts/DragOrZoomEventManager.gd"
 
 [display]
 
 window/size/viewport_width=1080
 window/size/viewport_height=1080
-window/size/window_width_override=1280
-window/size/window_height_override=720
+window/size/window_width_override=540
+window/size/window_height_override=960
 window/stretch/mode="canvas_items"
 window/stretch/aspect="expand"
-window/stretch/scale=1.5
 window/handheld/orientation=6
 
 [input]

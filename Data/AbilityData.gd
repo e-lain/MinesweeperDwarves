@@ -25,7 +25,7 @@ static var Data = {
 		"type": Type.ARMOR,
 		"name": "Active Armor",
 		"description": "Take no damage when revealing the next tile",
-		"icon_path": "res://Assets/UI/dowsingrodicon.png",
-		"small_icon_path": "res://Assets/UI/DowsingRodDownscaled.png"		
+		"icon_path": "res://Assets/UI/steelbarriericon.png",
+		"small_icon_path": "res://Assets/UI/oldsteeldownscaled.png"		
 	}
 }

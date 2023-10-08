@@ -1,0 +1,505 @@
+[gd_scene load_steps=21 format=3 uid="uid://b6ey248b5lsvj"]
+
+[ext_resource type="Theme" uid="uid://b6iv3a38m6uhb" path="res://UI.tres" id="1_u5axg"]
+[ext_resource type="Texture2D" uid="uid://ca5lct0ctr37m" path="res://Assets/UI/StoneIcon.png" id="2_7bcyx"]
+[ext_resource type="Script" path="res://UI/ResponsiveUI.gd" id="2_bkf2v"]
+[ext_resource type="Script" path="res://UI/ResourceBar.gd" id="3_km0c7"]
+[ext_resource type="Texture2D" uid="uid://du5p0tvlhojks" path="res://Assets/UI/PopIcon.png" id="3_tt564"]
+[ext_resource type="Texture2D" uid="uid://byetswoeyw7gd" path="res://Assets/UI/steeldownscaledicon.png" id="4_0svmv"]
+[ext_resource type="Texture2D" uid="uid://cfn88x8dv058h" path="res://Assets/Buildings/StairsUp.png" id="5_3xw3f"]
+[ext_resource type="Texture2D" uid="uid://bl2ixi00xkp8y" path="res://Assets/exclamation.png" id="6_ppse3"]
+[ext_resource type="StyleBox" uid="uid://767un3ynwawo" path="res://UI/OuterButtonStyle.tres" id="8_vwt44"]
+[ext_resource type="StyleBox" uid="uid://c5pcr2jlvlpd" path="res://UI/HoveredOuterButtonStyle.tres" id="9_dawhi"]
+[ext_resource type="Script" path="res://UI/BuildMenu.gd" id="9_o2aip"]
+[ext_resource type="PackedScene" uid="uid://bbc53njyng3ww" path="res://UI/BuildMenuBuildingIcon.tscn" id="10_0id56"]
+[ext_resource type="StyleBox" uid="uid://bbgl381yuqd6v" path="res://UI/CancelButton.tres" id="10_kuip1"]
+[ext_resource type="Script" path="res://UI/AbilityMenu.gd" id="11_dj7ul"]
+[ext_resource type="StyleBox" uid="uid://7xwe0gnyaoba" path="res://UI/ConfirmButton.tres" id="11_rgk7n"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_m5poj"]
+content_margin_left = 8.0
+content_margin_top = 8.0
+content_margin_right = 8.0
+content_margin_bottom = 8.0
+bg_color = Color(1, 1, 1, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0, 0, 0, 1)
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+corner_radius_bottom_right = 2
+corner_radius_bottom_left = 2
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_wo6rf"]
+bg_color = Color(1, 1, 1, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0, 0, 0, 1)
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+corner_radius_bottom_right = 2
+corner_radius_bottom_left = 2
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_wxix3"]
+content_margin_left = 8.0
+content_margin_top = 8.0
+content_margin_right = 8.0
+content_margin_bottom = 8.0
+bg_color = Color(0.6, 0.6, 0.6, 0)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rduq6"]
+content_margin_left = 8.0
+content_margin_top = 8.0
+content_margin_right = 8.0
+content_margin_bottom = 8.0
+bg_color = Color(1, 1, 1, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0, 0, 0, 1)
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+corner_radius_bottom_right = 2
+corner_radius_bottom_left = 2
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_82egx"]
+content_margin_left = 16.0
+content_margin_top = 16.0
+content_margin_right = 16.0
+content_margin_bottom = 16.0
+bg_color = Color(1, 1, 1, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0, 0, 0, 1)
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+corner_radius_bottom_right = 2
+corner_radius_bottom_left = 2
+
+[node name="ResponsiveUI" type="MarginContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme = ExtResource("1_u5axg")
+script = ExtResource("2_bkf2v")
+
+[node name="TopPanel" type="PanelContainer" parent="."]
+custom_minimum_size = Vector2(320, 91)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 0
+mouse_filter = 2
+theme = ExtResource("1_u5axg")
+theme_override_styles/panel = SubResource("StyleBoxFlat_m5poj")
+
+[node name="ResourceBar" type="HBoxContainer" parent="TopPanel"]
+layout_mode = 2
+mouse_filter = 0
+script = ExtResource("3_km0c7")
+
+[node name="Stone" type="HBoxContainer" parent="TopPanel/ResourceBar"]
+layout_mode = 2
+mouse_filter = 0
+
+[node name="TextureRect" type="TextureRect" parent="TopPanel/ResourceBar/Stone"]
+modulate = Color(0, 0, 0, 1)
+layout_mode = 2
+mouse_filter = 0
+texture = ExtResource("2_7bcyx")
+expand_mode = 2
+stretch_mode = 5
+
+[node name="Label" type="Label" parent="TopPanel/ResourceBar/Stone"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 1
+mouse_filter = 0
+theme_override_font_sizes/font_size = 72
+text = "x 3"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Population" type="HBoxContainer" parent="TopPanel/ResourceBar"]
+layout_mode = 2
+mouse_filter = 0
+
+[node name="TextureRect" type="TextureRect" parent="TopPanel/ResourceBar/Population"]
+modulate = Color(0, 0, 0, 1)
+layout_mode = 2
+mouse_filter = 0
+texture = ExtResource("3_tt564")
+expand_mode = 2
+stretch_mode = 5
+
+[node name="Label" type="Label" parent="TopPanel/ResourceBar/Population"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 1
+mouse_filter = 0
+theme_override_font_sizes/font_size = 72
+text = "x 3"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Steel" type="HBoxContainer" parent="TopPanel/ResourceBar"]
+layout_mode = 2
+mouse_filter = 0
+
+[node name="TextureRect" type="TextureRect" parent="TopPanel/ResourceBar/Steel"]
+modulate = Color(0, 0, 0, 1)
+layout_mode = 2
+mouse_filter = 0
+texture = ExtResource("4_0svmv")
+expand_mode = 2
+stretch_mode = 5
+
+[node name="Label" type="Label" parent="TopPanel/ResourceBar/Steel"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 1
+mouse_filter = 0
+theme_override_font_sizes/font_size = 72
+text = "x 3"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Lava" type="HBoxContainer" parent="TopPanel/ResourceBar"]
+layout_mode = 2
+mouse_filter = 0
+
+[node name="TextureRect" type="TextureRect" parent="TopPanel/ResourceBar/Lava"]
+modulate = Color(0, 0, 0, 1)
+layout_mode = 2
+texture = ExtResource("2_7bcyx")
+expand_mode = 2
+stretch_mode = 5
+
+[node name="Label" type="Label" parent="TopPanel/ResourceBar/Lava"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 1
+theme_override_font_sizes/font_size = 72
+text = "x 3"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="FloorsAndFlags" type="HBoxContainer" parent="TopPanel"]
+layout_mode = 2
+alignment = 2
+
+[node name="FloorCount" type="HBoxContainer" parent="TopPanel/FloorsAndFlags"]
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="TopPanel/FloorsAndFlags/FloorCount"]
+layout_mode = 2
+size_flags_horizontal = 3
+texture = ExtResource("5_3xw3f")
+expand_mode = 2
+stretch_mode = 5
+
+[node name="Label" type="Label" parent="TopPanel/FloorsAndFlags/FloorCount"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 1
+theme_override_font_sizes/font_size = 72
+text = "1"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="FlagCount" type="HBoxContainer" parent="TopPanel/FloorsAndFlags"]
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="TopPanel/FloorsAndFlags/FlagCount"]
+layout_mode = 2
+size_flags_horizontal = 3
+texture = ExtResource("6_ppse3")
+expand_mode = 3
+stretch_mode = 5
+
+[node name="Label" type="Label" parent="TopPanel/FloorsAndFlags/FlagCount"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 1
+theme_override_font_sizes/font_size = 72
+text = "1"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="BuildMenu" type="PanelContainer" parent="."]
+visible = false
+custom_minimum_size = Vector2(720, 180)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 8
+theme = ExtResource("1_u5axg")
+theme_override_styles/panel = SubResource("StyleBoxFlat_wo6rf")
+script = ExtResource("9_o2aip")
+
+[node name="ScrollContainer" type="ScrollContainer" parent="BuildMenu"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_wxix3")
+follow_focus = true
+horizontal_scroll_mode = 2
+vertical_scroll_mode = 0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="BuildMenu/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 16
+alignment = 1
+
+[node name="BuildMenuBuildingIcon" parent="BuildMenu/ScrollContainer/HBoxContainer" instance=ExtResource("10_0id56")]
+layout_mode = 2
+
+[node name="AbilityMenu" type="PanelContainer" parent="."]
+visible = false
+custom_minimum_size = Vector2(720, 180)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 8
+theme = ExtResource("1_u5axg")
+theme_override_styles/panel = SubResource("StyleBoxFlat_wo6rf")
+script = ExtResource("11_dj7ul")
+
+[node name="ScrollContainer" type="ScrollContainer" parent="AbilityMenu"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_wxix3")
+follow_focus = true
+horizontal_scroll_mode = 2
+vertical_scroll_mode = 0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="AbilityMenu/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 16
+alignment = 1
+
+[node name="BuildMenuBuildingIcon" parent="AbilityMenu/ScrollContainer/HBoxContainer" instance=ExtResource("10_0id56")]
+layout_mode = 2
+
+[node name="TopMargin" type="MarginContainer" parent="."]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/margin_top = 89
+
+[node name="Infobox" type="PanelContainer" parent="TopMargin"]
+visible = false
+custom_minimum_size = Vector2(656, 128)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 0
+theme_override_styles/panel = SubResource("StyleBoxFlat_rduq6")
+
+[node name="Label" type="Label" parent="TopMargin/Infobox"]
+layout_mode = 2
+size_flags_vertical = 1
+theme_override_font_sizes/font_size = 56
+text = "Quarry:
+It can do some things sometimes
+"
+vertical_alignment = 1
+text_overrun_behavior = 2
+
+[node name="DescendButton" type="MarginContainer" parent="TopMargin"]
+visible = false
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 0
+mouse_filter = 2
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+
+[node name="Button" type="Button" parent="TopMargin/DescendButton"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 64
+theme_override_styles/normal = ExtResource("8_vwt44")
+theme_override_styles/hover = ExtResource("9_dawhi")
+theme_override_styles/pressed = ExtResource("8_vwt44")
+theme_override_styles/disabled = ExtResource("8_vwt44")
+theme_override_styles/focus = ExtResource("8_vwt44")
+text = "Descend"
+
+[node name="ToBuildModeButton" type="MarginContainer" parent="TopMargin"]
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 0
+mouse_filter = 2
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+
+[node name="Button" type="Button" parent="TopMargin/ToBuildModeButton"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 64
+theme_override_styles/normal = ExtResource("8_vwt44")
+theme_override_styles/hover = ExtResource("9_dawhi")
+theme_override_styles/pressed = ExtResource("8_vwt44")
+theme_override_styles/disabled = ExtResource("8_vwt44")
+theme_override_styles/focus = ExtResource("8_vwt44")
+text = "To Build Mode"
+
+[node name="FloorsAndFlagsLandscape" type="MarginContainer" parent="."]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="FloorsAndFlagsLandscape"]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+
+[node name="FloorCount" type="HBoxContainer" parent="FloorsAndFlagsLandscape/VBoxContainer"]
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="FloorsAndFlagsLandscape/VBoxContainer/FloorCount"]
+layout_mode = 2
+size_flags_horizontal = 3
+texture = ExtResource("5_3xw3f")
+expand_mode = 2
+stretch_mode = 5
+
+[node name="Label" type="Label" parent="FloorsAndFlagsLandscape/VBoxContainer/FloorCount"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 1
+theme_override_font_sizes/font_size = 72
+text = "1"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="FlagCount" type="HBoxContainer" parent="FloorsAndFlagsLandscape/VBoxContainer"]
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="FloorsAndFlagsLandscape/VBoxContainer/FlagCount"]
+layout_mode = 2
+size_flags_horizontal = 3
+texture = ExtResource("6_ppse3")
+expand_mode = 3
+stretch_mode = 5
+
+[node name="Label" type="Label" parent="FloorsAndFlagsLandscape/VBoxContainer/FlagCount"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 1
+theme_override_font_sizes/font_size = 72
+text = "1"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="BottomMargin" type="MarginContainer" parent="."]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/margin_bottom = 16
+
+[node name="CancelConfirm" type="PanelContainer" parent="BottomMargin"]
+visible = false
+custom_minimum_size = Vector2(360, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 8
+theme_override_styles/panel = SubResource("StyleBoxFlat_82egx")
+
+[node name="MarginContainer" type="MarginContainer" parent="BottomMargin/CancelConfirm"]
+layout_mode = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+
+[node name="VBoxContainer" type="VBoxContainer" parent="BottomMargin/CancelConfirm/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 24
+
+[node name="Label" type="Label" parent="BottomMargin/CancelConfirm/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_font_sizes/font_size = 72
+text = "Place Building here?"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="BottomMargin/CancelConfirm/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 16
+alignment = 1
+
+[node name="Cancel" type="Button" parent="BottomMargin/CancelConfirm/MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 56
+theme_override_styles/normal = ExtResource("10_kuip1")
+theme_override_styles/hover = ExtResource("10_kuip1")
+theme_override_styles/pressed = ExtResource("10_kuip1")
+theme_override_styles/disabled = ExtResource("10_kuip1")
+theme_override_styles/focus = ExtResource("10_kuip1")
+text = "Cancel"
+
+[node name="Confirm" type="Button" parent="BottomMargin/CancelConfirm/MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 56
+theme_override_styles/normal = ExtResource("11_rgk7n")
+theme_override_styles/hover = ExtResource("11_rgk7n")
+theme_override_styles/pressed = ExtResource("11_rgk7n")
+theme_override_styles/disabled = ExtResource("11_rgk7n")
+theme_override_styles/focus = ExtResource("11_rgk7n")
+text = "Yes"
+
+[node name="CancelPlacement" type="PanelContainer" parent="BottomMargin"]
+visible = false
+custom_minimum_size = Vector2(360, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 8
+theme_override_styles/panel = SubResource("StyleBoxFlat_82egx")
+
+[node name="MarginContainer" type="MarginContainer" parent="BottomMargin/CancelPlacement"]
+layout_mode = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+
+[node name="HBoxContainer" type="HBoxContainer" parent="BottomMargin/CancelPlacement/MarginContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 48
+alignment = 1
+
+[node name="Label" type="Label" parent="BottomMargin/CancelPlacement/MarginContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_font_sizes/font_size = 56
+text = "Placing: Quarry"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Cancel" type="Button" parent="BottomMargin/CancelPlacement/MarginContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 56
+theme_override_styles/normal = ExtResource("10_kuip1")
+theme_override_styles/hover = ExtResource("10_kuip1")
+theme_override_styles/pressed = ExtResource("10_kuip1")
+theme_override_styles/disabled = ExtResource("10_kuip1")
+theme_override_styles/focus = ExtResource("10_kuip1")
+text = "Cancel"
+
+[connection signal="on_building_selected" from="BuildMenu" to="." method="_on_build_menu_on_building_selected"]
+[connection signal="on_ability_selected" from="AbilityMenu" to="." method="_on_ability_menu_ability_selected"]
+[connection signal="pressed" from="TopMargin/DescendButton/Button" to="." method="_on_descend_button_pressed"]
+[connection signal="pressed" from="TopMargin/ToBuildModeButton/Button" to="." method="_on_to_build_mode_button_pressed"]
+[connection signal="pressed" from="BottomMargin/CancelConfirm/MarginContainer/VBoxContainer/HBoxContainer/Cancel" to="." method="_on_building_placement_cancel_pressed"]
+[connection signal="pressed" from="BottomMargin/CancelConfirm/MarginContainer/VBoxContainer/HBoxContainer/Confirm" to="." method="_on_building_placement_confirm_pressed"]
+[connection signal="pressed" from="BottomMargin/CancelPlacement/MarginContainer/HBoxContainer/Cancel" to="." method="_on_building_placement_cancel_pressed"]

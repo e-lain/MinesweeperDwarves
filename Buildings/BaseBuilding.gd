@@ -1,6 +1,8 @@
 extends Node2D
 class_name BaseBuilding
 
+signal on_placed
+
 @export var type: BuildingData.Type
 @onready var sprite: Sprite2D = $Sprite2D
 @onready var no_minecart_sprite: Sprite2D = $NoMinecart
@@ -9,6 +11,8 @@ class_name BaseBuilding
 
 @onready var board = get_parent()
 @onready var main = board.get_parent()
+@onready var gui_control = $Control
+
 
 var building_placement_material: ShaderMaterial = preload("res://Shaders/InvalidBuildingPlacement.tres")
 
@@ -20,7 +24,6 @@ const collection_prefab: PackedScene = preload("res://UI/collection_effect.tscn"
 
 const TILE_SIZE = 64
 
-var placed: bool = false
 var in_bounds: bool = false
 
 var id: int
@@ -28,21 +31,36 @@ var size: int
 
 var took_help_text_override = false
 
+var state := State.Unplaced
+
+var move_begin_offset = Vector2.ZERO
+
+
+enum State {
+	Unplaced,
+	PlacedUnconfirmed,
+	Moving,
+	Confirmed
+}
+
 func set_type(value, icon):
 	type = value
 	size = BuildingData.data[type]["size"]
+	gui_control.size = Vector2(TILE_SIZE, TILE_SIZE) * size
+	
 	sprite.texture = icon
 
 func _process(delta):
-	if !placed:
+	if state == State.Unplaced || state == State.Moving:
 		var mouse = board.get_local_mouse_position()
+		if state == State.Moving:
+			mouse -= move_begin_offset
+		
 		var snapped = Vector2(snapped(mouse.x-TILE_SIZE/2, TILE_SIZE), snapped(mouse.y-TILE_SIZE/2, TILE_SIZE))
 		position = snapped
 		if position.x <= 0 - TILE_SIZE || position.x >= TILE_SIZE * board.rows || position.y <= 0-TILE_SIZE || position.y >= TILE_SIZE * board.columns:
-			self.hide()
 			in_bounds = false
 		else:
-			self.show()
 			in_bounds = true
 		if in_bounds:
 			if !can_place():
@@ -61,7 +79,7 @@ func _process(delta):
 			var region_h = size * TILE_SIZE - bg_offset.y * 2
 			background_sprite.region_rect = Rect2(region_x, region_y, region_w, region_h)
 	
-	if placed && (type == BuildingData.Type.HOUSE || type == BuildingData.Type.QUARRY):
+	if (type == BuildingData.Type.HOUSE || type == BuildingData.Type.QUARRY):
 		var next_to_minecart = next_to_minecart()
 		no_minecart_sprite.visible = !next_to_minecart
 		sprite.modulate.a = 1 if next_to_minecart else 0.7 
@@ -84,7 +102,7 @@ func next_to_minecart() -> bool:
 
 
 func _on_control_gui_input(event):
-	if event is InputEventMouseButton && !placed:
+	if event is InputEventMouseButton && state == State.Unplaced:
 		if event.is_action_pressed("left_click"):
 			if !can_place():
 				SoundManager.play_negative()
@@ -92,15 +110,34 @@ func _on_control_gui_input(event):
 				main.help_text_bar.text = "Stairs already placed! Can't have more than one staircase per floor"
 				print("Stairs already placed!")
 			if can_place() && in_bounds:
-				placed = true
-				board.on_building_placed(global_position, self)
-
+				state = State.PlacedUnconfirmed
+				on_placed.emit()
+				
 				sprite.material = null
 				return
-		if event.is_action_pressed("right_click"):
-			board.placing = false
-			main.help_text_is_overriden = false
-			queue_free()
+				
+	if state == State.PlacedUnconfirmed:
+		if event is InputEventMouseButton and event.is_action_pressed("left_click"):
+			state = State.Moving
+			move_begin_offset = Vector2.ZERO
+			var reference_pos = position + Vector2(TILE_SIZE, TILE_SIZE)
+			while (board.get_local_mouse_position().x - move_begin_offset.x > reference_pos.x):
+				move_begin_offset.x += TILE_SIZE
+			while (board.get_local_mouse_position().y - move_begin_offset.y > reference_pos.y):
+				move_begin_offset.y += TILE_SIZE
+	
+	
+	if state == State.Moving:
+		if event is InputEventMouseButton and event.is_action_released("left_click"):
+			state = State.PlacedUnconfirmed	
+			move_begin_offset = Vector2.ZERO
+		
+			
+func confirm_placement():
+	state = State.Confirmed
+
+func cancel_placement():
+	queue_free()
 
 func play_collection_animation(lifespan_seconds: float, icon_path: String):
 	var instance = collection_prefab.instantiate()

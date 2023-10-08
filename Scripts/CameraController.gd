@@ -24,10 +24,13 @@ func _unhandled_input(event):
 				events[event.index] = event
 			else:
 				events.erase(event.index)
+				if events.size() == 0:
+					DragOrZoomEventManager.clear()
 		if event is InputEventScreenDrag:
 			events[event.index] = event
 			if events.size() == 1:
 				drag_camera(event.relative)
+				DragOrZoomEventManager.dragging = true
 			elif events.size() == 2:
 				var drag_distance = events[0].position.distance_to(events[1].position)
 				var zoom_factor = abs(drag_distance - last_drag_distance)
@@ -35,18 +38,22 @@ func _unhandled_input(event):
 					var new_zoom = (1 - zoom_speed) if drag_distance < last_drag_distance else (1 + zoom_speed)
 					zoom_camera(new_zoom)
 					last_drag_distance = drag_distance
+					DragOrZoomEventManager.zooming = true
 		
 	else:
 		# Handle Drag
 		if event.is_action_pressed("left_click"):
 			dragging = true
 			get_viewport().set_input_as_handled()
+
 		elif event.is_action_released("left_click"):
 			dragging = false
 			get_viewport().set_input_as_handled()
+			DragOrZoomEventManager.dragging = false
 		
 		if event is InputEventMouseMotion and dragging:
 			drag_camera(event.relative)
+			DragOrZoomEventManager.dragging = true
 		
 		# Handle scroll zoom
 		if event is InputEventMouseButton and event.is_pressed():

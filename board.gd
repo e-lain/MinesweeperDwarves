@@ -7,6 +7,8 @@ signal mine_animation_complete
 signal wonder_placed
 signal workshop_placed
 
+signal building_placed
+
 @export var collection_lifespan_seconds: float = 1.5
 
 @export var grid_line_prefab: PackedScene = preload("res://Prefabs/GridLine.tscn")
@@ -24,8 +26,6 @@ const TILE_SIZE = 64
 
 var ability_controller
 
-var build_mode: bool = false
-var placing: bool = false
 var placing_type: BuildingData.Type
 var current_placing_instance: BaseBuilding
 
@@ -53,13 +53,22 @@ var buildings_by_id := {}
 
 var mine_exploded = false
 
+var state := State.Play
+
+enum State {
+	Play,
+	Build,
+	Placing,
+	Ability,
+	Complete
+}
+
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	ability_controller = AbilityController.new()
 	add_child(ability_controller)
-	
-	get_parent().queue_building.connect(_on_building_queue)
-	get_parent().queue_ability.connect(_on_ability_queue)
+
 	randomize()
 	
 	tilemap.destroyed.connect(_on_tile_destroyed)
@@ -124,12 +133,9 @@ func set_bombs():
 			bomb_tiles.append(tile)
 			n += 1
 
-func _process(delta):
-	pass
-
-func _on_building_queue(type: BuildingData.Type):
-	if build_mode and !placing:
-		placing = true
+func queue_building(type: BuildingData.Type):
+	if state == State.Build:
+		state = State.Placing
 		placing_type = type
 		get_parent().help_text_is_overriden = true
 		get_parent().help_text_bar.text = "Left-click on valid space to build. Right-click to cancel"
@@ -137,9 +143,14 @@ func _on_building_queue(type: BuildingData.Type):
 		add_child(building)
 		building.set_type(type, get_parent().icons[type])
 		current_placing_instance = building
+		current_placing_instance.on_placed.connect(on_building_placed)
 
-func _on_ability_queue(ability_name: AbilityData.Type):
+func queue_ability(ability_name: AbilityData.Type):
+	state = State.Ability
 	ability_controller.activate_ability(ability_name)
+	
+func complete_ability():
+	state = State.Play
 	
 func _on_tile_destroyed(cell_pos: Vector2i):
 	if cell_pos.x < 0 || cell_pos.y < 0 || cell_pos.x >= columns || cell_pos.y >= rows:
@@ -185,13 +196,30 @@ func enter_build_mode():
 		timer.timeout.connect(minesweeper_collection_complete)
 	else:
 		minesweeper_collection_complete()
+
+
+func on_building_placed():
+	if state != State.Placing:
+		push_error("Invalid state when building placed!")
+		return
 	
-func on_building_placed(building_world_pos: Vector2, building: BaseBuilding):
+	building_placed.emit()
+	
+func on_cancel_building_placement():
+	state = State.Build
+	current_placing_instance.cancel_placement()
+	current_placing_instance = null
+
+func on_confirm_building_placement():
+	var building = current_placing_instance
+	var building_world_pos = building.global_position
+	
+	building.confirm_placement()
+	
 	get_parent().help_text_is_overriden = false
 	building.id = total_building_count
 	var type = building.type
 	var id = building.id
-	placing = false
 	total_building_count += 1
 	var data = BuildingData.data[type]
 	var size = data["size"]
@@ -223,9 +251,11 @@ func on_building_placed(building_world_pos: Vector2, building: BaseBuilding):
 		workshop_placed.emit()
 	elif type == BuildingData.Type.WONDER:
 		wonder_placed.emit()
+		
+	state = State.Build
 
 func collect_resources():
-	placing = false
+	state = State.Complete
 	clearing_tile = false
 	var directions = [Vector2i.LEFT, Vector2i.RIGHT, Vector2i.UP, Vector2i.DOWN]
 	var tiles_to_collect_from = {}
@@ -282,8 +312,8 @@ func building_collection_complete():
 	on_building_collection_complete.emit()
 
 func minesweeper_collection_complete():
-	build_mode = true
-	get_parent().build_mode = true
+	state = State.Build
+	
 	for row in tiles:
 		for tile in row:
 			if tile.label:
@@ -291,7 +321,7 @@ func minesweeper_collection_complete():
 			if tile.is_bomb:
 				tile.destroy_bomb()
 				bomb_tiles.erase(tile)
-
+	
 	on_minesweeper_collection_complete.emit()
 
 func clear_tile(tile: BoardTile):
@@ -440,6 +470,8 @@ func building_is_next_to_minecart(building: BaseBuilding) -> bool:
 			if check.x < 0 || check.x >= columns || check.y < 0 || check.y >= rows:
 				continue
 			var tile = tiles[check.x][check.y]
+			if !tile.has_building:
+				continue
 			var other_building = buildings_by_id[tile.building_id]
 			if other_building.type == BuildingData.Type.MINECART:
 				return true
@@ -447,7 +479,7 @@ func building_is_next_to_minecart(building: BaseBuilding) -> bool:
 	return false
 
 func player_placing_minecart_next_to_building(building: BaseBuilding) -> bool:
-	if !placing || placing_type != BuildingData.Type.MINECART || current_placing_instance == null:
+	if state != State.Placing || placing_type != BuildingData.Type.MINECART || current_placing_instance == null:
 		return false
 	
 	var minecart_cell_pos = tilemap.local_to_map(tilemap.to_local(current_placing_instance.global_position))
@@ -457,6 +489,8 @@ func player_placing_minecart_next_to_building(building: BaseBuilding) -> bool:
 		if check.x < 0 || check.x >= columns || check.y < 0 || check.y >= rows:
 			continue
 		var tile = tiles[check.x][check.y]
+		if !tile.has_building:
+			continue
 		if tile.building_id == building.id:
 			return true
 	return false

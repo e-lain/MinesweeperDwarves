@@ -1,21 +1,43 @@
-extends CanvasLayer
+extends MarginContainer
+class_name ResponsiveUI
 
-@onready var margin_container = $MarginContainer
-@onready var top_margin = $MarginContainer/TopMargin
-@onready var bottom_margin = $MarginContainer/BottomMargin
+signal enter_build_mode_pressed
+signal descend_pressed
+signal cancel_placement_pressed
+signal confirm_placement_pressed
+signal build_menu_item_pressed(type: BuildingData.Type)
+signal ability_menu_item_pressed(type: AbilityData.Type)
 
-@onready var top_panel = $MarginContainer/TopPanel 
-@onready var build_menu = $MarginContainer/BuildMenu 
+@onready var top_margin = $TopMargin
+@onready var bottom_margin = $BottomMargin
 
-@onready var infobox = $MarginContainer/TopMargin/Infobox
-@onready var infobox_text = $MarginContainer/TopMargin/Infobox/Label
-@onready var descend_button_container = $MarginContainer/TopMargin/DescendButton
+@onready var top_panel = $TopPanel 
+@onready var build_menu: BuildMenu = $BuildMenu 
+@onready var ability_menu: AbilityMenu = $AbilityMenu
 
-@onready var floors_and_flags_portrait = $MarginContainer/TopPanel/FloorsAndFlags
-@onready var floors_and_flags_landscape = $MarginContainer/FloorsAndFlagsLandscape
+@onready var infobox = $TopMargin/Infobox
+@onready var infobox_text = $TopMargin/Infobox/Label
 
-@onready var cancel_confirm = $MarginContainer/BottomMargin/CancelConfirm
-@onready var cancel_placement = $MarginContainer/BottomMargin/CancelPlacement
+@onready var descend_button_container = $TopMargin/DescendButton
+@onready var descend_button = $TopMargin/DescendButton/Button
+
+@onready var floors_and_flags_portrait = $TopPanel/FloorsAndFlags
+@onready var floors_and_flags_landscape = $FloorsAndFlagsLandscape
+
+@onready var cancel_confirm = $BottomMargin/CancelConfirm
+@onready var cancel_placement = $BottomMargin/CancelPlacement
+
+@onready var resource_bar: ResourceBar = $TopPanel/ResourceBar
+
+# there's two for each because which one is chosen depends on screen layout. I hate it more than you
+@onready var depth_label_portrait: Label = $TopPanel/FloorsAndFlags/FloorCount/Label
+@onready var depth_label_landscape: Label = $FloorsAndFlagsLandscape/VBoxContainer/FloorCount/Label
+
+@onready var flag_label_portrait: Label = $TopPanel/FloorsAndFlags/FlagCount/Label
+@onready var flag_label_landscape: Label = $FloorsAndFlagsLandscape/VBoxContainer/FlagCount/Label
+
+@onready var to_build_mode_button_container = $TopMargin/ToBuildModeButton
+@onready var to_build_mode_button = $TopMargin/ToBuildModeButton/Button
 
 
 # If we want to have margins around the UI, this would be where to assign them 
@@ -41,15 +63,16 @@ func update_margins_for_notch():
 		right = max(right, abs(safe_area.end.x - window_size.x) * x_factor)
 		
 	# OVERRIDE MARGIN CONTAINER (HOSTS THIS SCRIPT)
-	margin_container.add_theme_constant_override("margin_top",top)
-	margin_container.add_theme_constant_override("margin_left",left)
-	margin_container.add_theme_constant_override("margin_right",right)
-	margin_container.add_theme_constant_override("margin_bottom",bottom)
-
+	add_theme_constant_override("margin_top",top)
+	add_theme_constant_override("margin_left",left)
+	add_theme_constant_override("margin_right",right)
+	add_theme_constant_override("margin_bottom",bottom)
 
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	ability_menu.update_abilities([AbilityData.Type.ARMOR, AbilityData.Type.DESTROY, AbilityData.Type.DOWSE])
+	build_menu.update_buildings([BuildingData.Type.STAIRCASE, BuildingData.Type.MINECART, BuildingData.Type.HOUSE, BuildingData.Type.QUARRY,  BuildingData.Type.WORKSHOP, BuildingData.Type.WONDER])
 	on_dimensions_updated()
 	
 
@@ -88,40 +111,34 @@ func on_dimensions_updated():
 	
 	bottom_margin.add_theme_constant_override("margin_bottom", screen_size.y * 0.01)
 
-
-# TODO: Hook Up functionality
-# TODO: Animate menus
-
 func enter_build_mode():
 	# TODO: Animate this!
+	ability_menu.visible = false
 	build_menu.visible = true
+	to_build_mode_button_container.visible = false
 	descend_button_container.visible = true
-	infobox.visible = true
+	#infobox.visible = true
 	cancel_placement.visible = false
 	cancel_confirm.visible = false
 
 func enter_play_mode():
+	ability_menu.visible = true
 	# TODO: animate this!
 	build_menu.visible = false
+	to_build_mode_button_container.visible = true
 	descend_button_container.visible = false
 	infobox.visible = false
 	
 func enter_place_mode():
 	build_menu.visible = false
 	cancel_placement.visible = true
+	to_build_mode_button_container.visible = false
 	descend_button_container.visible = false
 
 func on_building_placed():
+	build_menu.visible = false
 	cancel_placement.visible = false
 	cancel_confirm.visible = true
-	
-func on_building_placement_confirmed():
-	cancel_confirm.visible = false
-	descend_button_container.visible = true
-	build_menu.visible = true
-	infobox.visible = true
-	
-
 
 func _unhandled_input(event):
 	if event.is_action_pressed("Test_1"):
@@ -133,4 +150,43 @@ func _unhandled_input(event):
 	if event.is_action_pressed("Test_4"):
 		on_building_placed()
 	if event.is_action_pressed("Test_5"):
-		on_building_placement_confirmed()
+		enter_build_mode()
+
+
+func set_depth(depth: int):
+	depth_label_portrait.text = str(depth)
+	depth_label_landscape.text = str(depth)
+
+func set_flag_count(flag_count: int):
+	flag_label_portrait.text = str(flag_count)
+	flag_label_landscape.text = str(flag_count)
+
+func set_resource_count(type: ResourceData.Resources, val: int):
+	resource_bar.set_resource_count(type, val)
+	
+func set_infobox_text(text: String):
+	infobox_text.text = text
+	
+func set_enter_build_mode_disabled(val: bool):
+	to_build_mode_button.disabled = val
+
+func set_descend_disabled(val: bool):
+	descend_button.disabled = val
+
+func _on_descend_button_pressed():
+	descend_pressed.emit()
+
+func _on_to_build_mode_button_pressed():
+	enter_build_mode_pressed.emit()
+
+func _on_build_menu_on_building_selected(type: BuildingData.Type):
+	build_menu_item_pressed.emit(type)
+	
+func _on_building_placement_cancel_pressed():
+	cancel_placement_pressed.emit()
+
+func _on_building_placement_confirm_pressed():
+	confirm_placement_pressed.emit()
+
+func _on_ability_menu_ability_selected(type: AbilityData.Type):
+	ability_menu_item_pressed.emit(type)
