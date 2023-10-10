@@ -72,9 +72,13 @@ func update_margins_for_notch():
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	ability_menu.update_abilities([AbilityData.Type.ARMOR, AbilityData.Type.DESTROY, AbilityData.Type.DOWSE])
-	build_menu.update_buildings([BuildingData.Type.STAIRCASE, BuildingData.Type.MINECART, BuildingData.Type.HOUSE, BuildingData.Type.QUARRY,  BuildingData.Type.WORKSHOP, BuildingData.Type.WONDER])
 	on_dimensions_updated()
-	
+
+func update_buildings(buildings_list):
+	if !buildings_list:
+		print("ERROR: BUILDINGS LIST PROVIDED IS INVALID")
+		return
+	build_menu.update_buildings(buildings_list)
 
 func on_dimensions_updated():
 	update_margins_for_notch()

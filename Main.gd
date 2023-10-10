@@ -23,8 +23,9 @@ var Board = preload("res://board.tscn")
 
 var build_mode: bool = false
 
-var tier = 0
+var tier = 1
 var depth = 0
+var available_buildings = []
 
 var population = 3
 var stone = 8
@@ -100,7 +101,12 @@ func _ready():
 	
 	# place board in center with correct offset accounting for tile size and board size
 	generate_board(0)
+	new_tier()
+	responsive_ui.update_buildings(available_buildings)
 	responsive_ui.enter_play_mode()
+
+func new_tier():
+	available_buildings.append_array(BiomeData.get_buildings(tier))
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):

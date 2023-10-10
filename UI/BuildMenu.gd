@@ -6,7 +6,7 @@ signal on_building_selected(type: BuildingData.Type)
 @onready var building_icon_container = $ScrollContainer/HBoxContainer
 @onready var building_icon_prefab: PackedScene = preload("res://UI/BuildMenuBuildingIcon.tscn")
 
-func update_buildings(available_buildings: Array[BuildingData.Type]):
+func update_buildings(available_buildings):
 	for child in building_icon_container.get_children():
 		child.queue_free()
 		

@@ -5,11 +5,17 @@ enum Type {
 	LAVA
 }
 
+static func get_buildings(tier: int):
+	match tier:
+		1:
+			return data[Type.DEFAULT].buildings
+		2: return data[Type.LAVA].buildings
+
 static var data = {
 	Type.DEFAULT: {
 		"type": Type.DEFAULT,
 		"name": "The Mines",
-		"tier": 0,
+		"tier": 1,
 		"buildings": [BuildingData.Type.STAIRCASE, BuildingData.Type.MINECART, BuildingData.Type.HOUSE, BuildingData.Type.QUARRY, BuildingData.Type.WORKSHOP]
 	},
 	Type.LAVA: {
