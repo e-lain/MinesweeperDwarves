@@ -19,13 +19,13 @@ static var Data = {
 		"name": "Crane",
 		"description": "Safely remove selected tile",
 		"icon_path": "res://Assets/UI/CraneUI.png",
-		"small_icon_path": "res://Assets/UI/CraneSmaller.png"		
+		"small_icon_path": "res://Assets/UI/CraneSmaller.png"
 	},
 	Type.ARMOR: {
 		"type": Type.ARMOR,
 		"name": "Active Armor",
 		"description": "Take no damage when revealing the next tile",
 		"icon_path": "res://Assets/UI/steelbarriericon.png",
-		"small_icon_path": "res://Assets/UI/oldsteeldownscaled.png"		
+		"small_icon_path": "res://Assets/UI/oldsteeldownscaled.png"
 	}
 }

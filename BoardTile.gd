@@ -11,6 +11,7 @@ var cell_position: Vector2i
 var is_cover: bool = true
 var is_flagged: bool = false
 var is_bomb: bool = false
+var bomb_type: BombData.Type
 
 var has_building: bool = false
 var building_id: int
@@ -21,8 +22,9 @@ var bomb
 
 var label_parent
 
-func set_bomb():
+func set_bomb(bomb_type: BombData.Type):
 	is_bomb = true
+	self.bomb_type = bomb_type
 
 func toggle_flag():
 	if is_cover:
@@ -54,8 +56,9 @@ func destroy_flag():
 		flag.queue_free()
 		flag = null
 
-func create_bomb() -> Node2D:
+func create_bomb(bomb_type: BombData.Type) -> Node2D:
 	bomb = bomb_prefab.instantiate()
+	bomb.set_type(bomb_type)
 	label_parent.add_child(bomb)
 	bomb.position = get_position()
 	return bomb

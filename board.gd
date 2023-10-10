@@ -1,6 +1,8 @@
 extends Node2D
 class_name Board
 
+const TILE_SIZE = 64
+
 signal on_minesweeper_collection_complete
 signal on_building_collection_complete
 signal mine_animation_complete
@@ -22,8 +24,6 @@ var building_prefab = preload("res://Buildings/BaseBuilding.tscn")
 
 var Destroy = preload("res://Abilities/Destroy.tscn")
 
-const TILE_SIZE = 64
-
 var ability_controller
 
 var placing_type: BuildingData.Type
@@ -33,7 +33,7 @@ var current_placing_instance: BaseBuilding
 var clearing_tile: bool = false
 var armor_active: bool = false
 
-var tier = 0
+var tier: int
 var rows = 6
 var columns = 6
 var bomb_count = 4
@@ -77,6 +77,7 @@ func _ready():
 	
 func init_board(rows: int, cols: int, bombs: int, tier: int):
 	get_parent().build_mode = false
+	self.tier = tier
 	
 	self.rows = rows
 	self.columns = cols
@@ -129,7 +130,12 @@ func set_bombs():
 		var bomb_index = randi() % (rows * columns)
 		var tile = tiles[bomb_index / rows][bomb_index % rows]
 		if tile.is_bomb == false:
-			tile.set_bomb()
+			# Determine which type the bomb will be
+			var types = BiomeData.get_bombs(get_parent().tier)
+			var type_index = randi() % (types.size())
+			var bomb_type = types[type_index]
+			
+			tile.set_bomb(bomb_type)
 			bomb_tiles.append(tile)
 			n += 1
 
@@ -178,18 +184,20 @@ func _on_tile_uncovered(cell_pos: Vector2i):
 	update_shadows()
 
 func enter_build_mode():
-	get_parent().steel += bombs_found
-	
 	var has_steel_to_collect = false
 	for x in columns:
 		for y in rows:
 			var tile = tiles[x][y]
 			if tile.is_bomb && tile.is_flagged:
-				var instance = collection_prefab.instantiate()
-				add_child(instance)
-				instance.position = Vector2(tile.get_position()) + (Vector2(TILE_SIZE, TILE_SIZE) / 2.0) + Vector2(-16, -16)
-				instance.init(1, collection_lifespan_seconds,  "res://Assets/UI/steeldownscaledicon.png")
-				has_steel_to_collect = true
+				if tile.bomb_type == BombData.Type.DEFAULT:
+					get_parent().steel += 1
+					var instance = collection_prefab.instantiate()
+					add_child(instance)
+					instance.position = Vector2(tile.get_position()) + (Vector2(TILE_SIZE, TILE_SIZE) / 2.0) + Vector2(-16, -16)
+					instance.init(1, collection_lifespan_seconds,  "res://Assets/UI/steeldownscaledicon.png")
+					has_steel_to_collect = true
+				elif tile.bomb_type == BombData.Type.LAVA:
+					place_lava_from_bomb(tile)
 	
 	if has_steel_to_collect:
 		var timer = get_tree().create_timer(collection_lifespan_seconds)
@@ -197,6 +205,16 @@ func enter_build_mode():
 	else:
 		minesweeper_collection_complete()
 
+func place_lava_from_bomb(tile: BoardTile):
+	var building = building_prefab.instantiate()
+	var lava_type = BuildingData.Type.LAVA
+	add_child(building)
+	building.set_type(lava_type, get_parent().icons[lava_type])
+	current_placing_instance = building
+	building.confirm_placement()
+	var tile_pos = tile.get_position()
+	var snapped = Vector2(snapped(tile_pos.x-TILE_SIZE/2, TILE_SIZE), snapped(tile_pos.y-TILE_SIZE/2, TILE_SIZE))
+	building.position = snapped
 
 func on_building_placed():
 	if state != State.Placing:
@@ -338,7 +356,7 @@ func uncover_tile(tile: BoardTile):
 	tilemap.set_cells_terrain_connect(0, [tile.cell_position], 0, -1)
 	
 	if tile.is_bomb:
-		var bomb = tile.create_bomb()
+		var bomb = tile.create_bomb(tile.bomb_type)
 		if !armor_active && !clearing_tile:
 			mine_exploded = true
 			bomb.animation_complete.connect(on_bomb_animation_complete)

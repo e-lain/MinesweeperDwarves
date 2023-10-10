@@ -80,7 +80,7 @@ static var data = {
 		"population_cost": 0,
 		"steel_cost": 0,
 		"size": 1,
-		"icon_path": "res://Assets/Buildings/lava.png"
+		"icon_path": "res://Assets/PlaceholderTileBomb.png" # TODO: Replace this with the appropriate texture when available
 	},
 	Type.FORGE: {
 		"type": Type.FORGE,

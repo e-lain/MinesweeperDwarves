@@ -73,15 +73,15 @@ func generate_board(difficulty: int):
 	add_child(b)
 	
 	if difficulty == 0:
-		b.init_board(6,6,4,0)
+		b.init_board(6,6,4,tier)
 	elif difficulty == 1:
-		b.init_board(7,7,5,0)
+		b.init_board(7,7,5,tier)
 	elif difficulty == 2:
-		b.init_board(8,8,7,0)
+		b.init_board(8,8,7,tier)
 	elif difficulty == 3:
-		b.init_board(9,9,9,0)
+		b.init_board(9,9,9,tier)
 	else:
-		b.init_board(10,10,10,0)
+		b.init_board(10,10,10,tier)
 		
 	var center = get_viewport_rect().size/2
 	var offset = Vector2(center.x-(b.rows * b.TILE_SIZE/2), center.y-(b.columns * b.TILE_SIZE/2))

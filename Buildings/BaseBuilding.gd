@@ -100,7 +100,6 @@ func can_place():
 func next_to_minecart() -> bool:
 	return board.building_is_next_to_minecart(self) || board.player_placing_minecart_next_to_building(self)
 
-
 func _on_control_gui_input(event):
 	if event is InputEventMouseButton && state == State.Unplaced:
 		if event.is_action_pressed("left_click"):
