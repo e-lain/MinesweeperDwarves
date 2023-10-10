@@ -3,7 +3,7 @@ extends Node2D
 @onready var mine_hit_popup = $CanvasLayer/MineHitPopup
 @onready var greyout = $CanvasLayer/ColorRect
 
-@onready var responsive_ui: ResponsiveUI = $ResponsiveUICanvas/ResponsiveUI
+@onready var responsive_ui = $ResponsiveUICanvas/ResponsiveUI
 
 @onready var destroy_popup = $CanvasLayer/AbilityMenu/DestroyPopup
 @onready var armor_popup = $CanvasLayer/AbilityMenu/ArmorPopup
@@ -25,9 +25,11 @@ var build_mode: bool = false
 
 var tier = 0
 var depth = 0
+
 var population = 3
 var stone = 8
 var steel = 3
+var sledgehammer = 0
  
 var ability_destroy_max = 0
 var ability_destroy = 0
@@ -105,7 +107,7 @@ func _process(delta):
 	responsive_ui.set_resource_count(ResourceData.Resources.POPULATION, population)
 	responsive_ui.set_resource_count(ResourceData.Resources.STONE, stone)
 	responsive_ui.set_resource_count(ResourceData.Resources.STEEL, steel)
-	responsive_ui.set_resource_count(ResourceData.Resources.SLEDGEHAMMER, 5)
+	responsive_ui.set_resource_count(ResourceData.Resources.SLEDGEHAMMER, sledgehammer)
 	responsive_ui.set_depth(depth + 1)
 	
 	if get_current_board():

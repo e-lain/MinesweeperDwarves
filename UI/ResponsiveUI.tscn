@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=3 uid="uid://b6ey248b5lsvj"]
+[gd_scene load_steps=21 format=3 uid="uid://dnr83m4pqs7mp"]
 
 [ext_resource type="Theme" uid="uid://b6iv3a38m6uhb" path="res://UI.tres" id="1_u5axg"]
 [ext_resource type="Texture2D" uid="uid://ca5lct0ctr37m" path="res://Assets/UI/StoneIcon.png" id="2_7bcyx"]
@@ -8,13 +8,13 @@
 [ext_resource type="Texture2D" uid="uid://byetswoeyw7gd" path="res://Assets/UI/steeldownscaledicon.png" id="4_0svmv"]
 [ext_resource type="Texture2D" uid="uid://cfn88x8dv058h" path="res://Assets/Buildings/StairsUp.png" id="5_3xw3f"]
 [ext_resource type="Texture2D" uid="uid://bl2ixi00xkp8y" path="res://Assets/exclamation.png" id="6_ppse3"]
-[ext_resource type="StyleBox" uid="uid://767un3ynwawo" path="res://UI/OuterButtonStyle.tres" id="8_vwt44"]
-[ext_resource type="StyleBox" uid="uid://c5pcr2jlvlpd" path="res://UI/HoveredOuterButtonStyle.tres" id="9_dawhi"]
+[ext_resource type="StyleBox" path="res://UI/OuterButtonStyle.tres" id="8_vwt44"]
+[ext_resource type="StyleBox" path="res://UI/HoveredOuterButtonStyle.tres" id="9_dawhi"]
 [ext_resource type="Script" path="res://UI/BuildMenu.gd" id="9_o2aip"]
-[ext_resource type="PackedScene" uid="uid://bbc53njyng3ww" path="res://UI/BuildMenuBuildingIcon.tscn" id="10_0id56"]
-[ext_resource type="StyleBox" uid="uid://bbgl381yuqd6v" path="res://UI/CancelButton.tres" id="10_kuip1"]
+[ext_resource type="PackedScene" path="res://UI/BuildMenuBuildingIcon.tscn" id="10_0id56"]
+[ext_resource type="StyleBox" path="res://UI/CancelButton.tres" id="10_kuip1"]
 [ext_resource type="Script" path="res://UI/AbilityMenu.gd" id="11_dj7ul"]
-[ext_resource type="StyleBox" uid="uid://7xwe0gnyaoba" path="res://UI/ConfirmButton.tres" id="11_rgk7n"]
+[ext_resource type="StyleBox" path="res://UI/ConfirmButton.tres" id="11_rgk7n"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_m5poj"]
 content_margin_left = 8.0
@@ -170,6 +170,28 @@ size_flags_vertical = 1
 mouse_filter = 0
 theme_override_font_sizes/font_size = 72
 text = "x 3"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Sledgehammer" type="HBoxContainer" parent="TopPanel/ResourceBar"]
+layout_mode = 2
+mouse_filter = 0
+
+[node name="TextureRect" type="TextureRect" parent="TopPanel/ResourceBar/Sledgehammer"]
+modulate = Color(0, 0, 0, 1)
+layout_mode = 2
+mouse_filter = 0
+texture = ExtResource("4_0svmv")
+expand_mode = 2
+stretch_mode = 5
+
+[node name="Label" type="Label" parent="TopPanel/ResourceBar/Sledgehammer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 1
+mouse_filter = 0
+theme_override_font_sizes/font_size = 72
+text = "x 0"
 horizontal_alignment = 1
 vertical_alignment = 1
 
