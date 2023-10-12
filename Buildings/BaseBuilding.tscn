@@ -27,6 +27,7 @@ layout_mode = 3
 anchors_preset = 0
 offset_right = 64.0
 offset_bottom = 64.0
+mouse_filter = 1
 
 [node name="NoMinecart" type="Sprite2D" parent="."]
 visible = false
@@ -34,4 +35,5 @@ texture = ExtResource("4_wjvxv")
 centered = false
 offset = Vector2(6, 6)
 
-[connection signal="gui_input" from="Control" to="." method="_on_control_gui_input"]
+[connection signal="mouse_entered" from="Control" to="." method="_on_control_mouse_entered"]
+[connection signal="mouse_exited" from="Control" to="." method="_on_control_mouse_exited"]

@@ -26,3 +26,4 @@ func _unhandled_input(event):
 				uncovered.emit(cell_pos)
 			if event.is_action_released("right_click") && !DragOrZoomEventManager.drag_or_zoom_happening():
 				flag_toggled.emit(cell_pos)
+		

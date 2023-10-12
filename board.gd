@@ -10,6 +10,8 @@ signal wonder_placed
 signal workshop_placed
 
 signal building_placed
+signal building_selected(building: BaseBuilding)
+signal building_deselected
 
 @export var collection_lifespan_seconds: float = 1.5
 
@@ -55,12 +57,15 @@ var mine_exploded = false
 
 var state := State.Play
 
+var selected_building
+
 enum State {
 	Play,
 	Build,
 	Placing,
 	Ability,
-	Complete
+	Complete,
+	Selected
 }
 
 
@@ -233,6 +238,7 @@ func on_confirm_building_placement():
 	var building_world_pos = building.global_position
 	
 	building.confirm_placement()
+	building.on_selected.connect(on_building_selected)
 	
 	get_parent().help_text_is_overriden = false
 	building.id = total_building_count
@@ -271,6 +277,26 @@ func on_confirm_building_placement():
 		wonder_placed.emit()
 		
 	state = State.Build
+
+func on_building_selected(building: BaseBuilding):
+	if state == State.Selected && building != selected_building:
+		selected_building.deselect()
+	
+	building_selected.emit(building)
+	state = State.Selected
+	selected_building = building
+	selected_building.on_deselected.connect(on_building_deselected)
+	
+func deselect_building():
+	if state == State.Selected:
+		selected_building.deselect()
+
+func on_building_deselected():
+	if state == State.Selected:
+		building_deselected.emit()
+		selected_building.on_deselected.disconnect(on_building_deselected)
+		state = State.Build
+		selected_building = null
 
 func collect_resources():
 	state = State.Complete

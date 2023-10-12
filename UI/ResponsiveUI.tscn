@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=3 uid="uid://dnr83m4pqs7mp"]
+[gd_scene load_steps=22 format=3 uid="uid://dnr83m4pqs7mp"]
 
 [ext_resource type="Theme" uid="uid://b6iv3a38m6uhb" path="res://UI.tres" id="1_u5axg"]
 [ext_resource type="Texture2D" uid="uid://ca5lct0ctr37m" path="res://Assets/UI/StoneIcon.png" id="2_7bcyx"]
@@ -8,13 +8,14 @@
 [ext_resource type="Texture2D" uid="uid://byetswoeyw7gd" path="res://Assets/UI/steeldownscaledicon.png" id="4_0svmv"]
 [ext_resource type="Texture2D" uid="uid://cfn88x8dv058h" path="res://Assets/Buildings/StairsUp.png" id="5_3xw3f"]
 [ext_resource type="Texture2D" uid="uid://bl2ixi00xkp8y" path="res://Assets/exclamation.png" id="6_ppse3"]
-[ext_resource type="StyleBox" path="res://UI/OuterButtonStyle.tres" id="8_vwt44"]
-[ext_resource type="StyleBox" path="res://UI/HoveredOuterButtonStyle.tres" id="9_dawhi"]
+[ext_resource type="StyleBox" uid="uid://767un3ynwawo" path="res://UI/OuterButtonStyle.tres" id="8_vwt44"]
+[ext_resource type="StyleBox" uid="uid://c5pcr2jlvlpd" path="res://UI/HoveredOuterButtonStyle.tres" id="9_dawhi"]
 [ext_resource type="Script" path="res://UI/BuildMenu.gd" id="9_o2aip"]
-[ext_resource type="PackedScene" path="res://UI/BuildMenuBuildingIcon.tscn" id="10_0id56"]
-[ext_resource type="StyleBox" path="res://UI/CancelButton.tres" id="10_kuip1"]
+[ext_resource type="PackedScene" uid="uid://bbc53njyng3ww" path="res://UI/BuildMenuBuildingIcon.tscn" id="10_0id56"]
+[ext_resource type="StyleBox" uid="uid://bbgl381yuqd6v" path="res://UI/CancelButton.tres" id="10_kuip1"]
 [ext_resource type="Script" path="res://UI/AbilityMenu.gd" id="11_dj7ul"]
-[ext_resource type="StyleBox" path="res://UI/ConfirmButton.tres" id="11_rgk7n"]
+[ext_resource type="StyleBox" uid="uid://7xwe0gnyaoba" path="res://UI/ConfirmButton.tres" id="11_rgk7n"]
+[ext_resource type="Script" path="res://UI/Infobox.gd" id="12_ys41t"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_m5poj"]
 content_margin_left = 8.0
@@ -323,6 +324,7 @@ layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 0
 theme_override_styles/panel = SubResource("StyleBoxFlat_rduq6")
+script = ExtResource("12_ys41t")
 
 [node name="Label" type="Label" parent="TopMargin/Infobox"]
 layout_mode = 2

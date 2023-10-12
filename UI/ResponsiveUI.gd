@@ -177,6 +177,16 @@ func set_enter_build_mode_disabled(val: bool):
 func set_descend_disabled(val: bool):
 	descend_button.disabled = val
 
+func on_building_selected(building: BaseBuilding):
+	var data = BuildingData.data[building.type] 
+	infobox.set_data(data["name"], data["description"])
+	infobox.visible = true
+	build_menu.visible = false
+
+func on_building_deselected():
+	infobox.visible = false
+	build_menu.visible = true
+
 func _on_descend_button_pressed():
 	descend_pressed.emit()
 

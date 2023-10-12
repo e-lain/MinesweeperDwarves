@@ -1,12 +1,13 @@
 extends Camera2D
 
+signal tap_complete
+signal drag_complete
 
 @export var min_zoom = 0.5
 @export var max_zoom = 2
 var zoom_sensitivity = 10
 var zoom_speed = 0.05
 var drag_speed = 1.0
-
 
 # TODO: Split Mobile and Desktop controls to different classes? prolly good
 # Mobile drag tracking
@@ -15,6 +16,8 @@ var last_drag_distance = 0
 
 # Desktop drag tracking
 var dragging := false
+var absolute_drag_amount = Vector2.ZERO
+var absolute_drag_min_threshold = 3
 
 func _unhandled_input(event):
 	if PlatformUtil.isMobile():
@@ -44,17 +47,25 @@ func _unhandled_input(event):
 		# Handle Drag
 		if event.is_action_pressed("left_click"):
 			dragging = true
-			get_viewport().set_input_as_handled()
-
+			absolute_drag_amount = Vector2.ZERO
+		
 		elif event.is_action_released("left_click"):
 			dragging = false
-			get_viewport().set_input_as_handled()
+			if DragOrZoomEventManager.dragging:
+				drag_complete.emit()
+				get_viewport().set_input_as_handled()
+			else:
+				tap_complete.emit()
+			
 			DragOrZoomEventManager.dragging = false
 		
-		if event is InputEventMouseMotion and dragging:
-			drag_camera(event.relative)
-			DragOrZoomEventManager.dragging = true
-		
+		if event is InputEventMouseMotion and dragging and !DragOrZoomEventManager.drag_began_in_unconfirmed_building:
+			absolute_drag_amount += Vector2(abs(event.relative.x), abs(event.relative.y))
+			if absolute_drag_amount.length_squared() > absolute_drag_min_threshold:
+				print("Dragging!")
+				drag_camera(event.relative)
+				DragOrZoomEventManager.dragging = true
+			
 		# Handle scroll zoom
 		if event is InputEventMouseButton and event.is_pressed():
 			var mouse_event = event as InputEventMouseButton
