@@ -17,7 +17,16 @@ var last_drag_distance = 0
 # Desktop drag tracking
 var dragging := false
 var absolute_drag_amount = Vector2.ZERO
-var absolute_drag_min_threshold = 3
+var absolute_drag_min_threshold = 5
+
+func _input(event):
+	if event.is_action_released("left_click") && DragOrZoomEventManager.long_tap_occurred:
+		DragOrZoomEventManager.long_tap_occurred = false
+		dragging = false
+		DragOrZoomEventManager.clear()
+		get_viewport().set_input_as_handled()
+	elif DragOrZoomEventManager.long_tap_occurred:
+		get_viewport().set_input_as_handled()
 
 func _unhandled_input(event):
 	if PlatformUtil.isMobile():
@@ -65,6 +74,7 @@ func _unhandled_input(event):
 				print("Dragging!")
 				drag_camera(event.relative)
 				DragOrZoomEventManager.dragging = true
+				DragOrZoomEventManager.long_tap_started = false
 			
 		# Handle scroll zoom
 		if event is InputEventMouseButton and event.is_pressed():

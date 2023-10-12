@@ -20,6 +20,7 @@ config/icon="res://icon.svg"
 SoundManager="*res://Sound/sound_manager.tscn"
 PlatformUtil="*res://Scripts/PlatformUtil.gd"
 DragOrZoomEventManager="*res://Scripts/DragOrZoomEventManager.gd"
+SettingsController="*res://Scripts/SettingsController.gd"
 
 [display]
 
