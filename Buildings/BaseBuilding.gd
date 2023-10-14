@@ -104,6 +104,10 @@ func can_place():
 func next_to_minecart() -> bool:
 	return board.building_is_next_to_minecart(self) || board.player_placing_minecart_next_to_building(self)
 
+func place():
+	state = State.PlacedUnconfirmed
+	sprite.material = null
+
 func _unhandled_input(event):
 	if !mouse_in:
 		return 
@@ -117,9 +121,8 @@ func _unhandled_input(event):
 				main.help_text_bar.text = "Stairs already placed! Can't have more than one staircase per floor"
 				print("Stairs already placed!")
 			if can_place() && in_bounds:
-				state = State.PlacedUnconfirmed
+				place()
 				on_placed.emit()
-				sprite.material = null
 				return
 				
 	if state == State.PlacedUnconfirmed:

@@ -166,7 +166,7 @@ func start_placement(type: BuildingData.Type):
 	state = State.Placing
 	print("func start_placement, building_name: ", type)
 	get_current_board().queue_building(type)
-	responsive_ui.enter_place_mode()
+	responsive_ui.enter_place_mode(type)
 
 func on_building_placed():
 	responsive_ui.on_building_placed()
@@ -329,3 +329,18 @@ func _on_camera_2d_drag_complete():
 
 func _on_camera_2d_tap_complete():
 	get_current_board().deselect_building()
+
+
+func _on_responsive_ui_destroy_selected_building_pressed():
+	get_current_board().destroy_selected_building()
+
+func _on_responsive_ui_move_selected_building_pressed():
+	get_current_board().move_selected_building()
+
+
+func _on_responsive_ui_move_selected_building_cancelled():
+	get_current_board().cancel_selected_building_move()
+
+
+func _on_responsive_ui_move_selected_building_confirmed():
+	get_current_board().confirm_selected_building_move()

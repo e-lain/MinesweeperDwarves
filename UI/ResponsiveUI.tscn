@@ -1,4 +1,4 @@
-[gd_scene load_steps=22 format=3 uid="uid://dnr83m4pqs7mp"]
+[gd_scene load_steps=21 format=3 uid="uid://dnr83m4pqs7mp"]
 
 [ext_resource type="Theme" uid="uid://b6iv3a38m6uhb" path="res://UI.tres" id="1_u5axg"]
 [ext_resource type="Texture2D" uid="uid://ca5lct0ctr37m" path="res://Assets/UI/StoneIcon.png" id="2_7bcyx"]
@@ -15,7 +15,7 @@
 [ext_resource type="StyleBox" uid="uid://bbgl381yuqd6v" path="res://UI/CancelButton.tres" id="10_kuip1"]
 [ext_resource type="Script" path="res://UI/AbilityMenu.gd" id="11_dj7ul"]
 [ext_resource type="StyleBox" uid="uid://7xwe0gnyaoba" path="res://UI/ConfirmButton.tres" id="11_rgk7n"]
-[ext_resource type="Script" path="res://UI/Infobox.gd" id="12_ys41t"]
+[ext_resource type="PackedScene" uid="uid://cvjnp51gvjfte" path="res://UI/Infobox/Infobox.tscn" id="12_37fqm"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_m5poj"]
 content_margin_left = 8.0
@@ -51,22 +51,6 @@ content_margin_top = 8.0
 content_margin_right = 8.0
 content_margin_bottom = 8.0
 bg_color = Color(0.6, 0.6, 0.6, 0)
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rduq6"]
-content_margin_left = 8.0
-content_margin_top = 8.0
-content_margin_right = 8.0
-content_margin_bottom = 8.0
-bg_color = Color(1, 1, 1, 1)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(0, 0, 0, 1)
-corner_radius_top_left = 2
-corner_radius_top_right = 2
-corner_radius_bottom_right = 2
-corner_radius_bottom_left = 2
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_82egx"]
 content_margin_left = 16.0
@@ -317,24 +301,9 @@ layout_mode = 2
 mouse_filter = 2
 theme_override_constants/margin_top = 89
 
-[node name="Infobox" type="PanelContainer" parent="TopMargin"]
+[node name="Infobox" parent="TopMargin" instance=ExtResource("12_37fqm")]
 visible = false
-custom_minimum_size = Vector2(656, 128)
 layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 0
-theme_override_styles/panel = SubResource("StyleBoxFlat_rduq6")
-script = ExtResource("12_ys41t")
-
-[node name="Label" type="Label" parent="TopMargin/Infobox"]
-layout_mode = 2
-size_flags_vertical = 1
-theme_override_font_sizes/font_size = 56
-text = "Quarry:
-It can do some things sometimes
-"
-vertical_alignment = 1
-text_overrun_behavior = 2
 
 [node name="DescendButton" type="MarginContainer" parent="TopMargin"]
 visible = false
@@ -522,6 +491,8 @@ text = "Cancel"
 
 [connection signal="on_building_selected" from="BuildMenu" to="." method="_on_build_menu_on_building_selected"]
 [connection signal="on_ability_selected" from="AbilityMenu" to="." method="_on_ability_menu_ability_selected"]
+[connection signal="on_building_destroy_pressed" from="TopMargin/Infobox" to="." method="_on_destroy_selected_building_pressed"]
+[connection signal="on_building_move_pressed" from="TopMargin/Infobox" to="." method="_on_move_selected_building_pressed"]
 [connection signal="pressed" from="TopMargin/DescendButton/Button" to="." method="_on_descend_button_pressed"]
 [connection signal="pressed" from="TopMargin/ToBuildModeButton/Button" to="." method="_on_to_build_mode_button_pressed"]
 [connection signal="pressed" from="BottomMargin/CancelConfirm/MarginContainer/VBoxContainer/HBoxContainer/Cancel" to="." method="_on_building_placement_cancel_pressed"]

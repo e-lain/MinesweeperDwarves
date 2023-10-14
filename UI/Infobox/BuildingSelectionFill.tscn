@@ -1,0 +1,42 @@
+[gd_scene load_steps=7 format=3 uid="uid://dj4strmres8pb"]
+
+[ext_resource type="PackedScene" uid="uid://il5em7k3ysis" path="res://UI/Infobox/LabelFill.tscn" id="1_cehmd"]
+[ext_resource type="Script" path="res://UI/Infobox/BuildingSelectionFill.gd" id="1_evmko"]
+[ext_resource type="StyleBox" uid="uid://7xwe0gnyaoba" path="res://UI/ConfirmButton.tres" id="2_kmir7"]
+[ext_resource type="Texture2D" uid="uid://dr83dy41g1kvp" path="res://Assets/UI/CraneSmaller.png" id="3_vrrcn"]
+[ext_resource type="StyleBox" uid="uid://bbgl381yuqd6v" path="res://UI/CancelButton.tres" id="4_cjsex"]
+[ext_resource type="Texture2D" uid="uid://bsrr1hjdprcj2" path="res://Assets/PlaceholderDestroy.png" id="5_jl3ok"]
+
+[node name="BuildingSelectionFill" type="HBoxContainer"]
+script = ExtResource("1_evmko")
+
+[node name="Label" parent="." instance=ExtResource("1_cehmd")]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Move" type="Button" parent="."]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+size_flags_stretch_ratio = 0.1
+theme_override_styles/normal = ExtResource("2_kmir7")
+theme_override_styles/hover = ExtResource("2_kmir7")
+theme_override_styles/pressed = ExtResource("2_kmir7")
+theme_override_styles/disabled = ExtResource("2_kmir7")
+theme_override_styles/focus = ExtResource("2_kmir7")
+icon = ExtResource("3_vrrcn")
+
+[node name="Destroy" type="Button" parent="."]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+size_flags_stretch_ratio = 0.1
+theme_override_styles/normal = ExtResource("4_cjsex")
+theme_override_styles/hover = ExtResource("4_cjsex")
+theme_override_styles/pressed = ExtResource("4_cjsex")
+theme_override_styles/disabled = ExtResource("4_cjsex")
+theme_override_styles/focus = ExtResource("4_cjsex")
+icon = ExtResource("5_jl3ok")
+
+[connection signal="pressed" from="Move" to="." method="_on_move_pressed"]
+[connection signal="pressed" from="Destroy" to="." method="_on_destroy_pressed"]

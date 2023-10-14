@@ -59,15 +59,17 @@ var state := State.Play
 
 var selected_building
 
+var moving_building_original_world_position
+
 enum State {
 	Play,
 	Build,
 	Placing,
 	Ability,
 	Complete,
-	Selected
+	Selected,
+	Moving
 }
-
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -297,6 +299,114 @@ func on_building_deselected():
 		selected_building.on_deselected.disconnect(on_building_deselected)
 		state = State.Build
 		selected_building = null
+
+func destroy_selected_building():
+	if state != State.Selected:
+		push_error("Attempting to destroy selected building when not in selected state")
+		return
+	
+	var building = selected_building
+	# updates the UI
+	deselect_building()
+
+	var building_world_pos = building.global_position
+
+	var type = building.type
+	var id = building.id
+	
+	var data = BuildingData.data[type]
+	var size = data["size"]
+	
+	if data["population_cost"] > 0:
+		get_parent().population += data["population_cost"]
+	
+	if data["stone_cost"] > 0:
+		get_parent().stone += data["stone_cost"]
+	
+	if data["steel_cost"] > 0:
+		get_parent().steel += data["steel_cost"]
+	
+	var world_positions_to_update = get_world_positions_in_area(building_world_pos, size)
+	for world_pos in world_positions_to_update:
+		var cell_pos = tilemap.local_to_map(tilemap.to_local(world_pos))
+		var tile = tiles[cell_pos.x][cell_pos.y]
+		tile.has_building = false
+		tile.building_id = 0
+	
+	buildings_by_id.erase(id)
+	
+	building.queue_free()
+	
+	state = State.Build
+
+func move_selected_building():
+	if state != State.Selected:
+		push_error("tried to move selected building while board not in selected state")
+		return
+	
+	state = State.Moving
+	var type = selected_building.type
+	var id = selected_building.id
+	var data = BuildingData.data[type]
+	var size = data["size"]
+	moving_building_original_world_position = selected_building.global_position
+	
+	var old_world_positions = get_world_positions_in_area(moving_building_original_world_position, size)
+	for world_pos in old_world_positions:
+		var cell_pos = tilemap.local_to_map(tilemap.to_local(world_pos))
+		var tile = tiles[cell_pos.x][cell_pos.y]
+		tile.has_building = false
+		tile.building_id = 0
+	
+	selected_building.place()
+	
+
+func confirm_selected_building_move():
+	if state != State.Moving:
+		push_error("Tried to confirm building move while board not in moving state")
+		return
+	
+	state = State.Selected
+	var type = selected_building.type
+	var id = selected_building.id
+	var data = BuildingData.data[type]
+	var size = data["size"]
+		
+	var new_world_positions = get_world_positions_in_area(selected_building.global_position, size)
+	for world_pos in new_world_positions:
+		var cell_pos = tilemap.local_to_map(tilemap.to_local(world_pos))
+		var tile = tiles[cell_pos.x][cell_pos.y]
+		tile.has_building = true
+		tile.building_id = selected_building.id
+	
+	selected_building.confirm_placement()
+	# Update UI
+	deselect_building()
+	
+func cancel_selected_building_move():
+	if state != State.Moving:
+		push_error("Tried to cancel building move while board not in moving state")
+		return
+	
+	state = State.Selected
+	var type = selected_building.type
+	var id = selected_building.id
+	var data = BuildingData.data[type]
+	var size = data["size"]
+	
+	
+
+	var old_world_positions = get_world_positions_in_area(moving_building_original_world_position, size)
+	for world_pos in old_world_positions:
+		var cell_pos = tilemap.local_to_map(tilemap.to_local(world_pos))
+		var tile = tiles[cell_pos.x][cell_pos.y]
+		tile.has_building = true
+		tile.building_id = selected_building.id
+	
+	
+	selected_building.global_position = moving_building_original_world_position
+	selected_building.confirm_placement()
+	deselect_building()
 
 func collect_resources():
 	state = State.Complete

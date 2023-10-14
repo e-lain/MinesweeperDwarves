@@ -8,6 +8,11 @@ signal confirm_placement_pressed
 signal build_menu_item_pressed(type: BuildingData.Type)
 signal ability_menu_item_pressed(type: AbilityData.Type)
 
+signal move_selected_building_pressed
+signal move_selected_building_cancelled
+signal move_selected_building_confirmed
+signal destroy_selected_building_pressed
+
 @onready var top_margin = $TopMargin
 @onready var bottom_margin = $BottomMargin
 
@@ -16,7 +21,6 @@ signal ability_menu_item_pressed(type: AbilityData.Type)
 @onready var ability_menu: AbilityMenu = $AbilityMenu
 
 @onready var infobox = $TopMargin/Infobox
-@onready var infobox_text = $TopMargin/Infobox/Label
 
 @onready var descend_button_container = $TopMargin/DescendButton
 @onready var descend_button = $TopMargin/DescendButton/Button
@@ -25,7 +29,9 @@ signal ability_menu_item_pressed(type: AbilityData.Type)
 @onready var floors_and_flags_landscape = $FloorsAndFlagsLandscape
 
 @onready var cancel_confirm = $BottomMargin/CancelConfirm
+@onready var cancel_confirm_message = $BottomMargin/CancelConfirm/MarginContainer/VBoxContainer/Label
 @onready var cancel_placement = $BottomMargin/CancelPlacement
+@onready var cancel_placement_message = $BottomMargin/CancelPlacement/MarginContainer/HBoxContainer/Label
 
 @onready var resource_bar: ResourceBar = $TopPanel/ResourceBar
 
@@ -47,6 +53,18 @@ var left = 0
 var bottom = 0
 var right = 0
 
+enum State {
+	PLAY,
+	BUILD,
+	PLACEMENT_NO_BUILDING,
+	PLACEMENT_MOVE_BUILDING,
+	SELECTED,
+	MOVE_BUILDING,
+	DESTROY_BUILDING
+}
+
+var state
+var selected_building
 
 func update_margins_for_notch():
 	var safe_area = DisplayServer.get_display_safe_area()
@@ -73,6 +91,7 @@ func update_margins_for_notch():
 func _ready():
 	ability_menu.update_abilities([AbilityData.Type.ARMOR, AbilityData.Type.DESTROY, AbilityData.Type.DOWSE])
 	on_dimensions_updated()
+	state = State.PLAY
 
 func update_buildings(buildings_list):
 	if !buildings_list:
@@ -116,6 +135,7 @@ func on_dimensions_updated():
 	bottom_margin.add_theme_constant_override("margin_bottom", screen_size.y * 0.01)
 
 func enter_build_mode():
+	state = State.BUILD
 	# TODO: Animate this!
 	ability_menu.visible = false
 	build_menu.visible = true
@@ -126,6 +146,7 @@ func enter_build_mode():
 	cancel_confirm.visible = false
 
 func enter_play_mode():
+	state = State.PLAY
 	ability_menu.visible = true
 	# TODO: animate this!
 	build_menu.visible = false
@@ -133,29 +154,23 @@ func enter_play_mode():
 	descend_button_container.visible = false
 	infobox.visible = false
 	
-func enter_place_mode():
+func enter_place_mode(type: BuildingData.Type):
+	var data = BuildingData.data[type]
+	var name = data["name"]
+	state = State.PLACEMENT_NO_BUILDING
 	build_menu.visible = false
 	cancel_placement.visible = true
+	cancel_placement_message.text = "Placing %s" % name
 	to_build_mode_button_container.visible = false
 	descend_button_container.visible = false
+	
 
 func on_building_placed():
+	state = State.PLACEMENT_MOVE_BUILDING
 	build_menu.visible = false
 	cancel_placement.visible = false
 	cancel_confirm.visible = true
-
-func _unhandled_input(event):
-	if event.is_action_pressed("Test_1"):
-		enter_build_mode()
-	if event.is_action_pressed("Test_2"):
-		enter_play_mode()
-	if event.is_action_pressed("Test_3"):
-		enter_place_mode()
-	if event.is_action_pressed("Test_4"):
-		on_building_placed()
-	if event.is_action_pressed("Test_5"):
-		enter_build_mode()
-
+	cancel_confirm_message.text = "Place Building Here?"
 
 func set_depth(depth: int):
 	depth_label_portrait.text = str(depth)
@@ -167,10 +182,7 @@ func set_flag_count(flag_count: int):
 
 func set_resource_count(type: ResourceData.Resources, val: int):
 	resource_bar.set_resource_count(type, val)
-	
-func set_infobox_text(text: String):
-	infobox_text.text = text
-	
+
 func set_enter_build_mode_disabled(val: bool):
 	to_build_mode_button.disabled = val
 
@@ -178,14 +190,21 @@ func set_descend_disabled(val: bool):
 	descend_button.disabled = val
 
 func on_building_selected(building: BaseBuilding):
+	state = State.SELECTED
+	selected_building = building
 	var data = BuildingData.data[building.type] 
-	infobox.set_data(data["name"], data["description"])
+	infobox.set_building_selection(data["name"], data["description"])
+	cancel_confirm.visible = false
+	cancel_placement.visible = false
 	infobox.visible = true
 	build_menu.visible = false
 
 func on_building_deselected():
+	state = State.BUILD
+	cancel_confirm.visible = false
 	infobox.visible = false
 	build_menu.visible = true
+	selected_building = null
 
 func _on_descend_button_pressed():
 	descend_pressed.emit()
@@ -197,10 +216,33 @@ func _on_build_menu_on_building_selected(type: BuildingData.Type):
 	build_menu_item_pressed.emit(type)
 	
 func _on_building_placement_cancel_pressed():
-	cancel_placement_pressed.emit()
+	if state == State.PLACEMENT_MOVE_BUILDING || state == State.PLACEMENT_NO_BUILDING:
+		cancel_placement_pressed.emit()
+	elif state == State.DESTROY_BUILDING:
+		on_building_selected(selected_building)
+	elif state == State.MOVE_BUILDING:
+		move_selected_building_cancelled.emit()
 
 func _on_building_placement_confirm_pressed():
-	confirm_placement_pressed.emit()
+	if state == State.PLACEMENT_MOVE_BUILDING || state == State.PLACEMENT_NO_BUILDING:
+		confirm_placement_pressed.emit()
+	elif state == State.DESTROY_BUILDING:
+		destroy_selected_building_pressed.emit()
+	elif state == State.MOVE_BUILDING:
+		move_selected_building_confirmed.emit()
 
 func _on_ability_menu_ability_selected(type: AbilityData.Type):
 	ability_menu_item_pressed.emit(type)
+
+func _on_move_selected_building_pressed():
+	state = State.MOVE_BUILDING
+	cancel_confirm.visible = true
+	cancel_confirm_message.text = "Move Building Here?"
+	infobox.visible = false
+	move_selected_building_pressed.emit()
+
+func _on_destroy_selected_building_pressed():
+	state = State.DESTROY_BUILDING
+	infobox.visible = false
+	cancel_confirm.visible = true
+	cancel_confirm_message.text = "Destroy Building?"
