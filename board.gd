@@ -206,6 +206,11 @@ func enter_build_mode():
 		minesweeper_collection_complete()
 
 func place_lava_from_bomb(tile: BoardTile):
+	tile.is_cover = false
+	tiles_uncovered += 1
+	tilemap.set_cells_terrain_connect(0, [tile.cell_position], 0, -1)
+	update_shadows()
+	
 	var building = building_prefab.instantiate()
 	var lava_type = BuildingData.Type.LAVA
 	add_child(building)
