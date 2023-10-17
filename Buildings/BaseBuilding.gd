@@ -2,6 +2,8 @@ extends Node2D
 class_name BaseBuilding
 
 signal on_placed
+signal on_selected(building: BaseBuilding)
+signal on_deselected
 
 @export var type: BuildingData.Type
 @onready var sprite: Sprite2D = $Sprite2D
@@ -35,12 +37,14 @@ var state := State.Unplaced
 
 var move_begin_offset = Vector2.ZERO
 
+var mouse_in = false
 
 enum State {
 	Unplaced,
 	PlacedUnconfirmed,
 	Moving,
-	Confirmed
+	Confirmed,
+	Selected
 }
 
 func set_type(value, icon):
@@ -100,23 +104,30 @@ func can_place():
 func next_to_minecart() -> bool:
 	return board.building_is_next_to_minecart(self) || board.player_placing_minecart_next_to_building(self)
 
-func _on_control_gui_input(event):
+func place():
+	state = State.PlacedUnconfirmed
+	sprite.material = null
+
+func _unhandled_input(event):
+	if !mouse_in:
+		return 
+		
 	if event is InputEventMouseButton && state == State.Unplaced:
 		if event.is_action_pressed("left_click"):
 			if !can_place():
 				SoundManager.play_negative()
+
 			if type == BuildingData.Type.STAIRCASE and board.stairs_placed:
 				main.help_text_bar.text = "Stairs already placed! Can't have more than one staircase per floor"
 				print("Stairs already placed!")
 			if can_place() && in_bounds:
-				state = State.PlacedUnconfirmed
+				place()
 				on_placed.emit()
-				
-				sprite.material = null
 				return
 				
 	if state == State.PlacedUnconfirmed:
 		if event is InputEventMouseButton and event.is_action_pressed("left_click"):
+			DragOrZoomEventManager.drag_began_in_unconfirmed_building = true
 			state = State.Moving
 			move_begin_offset = Vector2.ZERO
 			var reference_pos = position + Vector2(TILE_SIZE, TILE_SIZE)
@@ -127,11 +138,25 @@ func _on_control_gui_input(event):
 	
 	
 	if state == State.Moving:
-		if event is InputEventMouseButton and event.is_action_released("left_click"):
-			state = State.PlacedUnconfirmed	
+		if event is InputEventMouseButton and event.is_action_released("left_click") and DragOrZoomEventManager.drag_began_in_unconfirmed_building:
+			state = State.PlacedUnconfirmed
 			move_begin_offset = Vector2.ZERO
-		
-			
+			DragOrZoomEventManager.drag_began_in_unconfirmed_building = false
+
+	if event is InputEventMouseButton and event.is_action_released("left_click") and !DragOrZoomEventManager.drag_or_zoom_happening():
+		if state == State.Confirmed:
+			select()
+		elif state == State.Selected:
+			deselect()
+
+func select():
+	state = State.Selected
+	on_selected.emit(self)
+
+func deselect():
+	state = State.Confirmed
+	on_deselected.emit()
+
 func confirm_placement():
 	state = State.Confirmed
 
@@ -152,3 +177,9 @@ func play_collection_animation(lifespan_seconds: float, icon_path: String):
 	
 	instance.init(amount, lifespan_seconds, icon_path)
 	instance.global_position = global_position + (Vector2(TILE_SIZE, TILE_SIZE) * size / 2.0) + Vector2(0, -16)
+
+func _on_control_mouse_entered():
+	mouse_in = true
+
+func _on_control_mouse_exited():
+	mouse_in = false

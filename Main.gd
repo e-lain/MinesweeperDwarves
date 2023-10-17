@@ -19,6 +19,8 @@ var help_text_is_overriden: bool = false
 
 @onready var choose_active = $CanvasLayer/ChooseActive
 
+@onready var camera = $Camera2D
+
 var Board = preload("res://board.tscn")
 
 var build_mode: bool = false
@@ -93,6 +95,11 @@ func generate_board(difficulty: int):
 	b.on_building_collection_complete.connect(on_building_collection_complete)
 	b.on_minesweeper_collection_complete.connect(on_minesweeper_collection_complete)
 	b.building_placed.connect(on_building_placed)
+	
+	b.building_selected.connect(on_building_selected)
+	b.building_deselected.connect(on_building_deselected)
+	
+	move_child(camera, -1)
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -159,10 +166,17 @@ func start_placement(type: BuildingData.Type):
 	state = State.Placing
 	print("func start_placement, building_name: ", type)
 	get_current_board().queue_building(type)
-	responsive_ui.enter_place_mode()
+	responsive_ui.enter_place_mode(type)
 
 func on_building_placed():
 	responsive_ui.on_building_placed()
+
+func on_building_selected(building: BaseBuilding):
+	responsive_ui.on_building_selected(building)
+
+func on_building_deselected():
+	responsive_ui.on_building_deselected()
+
 
 func next_level():
 	get_current_board().queue_free()
@@ -307,3 +321,26 @@ func _on_responsive_ui_confirm_placement_pressed():
 
 func _on_responsive_ui_ability_menu_item_pressed(type: AbilityData.Type):
 	ability(type)
+
+
+func _on_camera_2d_drag_complete():
+	pass # Replace with function body.
+
+
+func _on_camera_2d_tap_complete():
+	get_current_board().deselect_building()
+
+
+func _on_responsive_ui_destroy_selected_building_pressed():
+	get_current_board().destroy_selected_building()
+
+func _on_responsive_ui_move_selected_building_pressed():
+	get_current_board().move_selected_building()
+
+
+func _on_responsive_ui_move_selected_building_cancelled():
+	get_current_board().cancel_selected_building_move()
+
+
+func _on_responsive_ui_move_selected_building_confirmed():
+	get_current_board().confirm_selected_building_move()

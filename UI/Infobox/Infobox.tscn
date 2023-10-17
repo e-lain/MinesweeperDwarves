@@ -1,0 +1,28 @@
+[gd_scene load_steps=4 format=3 uid="uid://cvjnp51gvjfte"]
+
+[ext_resource type="Theme" uid="uid://b6iv3a38m6uhb" path="res://UI.tres" id="1_4peuc"]
+[ext_resource type="Script" path="res://UI/Infobox/Infobox.gd" id="1_fgjhg"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rduq6"]
+content_margin_left = 8.0
+content_margin_top = 8.0
+content_margin_right = 8.0
+content_margin_bottom = 8.0
+bg_color = Color(1, 1, 1, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0, 0, 0, 1)
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+corner_radius_bottom_right = 2
+corner_radius_bottom_left = 2
+
+[node name="Infobox" type="PanelContainer"]
+custom_minimum_size = Vector2(656, 128)
+size_flags_horizontal = 4
+size_flags_vertical = 0
+theme = ExtResource("1_4peuc")
+theme_override_styles/panel = SubResource("StyleBoxFlat_rduq6")
+script = ExtResource("1_fgjhg")

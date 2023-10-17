@@ -11,10 +11,10 @@
 [ext_resource type="Texture2D" uid="uid://byetswoeyw7gd" path="res://Assets/UI/steeldownscaledicon.png" id="6_jm4fe"]
 [ext_resource type="Texture2D" uid="uid://d0o6bpct5y38h" path="res://Assets/UI/Popup.png" id="6_nia6k"]
 [ext_resource type="FontFile" uid="uid://m1fwnp6qsmnn" path="res://Assets/UI/Quikhand.ttf" id="6_rv3xe"]
-[ext_resource type="StyleBox" path="res://UI/OuterButtonStyle.tres" id="7_2o6rd"]
+[ext_resource type="StyleBox" uid="uid://767un3ynwawo" path="res://UI/OuterButtonStyle.tres" id="7_2o6rd"]
 [ext_resource type="PackedScene" uid="uid://doi658hn04jhv" path="res://UI/popup.tscn" id="7_703se"]
 [ext_resource type="PackedScene" uid="uid://b8qmhoccrox3y" path="res://UI/GameOver.tscn" id="7_wj57j"]
-[ext_resource type="StyleBox" path="res://UI/HoveredOuterButtonStyle.tres" id="8_pyn5i"]
+[ext_resource type="StyleBox" uid="uid://c5pcr2jlvlpd" path="res://UI/HoveredOuterButtonStyle.tres" id="8_pyn5i"]
 [ext_resource type="PackedScene" uid="uid://cp25vmlk0k3ck" path="res://Abilities/AbilityDestroy.tscn" id="10_bm3kx"]
 [ext_resource type="Texture2D" uid="uid://7an4owy3gbe2" path="res://Assets/UI/ArrowUp.png" id="11_gm014"]
 [ext_resource type="PackedScene" uid="uid://cbn0lpatmkt08" path="res://UI/MineHitPopup.tscn" id="12_4reet"]
@@ -40,10 +40,6 @@ modulate_color = Color(1, 1, 1, 0.403922)
 
 [node name="Main" type="Node2D"]
 script = ExtResource("1_t2km6")
-
-[node name="Camera2D" type="Camera2D" parent="."]
-position = Vector2(690, 360)
-script = ExtResource("2_sxoug")
 
 [node name="ResponsiveUICanvas" type="CanvasLayer" parent="."]
 
@@ -883,12 +879,20 @@ offset_bottom = 2541.0
 mouse_filter = 2
 color = Color(0.639216, 0.380392, 0.109804, 0.0627451)
 
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(690, 360)
+script = ExtResource("2_sxoug")
+
 [connection signal="ability_menu_item_pressed" from="ResponsiveUICanvas/ResponsiveUI" to="." method="_on_responsive_ui_ability_menu_item_pressed"]
 [connection signal="build_menu_item_pressed" from="ResponsiveUICanvas/ResponsiveUI" to="." method="_on_responsive_ui_build_menu_item_pressed"]
 [connection signal="cancel_placement_pressed" from="ResponsiveUICanvas/ResponsiveUI" to="." method="_on_responsive_ui_cancel_placement_pressed"]
 [connection signal="confirm_placement_pressed" from="ResponsiveUICanvas/ResponsiveUI" to="." method="_on_responsive_ui_confirm_placement_pressed"]
 [connection signal="descend_pressed" from="ResponsiveUICanvas/ResponsiveUI" to="." method="_on_responsive_ui_descend_pressed"]
+[connection signal="destroy_selected_building_pressed" from="ResponsiveUICanvas/ResponsiveUI" to="." method="_on_responsive_ui_destroy_selected_building_pressed"]
 [connection signal="enter_build_mode_pressed" from="ResponsiveUICanvas/ResponsiveUI" to="." method="_on_responsive_ui_enter_build_mode_pressed"]
+[connection signal="move_selected_building_cancelled" from="ResponsiveUICanvas/ResponsiveUI" to="." method="_on_responsive_ui_move_selected_building_cancelled"]
+[connection signal="move_selected_building_confirmed" from="ResponsiveUICanvas/ResponsiveUI" to="." method="_on_responsive_ui_move_selected_building_confirmed"]
+[connection signal="move_selected_building_pressed" from="ResponsiveUICanvas/ResponsiveUI" to="." method="_on_responsive_ui_move_selected_building_pressed"]
 [connection signal="mouse_entered" from="CanvasLayer/UI/EndLevelBtn" to="." method="_on_end_level_btn_mouse_entered"]
 [connection signal="mouse_exited" from="CanvasLayer/UI/EndLevelBtn" to="." method="_on_end_level_btn_mouse_exited"]
 [connection signal="pressed" from="CanvasLayer/UI/NextFloorBtn" to="." method="_on_next_floor_btn_pressed"]
@@ -904,6 +908,8 @@ color = Color(0.639216, 0.380392, 0.109804, 0.0627451)
 [connection signal="pressed" from="CanvasLayer/GameOver/Panel/RestartButton" to="." method="_on_loss_restart_button_pressed"]
 [connection signal="pressed" from="CanvasLayer/YouWin/Panel/RestartButton" to="." method="_on_win_restart_button_pressed"]
 [connection signal="pressed" from="CanvasLayer/MineHitPopup/Button" to="." method="_on_mine_hit_restart_level_pressed"]
+[connection signal="drag_complete" from="Camera2D" to="." method="_on_camera_2d_drag_complete"]
+[connection signal="tap_complete" from="Camera2D" to="." method="_on_camera_2d_tap_complete"]
 
 [editable path="CanvasLayer/GameOver"]
 [editable path="CanvasLayer/YouWin"]
