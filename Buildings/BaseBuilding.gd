@@ -15,6 +15,8 @@ signal on_deselected
 @onready var main = board.get_parent()
 @onready var gui_control = $Control
 
+@onready var handle_arrows = $HandleArrows
+
 
 var building_placement_material: ShaderMaterial = preload("res://Shaders/InvalidBuildingPlacement.tres")
 
@@ -53,8 +55,15 @@ func set_type(value, icon):
 	gui_control.size = Vector2(TILE_SIZE, TILE_SIZE) * size
 	
 	sprite.texture = icon
+	handle_arrows.scale.x = size
+	handle_arrows.scale.y = size
 
 func _process(delta):
+	if state == State.PlacedUnconfirmed:
+		handle_arrows.visible = true
+	else:
+		handle_arrows.visible = false
+	
 	if state == State.Unplaced || state == State.Moving:
 		var mouse = board.get_local_mouse_position()
 		if state == State.Moving:
