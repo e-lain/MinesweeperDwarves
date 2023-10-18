@@ -16,6 +16,7 @@ signal on_deselected
 @onready var gui_control = $Control
 
 @onready var handle_arrows = $HandleArrows
+@onready var cant_build_label = $CantBuildLabel
 
 
 var building_placement_material: ShaderMaterial = preload("res://Shaders/InvalidBuildingPlacement.tres")
@@ -78,8 +79,10 @@ func _process(delta):
 		if in_bounds:
 			if !can_place():
 				sprite.material = building_placement_material
+				cant_build_label.visible = true
 			else:
 				sprite.material = null
+				cant_build_label.visible = false
 		
 		if size == 1:
 			background_sprite.visible = false

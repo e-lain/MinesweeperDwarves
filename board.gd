@@ -157,6 +157,7 @@ func queue_building(type: BuildingData.Type):
 		building.set_type(type, get_parent().icons[type])
 		current_placing_instance = building
 		current_placing_instance.on_placed.connect(on_building_placed)
+		return current_placing_instance
 
 func queue_ability(ability_name: AbilityData.Type):
 	state = State.Ability

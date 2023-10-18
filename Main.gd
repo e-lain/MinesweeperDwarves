@@ -170,8 +170,8 @@ func ability(ability_name: AbilityData.Type):
 func start_placement(type: BuildingData.Type):
 	state = State.Placing
 	print("func start_placement, building_name: ", type)
-	get_current_board().queue_building(type)
-	responsive_ui.enter_place_mode(type)
+	var building = get_current_board().queue_building(type)
+	responsive_ui.enter_place_mode(building)
 
 func on_building_placed():
 	responsive_ui.on_building_placed()

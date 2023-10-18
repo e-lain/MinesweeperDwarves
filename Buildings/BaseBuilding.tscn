@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://cv6moqrk0o3nj"]
+[gd_scene load_steps=8 format=3 uid="uid://cv6moqrk0o3nj"]
 
 [ext_resource type="Script" path="res://Buildings/BaseBuilding.gd" id="1_ghdmy"]
 [ext_resource type="Material" uid="uid://nqpwbe45b8cn" path="res://Shaders/InvalidBuildingPlacement.tres" id="2_8r5no"]
@@ -6,6 +6,7 @@
 [ext_resource type="Texture2D" uid="uid://cq1p5ky2322w8" path="res://Assets/Buildings/StairsDown.png" id="3_e7n3w"]
 [ext_resource type="Texture2D" uid="uid://dbis5jfyeq0u6" path="res://Assets/UI/nominecart.png" id="4_wjvxv"]
 [ext_resource type="Texture2D" uid="uid://cxnwi8bt7vm5k" path="res://Assets/UI/ArrowRightSource.png" id="6_e72s1"]
+[ext_resource type="Theme" uid="uid://b6iv3a38m6uhb" path="res://UI.tres" id="7_tes3t"]
 
 [node name="BaseBuilding" type="Node2D"]
 script = ExtResource("1_ghdmy")
@@ -112,6 +113,16 @@ mouse_filter = 2
 texture = ExtResource("6_e72s1")
 expand_mode = 2
 flip_h = true
+
+[node name="CantBuildLabel" type="Label" parent="."]
+visible = false
+offset_left = -23.0
+offset_top = -53.0
+offset_right = 89.0
+offset_bottom = -18.0
+theme = ExtResource("7_tes3t")
+theme_override_colors/font_color = Color(1, 0, 0, 1)
+text = "Can't Build Here"
 
 [connection signal="mouse_entered" from="Control" to="." method="_on_control_mouse_entered"]
 [connection signal="mouse_exited" from="Control" to="." method="_on_control_mouse_exited"]
