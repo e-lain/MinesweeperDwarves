@@ -255,7 +255,9 @@ func on_wonder_placed():
 	get_tree().paused = true
 
 func on_workshop_placed():
-	get_current_board().placing = false
+	# TODO: Some kind of user feedback notifying tier has been progressed
+	if tier < 2:
+		tier += 1
 	help_text_is_overriden = false
 	choose_active.show()
 	greyout.show()
