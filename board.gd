@@ -161,6 +161,7 @@ func queue_building(type: BuildingData.Type):
 		building.set_type(type, get_parent().icons[type])
 		current_placing_instance = building
 		current_placing_instance.on_placed.connect(on_building_placed)
+		return current_placing_instance
 
 func queue_ability(ability_name: AbilityData.Type):
 	state = State.Ability
@@ -186,7 +187,7 @@ func _on_tile_uncovered(cell_pos: Vector2i):
 	if tile.is_bomb:
 		print("status of armor active: ", armor_active)
 		if !armor_active:
-			get_parent().population -= 1
+			Resources.population -= 1
 			explode_mine()
 	
 	SoundManager.play_uncover_tile_sound()
@@ -201,7 +202,7 @@ func enter_build_mode():
 			var tile = tiles[x][y]
 			if tile.is_bomb && tile.is_flagged:
 				if tile.bomb_type == BombData.Type.DEFAULT:
-					get_parent().steel += 1
+					Resources.steel += 1
 					var instance = collection_prefab.instantiate()
 					add_child(instance)
 					instance.position = Vector2(tile.get_position()) + (Vector2(TILE_SIZE, TILE_SIZE) / 2.0) + Vector2(-16, -16)
@@ -348,13 +349,13 @@ func on_confirm_building_placement():
 		stairs_placed = type == BuildingData.Type.STAIRCASE
 	
 	if data["population_cost"] > 0:
-		get_parent().population -= data["population_cost"]
+		Resources.population -= data["population_cost"]
 	
 	if data["stone_cost"] > 0:
-		get_parent().stone -= data["stone_cost"]
+		Resources.stone -= data["stone_cost"]
 	
 	if data["steel_cost"] > 0:
-		get_parent().steel -= data["steel_cost"]
+		Resources.steel -= data["steel_cost"]
 	
 	var tile
 	var world_positions_to_update = get_world_positions_in_area(building_world_pos, size)
@@ -423,13 +424,13 @@ func destroy_selected_building():
 	var size = data["size"]
 	
 	if data["population_cost"] > 0:
-		get_parent().population += data["population_cost"]
+		Resources.population += data["population_cost"]
 	
 	if data["stone_cost"] > 0:
-		get_parent().stone += data["stone_cost"]
+		Resources.stone += data["stone_cost"]
 	
 	if data["steel_cost"] > 0:
-		get_parent().steel += data["steel_cost"]
+		Resources.steel += data["steel_cost"]
 	
 	var world_positions_to_update = get_world_positions_in_area(building_world_pos, size)
 	for world_pos in world_positions_to_update:
@@ -545,17 +546,17 @@ func collect_resources():
 		
 		# TODO - animate this
 		if stone_cost < 0: # negative costs are resource gains
-			get_parent().stone -= stone_cost
+			Resources.stone -= stone_cost
 			buildings_by_id[tile_id].play_collection_animation(collection_lifespan_seconds, "res://Assets/UI/StoneIcon.png")
 			collected_resources = true
 		
 		if population_cost < 0:
-			get_parent().population -= population_cost
+			Resources.population -= population_cost
 			buildings_by_id[tile_id].play_collection_animation(collection_lifespan_seconds, "res://Assets/UI/PopIcon.png")
 			collected_resources = true
 		
 		if steel_cost < 0:
-			get_parent().steel -= steel_cost
+			Resources.steel -= steel_cost
 			buildings_by_id[tile_id].play_collection_animation(collection_lifespan_seconds, "res://Assets/UI/steeldownscaledicon.png")
 			collected_resources = true
 	

@@ -15,6 +15,9 @@ signal on_deselected
 @onready var main = board.get_parent()
 @onready var gui_control = $Control
 
+@onready var handle_arrows = $HandleArrows
+@onready var cant_build_label = $CantBuildLabel
+
 
 var building_placement_material: ShaderMaterial = preload("res://Shaders/InvalidBuildingPlacement.tres")
 
@@ -23,8 +26,6 @@ const bg_offset := Vector2i(3, 3)
 const collection_prefab: PackedScene = preload("res://UI/collection_effect.tscn")
 
 const TILE_SIZE = 64
-
-var in_bounds: bool = false
 
 var id: int
 var size: int
@@ -54,8 +55,15 @@ func set_type(value, icon):
 	gui_control.size = Vector2(TILE_SIZE, TILE_SIZE) * size
 	
 	sprite.texture = icon
+	handle_arrows.scale.x = size
+	handle_arrows.scale.y = size
 
 func _process(delta):
+	if state == State.PlacedUnconfirmed:
+		handle_arrows.visible = true
+	else:
+		handle_arrows.visible = false
+	
 	if state == State.Unplaced || state == State.Moving:
 		var mouse = board.get_local_mouse_position()
 		if state == State.Moving:
@@ -64,15 +72,13 @@ func _process(delta):
 		# in-bounds with grid check
 		var snapped = Vector2(snapped(mouse.x-TILE_SIZE/2, TILE_SIZE), snapped(mouse.y-TILE_SIZE/2, TILE_SIZE))
 		position = snapped
-		if position.x <= 0 - TILE_SIZE || position.x >= TILE_SIZE * board.rows || position.y <= 0-TILE_SIZE || position.y >= TILE_SIZE * board.columns:
-			in_bounds = false
+
+		if !can_place():
+			sprite.material = building_placement_material
+			cant_build_label.visible = true
 		else:
-			in_bounds = true
-		if in_bounds:
-			if !can_place():
-				sprite.material = building_placement_material
-			else:
-				sprite.material = null
+			sprite.material = null
+			cant_build_label.visible = false
 		
 		if size == 1:
 			background_sprite.visible = false
@@ -128,7 +134,7 @@ func _unhandled_input(event):
 			if type == BuildingData.Type.STAIRCASE and board.stairs_placed:
 				main.help_text_bar.text = "Stairs already placed! Can't have more than one staircase per floor"
 				print("Stairs already placed!")
-			if can_place() && in_bounds:
+			if can_place():
 				place()
 				on_placed.emit()
 				return

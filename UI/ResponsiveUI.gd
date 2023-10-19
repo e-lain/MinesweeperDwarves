@@ -30,6 +30,7 @@ signal destroy_selected_building_pressed
 
 @onready var cancel_confirm = $BottomMargin/CancelConfirm
 @onready var cancel_confirm_message = $BottomMargin/CancelConfirm/MarginContainer/VBoxContainer/Label
+@onready var cancel_confirm_confirm_button = $BottomMargin/CancelConfirm/MarginContainer/VBoxContainer/HBoxContainer/Confirm
 @onready var cancel_placement = $BottomMargin/CancelPlacement
 @onready var cancel_placement_message = $BottomMargin/CancelPlacement/MarginContainer/HBoxContainer/Label
 
@@ -65,6 +66,14 @@ enum State {
 
 var state
 var selected_building
+
+
+func _process(delta):
+	if state == State.PLACEMENT_MOVE_BUILDING || state == State.MOVE_BUILDING:
+		cancel_confirm_confirm_button.disabled = !selected_building.can_place()
+
+func set_stairs_placed(placed: bool):
+	build_menu.set_stairs_placed(placed)
 
 func update_margins_for_notch():
 	var safe_area = DisplayServer.get_display_safe_area()
@@ -157,7 +166,9 @@ func enter_play_mode():
 	descend_button_container.visible = false
 	infobox.visible = false
 	
-func enter_place_mode(type: BuildingData.Type):
+func enter_place_mode(building: BaseBuilding):
+	selected_building = building
+	var type = building.type
 	var data = BuildingData.data[type]
 	var name = data["name"]
 	state = State.PLACEMENT_NO_BUILDING
@@ -166,7 +177,6 @@ func enter_place_mode(type: BuildingData.Type):
 	cancel_placement_message.text = "Placing %s" % name
 	to_build_mode_button_container.visible = false
 	descend_button_container.visible = false
-	
 
 func on_building_placed():
 	state = State.PLACEMENT_MOVE_BUILDING

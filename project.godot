@@ -21,6 +21,7 @@ SoundManager="*res://Sound/sound_manager.tscn"
 PlatformUtil="*res://Scripts/PlatformUtil.gd"
 DragOrZoomEventManager="*res://Scripts/DragOrZoomEventManager.gd"
 SettingsController="*res://Scripts/SettingsController.gd"
+Resources="*res://Scripts/Resources.gd"
 
 [display]
 
