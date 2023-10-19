@@ -1,16 +1,14 @@
-[gd_scene load_steps=27 format=3 uid="uid://iqvlmmwy7d46"]
+[gd_scene load_steps=22 format=3 uid="uid://iqvlmmwy7d46"]
 
 [ext_resource type="Script" path="res://Main.gd" id="1_t2km6"]
 [ext_resource type="Theme" uid="uid://b6iv3a38m6uhb" path="res://UI.tres" id="2_b2qml"]
 [ext_resource type="Script" path="res://Scripts/CameraController.gd" id="2_sxoug"]
-[ext_resource type="PackedScene" uid="uid://dmmp1otl8dakg" path="res://Buildings/ToolbarBuilding.tscn" id="3_22qjw"]
 [ext_resource type="Texture2D" uid="uid://c5ocuxxxsbgne" path="res://Assets/UI/UIMapBackgroundAndBorder.png" id="3_c74ye"]
 [ext_resource type="PackedScene" uid="uid://dnr83m4pqs7mp" path="res://UI/ResponsiveUI.tscn" id="3_uhbjp"]
 [ext_resource type="Texture2D" uid="uid://du5p0tvlhojks" path="res://Assets/UI/PopIcon.png" id="4_wg3lp"]
 [ext_resource type="Texture2D" uid="uid://ca5lct0ctr37m" path="res://Assets/UI/StoneIcon.png" id="5_o2ngn"]
 [ext_resource type="Texture2D" uid="uid://byetswoeyw7gd" path="res://Assets/UI/steeldownscaledicon.png" id="6_jm4fe"]
 [ext_resource type="Texture2D" uid="uid://d0o6bpct5y38h" path="res://Assets/UI/Popup.png" id="6_nia6k"]
-[ext_resource type="FontFile" uid="uid://m1fwnp6qsmnn" path="res://Assets/UI/Quikhand.ttf" id="6_rv3xe"]
 [ext_resource type="StyleBox" uid="uid://767un3ynwawo" path="res://UI/OuterButtonStyle.tres" id="7_2o6rd"]
 [ext_resource type="PackedScene" uid="uid://doi658hn04jhv" path="res://UI/popup.tscn" id="7_703se"]
 [ext_resource type="PackedScene" uid="uid://b8qmhoccrox3y" path="res://UI/GameOver.tscn" id="7_wj57j"]
@@ -18,7 +16,6 @@
 [ext_resource type="PackedScene" uid="uid://cp25vmlk0k3ck" path="res://Abilities/AbilityDestroy.tscn" id="10_bm3kx"]
 [ext_resource type="Texture2D" uid="uid://7an4owy3gbe2" path="res://Assets/UI/ArrowUp.png" id="11_gm014"]
 [ext_resource type="PackedScene" uid="uid://cbn0lpatmkt08" path="res://UI/MineHitPopup.tscn" id="12_4reet"]
-[ext_resource type="Texture2D" uid="uid://cugy8vitkf3fg" path="res://Assets/UI/ArrowDown.png" id="12_hutn7"]
 [ext_resource type="PackedScene" uid="uid://dc8igqfayfl61" path="res://Abilities/AbilityArmor.tscn" id="16_hhtyy"]
 [ext_resource type="PackedScene" uid="uid://bqrac1jbrmwcd" path="res://UI/ChooseActive.tscn" id="17_r6xie"]
 [ext_resource type="PackedScene" uid="uid://pv3mpwrce0vs" path="res://Abilities/AbilityDowse.tscn" id="17_sj1ur"]
@@ -33,10 +30,6 @@ texture_margin_bottom = 13.0
 axis_stretch_horizontal = 2
 axis_stretch_vertical = 2
 modulate_color = Color(1, 1, 1, 0.403922)
-
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_cckrc"]
-
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_bthxj"]
 
 [node name="Main" type="Node2D"]
 script = ExtResource("1_t2km6")
@@ -175,172 +168,6 @@ offset_right = 911.0
 offset_bottom = 722.0
 text = "Press 'H' for help overlay"
 horizontal_alignment = 1
-
-[node name="BuildMenu" type="Control" parent="CanvasLayer"]
-visible = false
-layout_mode = 3
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-theme = ExtResource("2_b2qml")
-
-[node name="Page1" type="VBoxContainer" parent="CanvasLayer/BuildMenu"]
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.803906
-anchor_top = 0.0652778
-anchor_right = 0.803906
-anchor_bottom = 0.345833
-offset_left = -97.0
-offset_bottom = 299.0
-metadata/_edit_use_anchors_ = true
-
-[node name="Staircase" parent="CanvasLayer/BuildMenu/Page1" node_paths=PackedStringArray("info_popup", "resources_source") instance=ExtResource("3_22qjw")]
-visible = true
-layout_mode = 2
-info_popup = NodePath("../../StaircasePopup")
-type = 2
-resources_source = NodePath("../../../..")
-
-[node name="Minecart" parent="CanvasLayer/BuildMenu/Page1" node_paths=PackedStringArray("info_popup", "resources_source") instance=ExtResource("3_22qjw")]
-visible = true
-layout_mode = 2
-info_popup = NodePath("../../HousePopup")
-type = 5
-resources_source = NodePath("../../../..")
-
-[node name="House" parent="CanvasLayer/BuildMenu/Page1" node_paths=PackedStringArray("info_popup", "resources_source") instance=ExtResource("3_22qjw")]
-visible = true
-layout_mode = 2
-info_popup = NodePath("../../QuarryPopup")
-resources_source = NodePath("../../../..")
-
-[node name="Quarry" parent="CanvasLayer/BuildMenu/Page1" node_paths=PackedStringArray("info_popup", "resources_source") instance=ExtResource("3_22qjw")]
-visible = true
-layout_mode = 2
-info_popup = NodePath("../../WorkshopPopup")
-type = 1
-resources_source = NodePath("../../../..")
-
-[node name="Page2" type="VBoxContainer" parent="CanvasLayer/BuildMenu"]
-visible = false
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.804688
-anchor_top = 0.0652778
-anchor_right = 0.804688
-anchor_bottom = 0.345833
-offset_left = -97.0
-offset_bottom = 299.0
-metadata/_edit_use_anchors_ = true
-
-[node name="Workshop" parent="CanvasLayer/BuildMenu/Page2" node_paths=PackedStringArray("info_popup", "resources_source") instance=ExtResource("3_22qjw")]
-visible = true
-layout_mode = 2
-info_popup = NodePath("../../StaircasePopup")
-type = 3
-resources_source = NodePath("../../../..")
-
-[node name="Wonder" parent="CanvasLayer/BuildMenu/Page2" node_paths=PackedStringArray("info_popup", "resources_source") instance=ExtResource("3_22qjw")]
-visible = true
-layout_mode = 2
-info_popup = NodePath("../../QuarryPopup")
-type = 4
-resources_source = NodePath("../../../..")
-
-[node name="Label" type="Label" parent="CanvasLayer/BuildMenu"]
-layout_mode = 0
-offset_left = 942.0
-offset_top = 11.0
-offset_right = 1014.0
-offset_bottom = 50.0
-theme_override_font_sizes/font_size = 36
-text = "Buildings"
-
-[node name="Tooltip" type="Label" parent="CanvasLayer/BuildMenu"]
-visible = false
-layout_mode = 2
-offset_left = 849.0
-offset_top = 1.0
-offset_right = 1112.0
-offset_bottom = 105.0
-theme_override_fonts/font = ExtResource("6_rv3xe")
-text = "Test Building
-Cost - blah
-
-Wow this is a building, pretty neat"
-
-[node name="StaircasePopup" parent="CanvasLayer/BuildMenu" instance=ExtResource("7_703se")]
-visible = false
-layout_mode = 0
-offset_left = 736.0
-offset_top = 43.0
-offset_right = 936.0
-offset_bottom = 152.0
-
-[node name="HousePopup" parent="CanvasLayer/BuildMenu" instance=ExtResource("7_703se")]
-visible = false
-layout_mode = 0
-offset_left = 736.0
-offset_top = 149.0
-offset_right = 936.0
-offset_bottom = 260.0
-
-[node name="QuarryPopup" parent="CanvasLayer/BuildMenu" instance=ExtResource("7_703se")]
-visible = false
-layout_mode = 0
-offset_left = 736.0
-offset_top = 267.0
-offset_right = 936.0
-offset_bottom = 377.0
-
-[node name="WorkshopPopup" parent="CanvasLayer/BuildMenu" instance=ExtResource("7_703se")]
-visible = false
-layout_mode = 0
-offset_left = 736.0
-offset_top = 435.0
-offset_right = 936.0
-offset_bottom = 543.0
-
-[node name="PageUpButton" type="Button" parent="CanvasLayer/BuildMenu"]
-layout_mode = 0
-offset_left = 1022.0
-offset_top = 38.0
-offset_right = 1039.0
-offset_bottom = 68.0
-rotation = -1.60875
-theme_override_colors/icon_pressed_color = Color(0, 0, 0, 0.764706)
-theme_override_colors/icon_hover_color = Color(0, 0, 0, 0.764706)
-theme_override_colors/icon_hover_pressed_color = Color(0, 0, 0, 0.764706)
-theme_override_colors/icon_disabled_color = Color(0, 0, 0, 0.372549)
-theme_override_styles/normal = SubResource("StyleBoxEmpty_cckrc")
-theme_override_styles/hover = SubResource("StyleBoxEmpty_cckrc")
-theme_override_styles/pressed = SubResource("StyleBoxEmpty_cckrc")
-theme_override_styles/disabled = SubResource("StyleBoxEmpty_cckrc")
-theme_override_styles/focus = SubResource("StyleBoxEmpty_cckrc")
-disabled = true
-icon = ExtResource("11_gm014")
-
-[node name="PageDownButton" type="Button" parent="CanvasLayer/BuildMenu"]
-layout_mode = 0
-offset_left = 1062.0
-offset_top = 35.0
-offset_right = 1079.0
-offset_bottom = 65.0
-rotation = 4.83077
-theme_override_colors/icon_pressed_color = Color(0, 0, 0, 0.764706)
-theme_override_colors/icon_hover_color = Color(0, 0, 0, 0.764706)
-theme_override_colors/icon_hover_pressed_color = Color(0, 0, 0, 0.764706)
-theme_override_colors/icon_disabled_color = Color(0, 0, 0, 0.384314)
-theme_override_styles/normal = SubResource("StyleBoxEmpty_bthxj")
-theme_override_styles/hover = SubResource("StyleBoxEmpty_bthxj")
-theme_override_styles/pressed = SubResource("StyleBoxEmpty_bthxj")
-theme_override_styles/disabled = SubResource("StyleBoxEmpty_bthxj")
-theme_override_styles/focus = SubResource("StyleBoxEmpty_bthxj")
-icon = ExtResource("12_hutn7")
 
 [node name="AbilityMenu" type="Control" parent="CanvasLayer"]
 visible = false
@@ -896,14 +723,6 @@ script = ExtResource("2_sxoug")
 [connection signal="mouse_entered" from="CanvasLayer/UI/EndLevelBtn" to="." method="_on_end_level_btn_mouse_entered"]
 [connection signal="mouse_exited" from="CanvasLayer/UI/EndLevelBtn" to="." method="_on_end_level_btn_mouse_exited"]
 [connection signal="pressed" from="CanvasLayer/UI/NextFloorBtn" to="." method="_on_next_floor_btn_pressed"]
-[connection signal="build" from="CanvasLayer/BuildMenu/Page1/Staircase" to="." method="build"]
-[connection signal="build" from="CanvasLayer/BuildMenu/Page1/Minecart" to="." method="build"]
-[connection signal="build" from="CanvasLayer/BuildMenu/Page1/House" to="." method="build"]
-[connection signal="build" from="CanvasLayer/BuildMenu/Page1/Quarry" to="." method="build"]
-[connection signal="build" from="CanvasLayer/BuildMenu/Page2/Workshop" to="." method="build"]
-[connection signal="build" from="CanvasLayer/BuildMenu/Page2/Wonder" to="." method="build"]
-[connection signal="pressed" from="CanvasLayer/BuildMenu/PageUpButton" to="." method="_on_page_up_button_pressed"]
-[connection signal="pressed" from="CanvasLayer/BuildMenu/PageDownButton" to="." method="_on_page_down_button_pressed"]
 [connection signal="ability_chosen" from="CanvasLayer/ChooseActive" to="." method="_on_choose_active_ability_chosen"]
 [connection signal="pressed" from="CanvasLayer/GameOver/Panel/RestartButton" to="." method="_on_loss_restart_button_pressed"]
 [connection signal="pressed" from="CanvasLayer/YouWin/Panel/RestartButton" to="." method="_on_win_restart_button_pressed"]

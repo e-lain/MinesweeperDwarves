@@ -28,11 +28,6 @@ var build_mode: bool = false
 var tier = 1
 var depth = 0
 var available_buildings = []
-
-var population = 3
-var stone = 8
-var steel = 3
-var sledgehammer = 0
  
 var ability_destroy_max = 0
 var ability_destroy = 0
@@ -122,10 +117,10 @@ func new_tier():
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
-	responsive_ui.set_resource_count(ResourceData.Resources.POPULATION, population)
-	responsive_ui.set_resource_count(ResourceData.Resources.STONE, stone)
-	responsive_ui.set_resource_count(ResourceData.Resources.STEEL, steel)
-	responsive_ui.set_resource_count(ResourceData.Resources.SLEDGEHAMMER, sledgehammer)
+	responsive_ui.set_resource_count(ResourceData.Resources.POPULATION, Resources.population)
+	responsive_ui.set_resource_count(ResourceData.Resources.STONE, Resources.stone)
+	responsive_ui.set_resource_count(ResourceData.Resources.STEEL, Resources.steel)
+	responsive_ui.set_resource_count(ResourceData.Resources.SLEDGEHAMMER, Resources.sledgehammer)
 	responsive_ui.set_depth(depth + 1)
 	
 	if get_current_board():
@@ -133,6 +128,7 @@ func _process(delta):
 		responsive_ui.set_enter_build_mode_disabled(!can_enter_build_mode())
 		
 		responsive_ui.set_descend_disabled(!stairs_placed())
+		responsive_ui.set_stairs_placed(stairs_placed())
 	
 	if !help_text_is_overriden:
 		help_text_bar.text = "Press \'H\' for help overlay"
@@ -192,6 +188,7 @@ func next_level():
 	state = State.Play
 	
 	generate_board(depth)
+	responsive_ui.update_buildings(available_buildings)
 	responsive_ui.enter_play_mode()
 
 func _on_responsive_ui_enter_build_mode_pressed():
@@ -204,10 +201,10 @@ func _on_responsive_ui_enter_build_mode_pressed():
 func on_mine_animation_complete():
 	get_tree().paused = true
 	SoundManager.play_negative()
-	if population > 0:
+	if Resources.population > 0:
 		mine_hit_popup.visible = true
 		greyout.visible = true
-	elif population == 0:
+	elif Resources.population == 0:
 		game_over.show()
 		greyout.show()
 

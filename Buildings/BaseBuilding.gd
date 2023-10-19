@@ -29,8 +29,6 @@ const collection_prefab: PackedScene = preload("res://UI/collection_effect.tscn"
 
 const TILE_SIZE = 64
 
-var in_bounds: bool = false
-
 var id: int
 var size: int
 
@@ -72,17 +70,13 @@ func _process(delta):
 		
 		var snapped = Vector2(snapped(mouse.x-TILE_SIZE/2, TILE_SIZE), snapped(mouse.y-TILE_SIZE/2, TILE_SIZE))
 		position = snapped
-		if position.x <= 0 - TILE_SIZE || position.x >= TILE_SIZE * board.rows || position.y <= 0-TILE_SIZE || position.y >= TILE_SIZE * board.columns:
-			in_bounds = false
+
+		if !can_place():
+			sprite.material = building_placement_material
+			cant_build_label.visible = true
 		else:
-			in_bounds = true
-		if in_bounds:
-			if !can_place():
-				sprite.material = building_placement_material
-				cant_build_label.visible = true
-			else:
-				sprite.material = null
-				cant_build_label.visible = false
+			sprite.material = null
+			cant_build_label.visible = false
 		
 		if size == 1:
 			background_sprite.visible = false
@@ -132,7 +126,7 @@ func _unhandled_input(event):
 			if type == BuildingData.Type.STAIRCASE and board.stairs_placed:
 				main.help_text_bar.text = "Stairs already placed! Can't have more than one staircase per floor"
 				print("Stairs already placed!")
-			if can_place() && in_bounds:
+			if can_place():
 				place()
 				on_placed.emit()
 				return

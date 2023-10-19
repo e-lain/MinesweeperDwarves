@@ -71,7 +71,10 @@ var selected_building
 func _process(delta):
 	if state == State.PLACEMENT_MOVE_BUILDING || state == State.MOVE_BUILDING:
 		cancel_confirm_confirm_button.disabled = !selected_building.can_place()
-		
+
+func set_stairs_placed(placed: bool):
+	build_menu.set_stairs_placed(placed)
+
 func update_margins_for_notch():
 	var safe_area = DisplayServer.get_display_safe_area()
 	var window_size = DisplayServer.window_get_size()
