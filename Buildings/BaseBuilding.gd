@@ -18,9 +18,7 @@ signal on_deselected
 
 var building_placement_material: ShaderMaterial = preload("res://Shaders/InvalidBuildingPlacement.tres")
 
-
 const bg_offset := Vector2i(3, 3)
-
 
 const collection_prefab: PackedScene = preload("res://UI/collection_effect.tscn")
 
@@ -30,6 +28,9 @@ var in_bounds: bool = false
 
 var id: int
 var size: int
+
+# Only used if building is a LAVA moat, keeps track of which (if any) lava source tiles it is pathed to
+var connected_lava_sources = []
 
 var took_help_text_override = false
 
@@ -60,6 +61,7 @@ func _process(delta):
 		if state == State.Moving:
 			mouse -= move_begin_offset
 		
+		# in-bounds with grid check
 		var snapped = Vector2(snapped(mouse.x-TILE_SIZE/2, TILE_SIZE), snapped(mouse.y-TILE_SIZE/2, TILE_SIZE))
 		position = snapped
 		if position.x <= 0 - TILE_SIZE || position.x >= TILE_SIZE * board.rows || position.y <= 0-TILE_SIZE || position.y >= TILE_SIZE * board.columns:
@@ -99,10 +101,15 @@ func _process(delta):
 			took_help_text_override = false
 
 func can_place():
+	if type == BuildingData.Type.LAVA && !next_to_lava():
+		return false
 	return board.can_place_at_position(global_position, size)
 
 func next_to_minecart() -> bool:
 	return board.building_is_next_to_minecart(self) || board.player_placing_minecart_next_to_building(self)
+	
+func next_to_lava() -> bool:
+	return board.building_is_next_to_lava(self) 
 
 func place():
 	state = State.PlacedUnconfirmed
@@ -111,7 +118,8 @@ func place():
 func _unhandled_input(event):
 	if !mouse_in:
 		return 
-		
+	
+	# Left-click to place building logic
 	if event is InputEventMouseButton && state == State.Unplaced:
 		if event.is_action_pressed("left_click"):
 			if !can_place():

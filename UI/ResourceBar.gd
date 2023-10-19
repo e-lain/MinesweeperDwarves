@@ -7,7 +7,11 @@ class_name ResourceBar
 @onready var lava_label = $Lava/Label
 @onready var sledgehammer_label = $Sledgehammer/Label
 
-
+func set_tier(tier: int):
+	# TODO: Move this logic to BiomeData
+	if tier == 2:
+		$Sledgehammer.show()
+		
 func set_resource_count(type: ResourceData.Resources, val: int):
 	var label
 	match type:

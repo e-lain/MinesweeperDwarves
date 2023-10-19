@@ -184,6 +184,7 @@ func on_building_deselected():
 
 
 func next_level():
+	responsive_ui.set_tier(tier)
 	get_current_board().queue_free()
 	
 	print("MAIN SCENE RECEIVED NEXT LEVEL CALL")

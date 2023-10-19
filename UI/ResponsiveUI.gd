@@ -93,6 +93,9 @@ func _ready():
 	on_dimensions_updated()
 	state = State.PLAY
 
+func set_tier(tier: int):
+	resource_bar.set_tier(tier)
+
 func update_buildings(buildings_list):
 	if !buildings_list:
 		print("ERROR: BUILDINGS LIST PROVIDED IS INVALID")

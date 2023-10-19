@@ -10,11 +10,14 @@ var cell_position: Vector2i
 
 var is_cover: bool = true
 var is_flagged: bool = false
+
 var is_bomb: bool = false
 var bomb_type: BombData.Type
 
 var has_building: bool = false
 var building_id: int
+# Only used if bomb is a lava source
+var lava_uid: int
 
 var label
 var flag
