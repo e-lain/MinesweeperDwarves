@@ -113,6 +113,11 @@ func _ready():
 	responsive_ui.enter_play_mode()
 
 func new_tier():
+	# Keep this commented except for when jumping straight to a higher tier for testing
+	# TODO: Re-Comment this when done testing
+	# tier = 2
+	# available_buildings.append_array(BiomeData.get_buildings(1))
+	
 	available_buildings.append_array(BiomeData.get_buildings(tier))
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
