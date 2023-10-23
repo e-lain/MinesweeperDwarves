@@ -2,7 +2,6 @@
 
 [ext_resource type="Script" path="res://Main.gd" id="1_t2km6"]
 [ext_resource type="Theme" uid="uid://b6iv3a38m6uhb" path="res://UI.tres" id="2_b2qml"]
-[ext_resource type="Script" path="res://Scripts/CameraController.gd" id="2_sxoug"]
 [ext_resource type="Texture2D" uid="uid://c5ocuxxxsbgne" path="res://Assets/UI/UIMapBackgroundAndBorder.png" id="3_c74ye"]
 [ext_resource type="PackedScene" uid="uid://dnr83m4pqs7mp" path="res://UI/ResponsiveUI.tscn" id="3_uhbjp"]
 [ext_resource type="Texture2D" uid="uid://du5p0tvlhojks" path="res://Assets/UI/PopIcon.png" id="4_wg3lp"]
@@ -19,6 +18,7 @@
 [ext_resource type="PackedScene" uid="uid://dc8igqfayfl61" path="res://Abilities/AbilityArmor.tscn" id="16_hhtyy"]
 [ext_resource type="PackedScene" uid="uid://bqrac1jbrmwcd" path="res://UI/ChooseActive.tscn" id="17_r6xie"]
 [ext_resource type="PackedScene" uid="uid://pv3mpwrce0vs" path="res://Abilities/AbilityDowse.tscn" id="17_sj1ur"]
+[ext_resource type="Script" path="res://Controllers/CameraController.gd" id="20_h7imp"]
 [ext_resource type="Texture2D" uid="uid://te50q3hpxrqb" path="res://Assets/Buildings/WonderFlattenedDownscaled.png" id="20_yhfny"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_qk65p"]
@@ -707,8 +707,7 @@ mouse_filter = 2
 color = Color(0.639216, 0.380392, 0.109804, 0.0627451)
 
 [node name="Camera2D" type="Camera2D" parent="."]
-position = Vector2(690, 360)
-script = ExtResource("2_sxoug")
+script = ExtResource("20_h7imp")
 
 [connection signal="ability_menu_item_pressed" from="ResponsiveUICanvas/ResponsiveUI" to="." method="_on_responsive_ui_ability_menu_item_pressed"]
 [connection signal="build_menu_item_pressed" from="ResponsiveUICanvas/ResponsiveUI" to="." method="_on_responsive_ui_build_menu_item_pressed"]
