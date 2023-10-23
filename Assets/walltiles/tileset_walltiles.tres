@@ -1,9 +1,10 @@
-[gd_resource type="TileSet" load_steps=9 format=3 uid="uid://dk354anap47kc"]
+[gd_resource type="TileSet" load_steps=11 format=3 uid="uid://dk354anap47kc"]
 
 [ext_resource type="Texture2D" uid="uid://dcoqsnpxuptcq" path="res://Assets/walltiles/tileset_walltiles.png" id="1"]
 [ext_resource type="Texture2D" uid="uid://btuj0skd520lj" path="res://Assets/RocksonGround.png" id="2_hv0ik"]
 [ext_resource type="Texture2D" uid="uid://do31t4cek0pwe" path="res://Assets/Shadows.png" id="3_u0wpj"]
 [ext_resource type="Texture2D" uid="uid://c5smwg38fivrb" path="res://Assets/walltiles/ShadowTiles.png" id="4_n04ql"]
+[ext_resource type="Texture2D" uid="uid://xout8fyu10h4" path="res://Assets/walltiles/TempLavaSheet.png" id="5_6nitb"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_emgiv"]
 texture = ExtResource("1")
@@ -733,6 +734,72 @@ texture_region_size = Vector2i(64, 64)
 1:1/0/terrains_peering_bit/top_side = 1
 1:1/0/terrains_peering_bit/top_right_corner = 1
 
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_x5rp4"]
+resource_name = "Lava"
+texture = ExtResource("5_6nitb")
+texture_region_size = Vector2i(64, 64)
+1:0/0 = 0
+1:0/0/terrain_set = 0
+1:0/0/terrain = 2
+1:0/0/terrains_peering_bit/right_side = 2
+1:0/0/terrains_peering_bit/left_side = 2
+2:0/0 = 0
+2:0/0/terrain_set = 0
+2:0/0/terrain = 2
+2:0/0/terrains_peering_bit/bottom_side = 2
+2:0/0/terrains_peering_bit/top_side = 2
+3:0/0 = 0
+3:0/0/terrain_set = 0
+3:0/0/terrain = 2
+3:0/0/terrains_peering_bit/right_side = 2
+3:0/0/terrains_peering_bit/bottom_side = 2
+3:0/0/terrains_peering_bit/left_side = 2
+3:0/0/terrains_peering_bit/top_side = 2
+4:0/0 = 0
+4:0/0/terrain_set = 0
+4:0/0/terrain = 2
+4:0/0/terrains_peering_bit/right_side = 2
+4:0/0/terrains_peering_bit/bottom_side = 2
+5:0/0 = 0
+5:0/0/terrain_set = 0
+5:0/0/terrain = 2
+5:0/0/terrains_peering_bit/bottom_side = 2
+5:0/0/terrains_peering_bit/left_side = 2
+6:0/0 = 0
+6:0/0/terrain_set = 0
+6:0/0/terrain = 2
+6:0/0/terrains_peering_bit/left_side = 2
+6:0/0/terrains_peering_bit/top_side = 2
+7:0/0 = 0
+7:0/0/terrain_set = 0
+7:0/0/terrain = 2
+7:0/0/terrains_peering_bit/right_side = 2
+7:0/0/terrains_peering_bit/top_side = 2
+8:0/0 = 0
+8:0/0/terrain_set = 0
+8:0/0/terrain = 2
+8:0/0/terrains_peering_bit/right_side = 2
+8:0/0/terrains_peering_bit/left_side = 2
+8:0/0/terrains_peering_bit/top_side = 2
+9:0/0 = 0
+9:0/0/terrain_set = 0
+9:0/0/terrain = 2
+9:0/0/terrains_peering_bit/right_side = 2
+9:0/0/terrains_peering_bit/bottom_side = 2
+9:0/0/terrains_peering_bit/top_side = 2
+10:0/0 = 0
+10:0/0/terrain_set = 0
+10:0/0/terrain = 2
+10:0/0/terrains_peering_bit/right_side = 2
+10:0/0/terrains_peering_bit/bottom_side = 2
+10:0/0/terrains_peering_bit/left_side = 2
+11:0/0 = 0
+11:0/0/terrain_set = 0
+11:0/0/terrain = 2
+11:0/0/terrains_peering_bit/bottom_side = 2
+11:0/0/terrains_peering_bit/left_side = 2
+11:0/0/terrains_peering_bit/top_side = 2
+
 [resource]
 tile_size = Vector2i(64, 64)
 terrain_set_0/mode = 0
@@ -740,10 +807,13 @@ terrain_set_0/terrain_0/name = "Wall"
 terrain_set_0/terrain_0/color = Color(0.5, 0.34375, 0.25, 1)
 terrain_set_0/terrain_1/name = "Shadows"
 terrain_set_0/terrain_1/color = Color(0.5, 0.4375, 0.25, 1)
+terrain_set_0/terrain_2/name = "Lava"
+terrain_set_0/terrain_2/color = Color(0.67451, 0.4, 0.054902, 1)
 sources/0 = SubResource("TileSetAtlasSource_emgiv")
 sources/1 = SubResource("TileSetAtlasSource_akt7d")
 sources/2 = SubResource("TileSetAtlasSource_nt1og")
 sources/3 = SubResource("TileSetAtlasSource_70nxt")
+sources/4 = SubResource("TileSetAtlasSource_x5rp4")
 metadata/terrain_autotiler = {
 "terrain_sets": {
 0: {

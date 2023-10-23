@@ -115,8 +115,8 @@ func _ready():
 func new_tier():
 	# Keep this commented except for when jumping straight to a higher tier for testing
 	# TODO: Re-Comment this when done testing
-	# tier = 2
-	# available_buildings.append_array(BiomeData.get_buildings(1))
+	tier = 2
+	available_buildings.append_array(BiomeData.get_buildings(1))
 	
 	available_buildings.append_array(BiomeData.get_buildings(tier))
 

@@ -206,7 +206,7 @@ func on_building_selected(building: BaseBuilding):
 	state = State.SELECTED
 	selected_building = building
 	var data = BuildingData.data[building.type] 
-	infobox.set_building_selection(data["name"], data["description"])
+	infobox.set_building_selection(building.type, data["name"], data["description"])
 	cancel_confirm.visible = false
 	cancel_placement.visible = false
 	infobox.visible = true

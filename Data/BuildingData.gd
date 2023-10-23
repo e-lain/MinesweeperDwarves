@@ -76,11 +76,11 @@ static var data = {
 		"type": Type.LAVA,
 		"name": "Lava Moat",
 		"description": "Needs to be adjacent to build a Forge. Can only connect to other Lava tiles",
-		"stone_cost": 3,
+		"stone_cost": 1,
 		"population_cost": 0,
 		"steel_cost": 0,
 		"size": 1,
-		"icon_path": "res://Assets/PlaceholderTileBomb.png" # TODO: Replace this with the appropriate texture when available
+		"icon_path": "res://Assets/walltiles/LavaBlock.png" # TODO: Replace this with the appropriate texture when available
 	},
 	Type.FORGE: {
 		"type": Type.FORGE,
