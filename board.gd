@@ -95,19 +95,7 @@ func init_board(rows: int, cols: int, bombs: int, tier: int):
 	self.flags = self.bomb_count
 	lava_tiles = []
 	
-	var fill_cells = []
-	
-	for c in columns:
-		tiles.append([])
-		for r in rows:
-			var t = BoardTile.new()
-			t.label_parent = self
-			var cell_pos = Vector2i(c, r)
-			t.cell_position = cell_pos
-			tiles[c].append(t)
-			fill_cells.append(cell_pos)
-	
-	tilemap.set_cells_terrain_connect(0, fill_cells, 0, 0)
+	tiles = tilemap.fill(columns, rows, tier)
 	set_bombs()
 
 func create_grid_lines():
@@ -218,22 +206,13 @@ func enter_build_mode():
 		minesweeper_collection_complete()
 
 func place_lava_from_bomb(tile: BoardTile):
+	if tile.is_flagged: # Should always be true but I'm one paranoid little baby
+		tile.toggle_flag()
 	tile.is_cover = false
 	tiles_uncovered += 1
-	tilemap.set_cells_terrain_connect(0, [tile.cell_position], 0, -1)
+	tilemap.remove_tile(tile.cell_position)
+	tilemap.set_lava_source(tile.cell_position)
 	update_shadows()
-	
-	# Create lava source buliding on tile. THIS IS NOT TREATED AS A BUILDING BY THE LOGIC
-	var building = building_prefab.instantiate()
-	var lava_type = BuildingData.Type.LAVA
-	add_child(building)
-	building.set_type(lava_type, get_parent().icons[lava_type])
-	current_placing_instance = building
-	building.confirm_placement()
-	var tile_pos = tile.get_position()
-	var snapped = Vector2(snapped(tile_pos.x-TILE_SIZE/2, TILE_SIZE), snapped(tile_pos.y-TILE_SIZE/2, TILE_SIZE))
-	building.position = snapped
-	building.sprite.material = null
 	
 	# Add tile to lava_tiles array, assign UID to lava source
 	lava_tiles.append(tile)
@@ -380,6 +359,8 @@ func on_confirm_building_placement():
 	# If placed building is a lava moat, register it with the lava_tiles list in board, and refresh board's lava pathing
 	if type == BuildingData.Type.LAVA:
 		if tile:
+			building.set_building_visibility(false)
+			tilemap.set_lava_moat(tile.cell_position)
 			lava_tiles.append(tile)
 			refresh_lava_connections()
 			print("CONNECTIONS: ", building.connected_lava_sources)
@@ -438,6 +419,11 @@ func destroy_selected_building():
 		var tile = tiles[cell_pos.x][cell_pos.y]
 		tile.has_building = false
 		tile.building_id = 0
+		if type == BuildingData.Type.LAVA:
+			tilemap.remove_tile(cell_pos)
+			lava_tiles.erase(tile)
+			tile.lava_uid = 0
+			refresh_lava_connections()
 	
 	buildings_by_id.erase(id)
 	
@@ -595,7 +581,7 @@ func clear_tile(tile: BoardTile):
 func uncover_tile(tile: BoardTile):
 	tile.is_cover = false
 	tiles_uncovered += 1
-	tilemap.set_cells_terrain_connect(0, [tile.cell_position], 0, -1)
+	tilemap.remove_tile(tile.cell_position)
 	
 	if tile.is_bomb:
 		var bomb = tile.create_bomb(tile.bomb_type)
@@ -681,20 +667,7 @@ func _on_flag_toggled(cell_pos: Vector2i):
 	tile.toggle_flag()
 
 func update_shadows():
-	var used_cells = tilemap.get_used_cells(0)
-	var occupied_tiles = {}
-	
-	for pos in used_cells:
-		occupied_tiles[pos] = null
-	var unused_cells = []
-	for x in rows:
-		for y in columns:
-			var cell = Vector2i(x,y)
-			if !occupied_tiles.has(cell):
-				unused_cells.append(cell)
-	
-	tilemap.clear_layer(1)
-	tilemap.set_cells_terrain_connect(1, unused_cells, 0, 1)
+	tilemap.update_shadows(columns, rows)
 
 func can_place_at_position(world_pos: Vector2, size: int):
 	var places_to_check = get_world_positions_in_area(world_pos, size)

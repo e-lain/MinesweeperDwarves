@@ -121,6 +121,10 @@ func place():
 	state = State.PlacedUnconfirmed
 	sprite.material = null
 
+func set_building_visibility(val: bool) -> void:
+	# used by lava moat tile to hide building in favor of lava moat tile
+	sprite.visible = val
+
 func _unhandled_input(event):
 	if !mouse_in:
 		return 

@@ -25,7 +25,7 @@ var Board = preload("res://board.tscn")
 
 var build_mode: bool = false
 
-var tier = 1
+var tier = 2
 var depth = 0
 var available_buildings = []
  
