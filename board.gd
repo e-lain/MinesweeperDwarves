@@ -9,6 +9,7 @@ signal mine_animation_complete
 signal wonder_placed
 signal workshop_placed
 
+signal placing_building_instantiated(building: BaseBuilding)
 signal building_placed
 signal building_selected(building: BaseBuilding)
 signal building_deselected
@@ -67,6 +68,7 @@ var moving_building_original_world_position
 enum State {
 	Play,
 	Build,
+	MobilePrePlacing,
 	Placing,
 	Ability,
 	Complete,
@@ -97,6 +99,13 @@ func init_board(rows: int, cols: int, bombs: int, tier: int):
 	
 	tiles = tilemap.fill(columns, rows, tier)
 	set_bombs()
+	
+func _unhandled_input(event):
+	if state == State.MobilePrePlacing and event is InputEventScreenTouch:
+		get_viewport().set_input_as_handled()
+		enter_placing(placing_type)
+		
+		current_placing_instance.place(get_global_mouse_position())
 
 func create_grid_lines():
 	var offset = Vector2(TILE_SIZE, TILE_SIZE)
@@ -140,16 +149,22 @@ func set_bombs():
 
 func queue_building(type: BuildingData.Type):
 	if state == State.Build:
-		state = State.Placing
-		placing_type = type
-		get_parent().help_text_is_overriden = true
-		get_parent().help_text_bar.text = "Left-click on valid space to build. Right-click to cancel"
-		var building = building_prefab.instantiate()
-		add_child(building)
-		building.set_type(type, get_parent().icons[type])
-		current_placing_instance = building
-		current_placing_instance.on_placed.connect(on_building_placed)
-		return current_placing_instance
+		if PlatformUtil.isMobile():
+			state = State.MobilePrePlacing
+			placing_type = type
+		else:
+			enter_placing(type)
+
+func enter_placing(type: BuildingData.Type):
+	state = State.Placing
+	placing_type = type
+	
+	var building = building_prefab.instantiate()
+	add_child(building)
+	building.set_type(type, get_parent().icons[type])
+	current_placing_instance = building
+	current_placing_instance.on_placed.connect(on_building_placed)
+	placing_building_instantiated.emit(current_placing_instance)
 
 func queue_ability(ability_name: AbilityData.Type):
 	state = State.Ability
@@ -299,6 +314,8 @@ func register_lava_connections(source_uid: int, tile: BoardTile) -> void:
 	return
 
 func on_building_placed():
+	if state == State.Moving:
+		return
 	if state != State.Placing:
 		push_error("Invalid state when building placed!")
 		return
@@ -369,16 +386,16 @@ func on_confirm_building_placement():
 
 func on_building_selected(building: BaseBuilding):
 	if state == State.Selected && building != selected_building:
-		selected_building.deselect()
+		selected_building.deselect(null)
 	
 	building_selected.emit(building)
 	state = State.Selected
 	selected_building = building
 	selected_building.on_deselected.connect(on_building_deselected)
 	
-func deselect_building():
+func deselect_building(event = null):
 	if state == State.Selected:
-		selected_building.deselect()
+		selected_building.deselect(event)
 
 func on_building_deselected():
 	if state == State.Selected:
@@ -450,7 +467,7 @@ func move_selected_building():
 		tile.has_building = false
 		tile.building_id = 0
 	
-	selected_building.place()
+	selected_building.place(selected_building.global_position)
 	
 
 func confirm_selected_building_move():

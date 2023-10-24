@@ -94,6 +94,8 @@ func generate_board(difficulty: int):
 	b.workshop_placed.connect(on_workshop_placed)
 	b.on_building_collection_complete.connect(on_building_collection_complete)
 	b.on_minesweeper_collection_complete.connect(on_minesweeper_collection_complete)
+	
+	b.placing_building_instantiated.connect(on_placing_building_instantiated)
 	b.building_placed.connect(on_building_placed)
 	
 	b.building_selected.connect(on_building_selected)
@@ -172,11 +174,15 @@ func ability(ability_name: AbilityData.Type):
 func start_placement(type: BuildingData.Type):
 	state = State.Placing
 	print("func start_placement, building_name: ", type)
-	var building = get_current_board().queue_building(type)
-	responsive_ui.enter_place_mode(building)
+	
+	responsive_ui.enter_place_mode(type)
+	get_current_board().queue_building(type)
+	
+	DragOrZoomEventManager.drag_blocked = true
 
 func on_building_placed():
 	responsive_ui.on_building_placed()
+	DragOrZoomEventManager.drag_blocked = false
 
 func on_building_selected(building: BaseBuilding):
 	responsive_ui.on_building_selected(building)
@@ -339,9 +345,8 @@ func _on_camera_2d_drag_complete():
 	pass # Replace with function body.
 
 
-func _on_camera_2d_tap_complete():
-	get_current_board().deselect_building()
-
+func _on_camera_2d_tap_complete(event):
+	get_current_board().deselect_building(event)
 
 func _on_responsive_ui_destroy_selected_building_pressed():
 	get_current_board().destroy_selected_building()
@@ -356,3 +361,6 @@ func _on_responsive_ui_move_selected_building_cancelled():
 
 func _on_responsive_ui_move_selected_building_confirmed():
 	get_current_board().confirm_selected_building_move()
+
+func on_placing_building_instantiated(building: BaseBuilding):
+	responsive_ui.on_building_placement_instantiated(building)

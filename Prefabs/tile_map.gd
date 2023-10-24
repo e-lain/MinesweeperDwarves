@@ -67,6 +67,9 @@ func _process(delta):
 	if DragOrZoomEventManager.long_tap_started && Time.get_ticks_msec() - tap_start_time > SettingsController.LONG_TAP_DELAY_MS  && !DragOrZoomEventManager.drag_or_zoom_happening():
 		DragOrZoomEventManager.long_tap_started = false
 		DragOrZoomEventManager.long_tap_occurred = true
+			
+		if PlatformUtil.isMobile():
+			Input.vibrate_handheld(100)
 		flag_toggled.emit(tap_start_pos)
 
 func _unhandled_input(event):

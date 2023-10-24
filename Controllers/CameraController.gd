@@ -1,6 +1,6 @@
 extends Camera2D
 
-signal tap_complete
+signal tap_complete(event: InputEventScreenTouch)
 signal drag_complete
 
 @export var min_zoom = 0.75
@@ -44,15 +44,25 @@ func _unhandled_input(event):
 		if event is InputEventScreenTouch:
 			if event.pressed:
 				events[event.index] = event
+				dragging = true
+				absolute_drag_amount = Vector2.ZERO
 			else:
 				events.erase(event.index)
 				if events.size() == 0:
+					dragging = false
+					if DragOrZoomEventManager.dragging:
+						drag_complete.emit()
+					else:
+						tap_complete.emit(event)
 					DragOrZoomEventManager.clear()
-		if event is InputEventScreenDrag:
+		if event is InputEventScreenDrag && !DragOrZoomEventManager.drag_blocked:
 			events[event.index] = event
-			if events.size() == 1:
-				drag_camera(event.relative)
-				DragOrZoomEventManager.dragging = true
+			if events.size() == 1 && !DragOrZoomEventManager.drag_began_in_unconfirmed_building: 
+				absolute_drag_amount += Vector2(abs(event.relative.x), abs(event.relative.y))
+				if absolute_drag_amount.length_squared() > absolute_drag_min_threshold:
+					drag_camera(event.relative)
+					DragOrZoomEventManager.dragging = true
+					DragOrZoomEventManager.long_tap_started = false
 			elif events.size() == 2:
 				var drag_distance = events[0].position.distance_to(events[1].position)
 				var zoom_factor = abs(drag_distance - last_drag_distance)
@@ -61,6 +71,7 @@ func _unhandled_input(event):
 					zoom_camera(new_zoom)
 					last_drag_distance = drag_distance
 					DragOrZoomEventManager.zooming = true
+					DragOrZoomEventManager.long_tap_started = false
 		
 	else:
 		# Handle Drag
@@ -74,7 +85,7 @@ func _unhandled_input(event):
 				drag_complete.emit()
 				get_viewport().set_input_as_handled()
 			else:
-				tap_complete.emit()
+				tap_complete.emit(event)
 			
 			DragOrZoomEventManager.dragging = false
 		

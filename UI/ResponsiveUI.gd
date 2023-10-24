@@ -70,7 +70,7 @@ var selected_building
 
 func _process(delta):
 	if state == State.PLACEMENT_MOVE_BUILDING || state == State.MOVE_BUILDING:
-		cancel_confirm_confirm_button.disabled = !selected_building.can_place()
+		cancel_confirm_confirm_button.disabled = !selected_building.can_place(selected_building.global_position)
 
 func set_stairs_placed(placed: bool):
 	build_menu.set_stairs_placed(placed)
@@ -166,9 +166,7 @@ func enter_play_mode():
 	descend_button_container.visible = false
 	infobox.visible = false
 	
-func enter_place_mode(building: BaseBuilding):
-	selected_building = building
-	var type = building.type
+func enter_place_mode(type: BuildingData.Type):
 	var data = BuildingData.data[type]
 	var name = data["name"]
 	state = State.PLACEMENT_NO_BUILDING
@@ -177,6 +175,10 @@ func enter_place_mode(building: BaseBuilding):
 	cancel_placement_message.text = "Placing %s" % name
 	to_build_mode_button_container.visible = false
 	descend_button_container.visible = false
+
+func on_building_placement_instantiated(building: BaseBuilding):
+	if state == State.PLACEMENT_NO_BUILDING:
+		selected_building = building
 
 func on_building_placed():
 	state = State.PLACEMENT_MOVE_BUILDING
