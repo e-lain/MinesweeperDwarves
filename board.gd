@@ -155,6 +155,7 @@ func queue_building(type: BuildingData.Type):
 		if PlatformUtil.isMobile():
 			state = State.MobilePrePlacing
 			placing_type = type
+			current_placing_instance = null
 		else:
 			enter_placing(type)
 
@@ -328,8 +329,9 @@ func on_building_placed():
 	
 func on_cancel_building_placement():
 	state = State.Build
-	current_placing_instance.cancel_placement()
-	current_placing_instance = null
+	if current_placing_instance != null:
+		current_placing_instance.cancel_placement()
+		current_placing_instance = null
 
 func on_confirm_building_placement():
 	var building = current_placing_instance
