@@ -12,7 +12,7 @@ func _ready():
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
-	use_count = main.ability_destroy
+	use_count = main.get_ability_charge_count(AbilityData.Type.DESTROY)
 	$Uses.text = str(use_count)
 	if use_count <= 0:
 		var new_color = Color.WHITE

@@ -22,7 +22,7 @@ func activate_ability(ability_type: AbilityData.Type):
 	
 func ability_dowse():
 	print("SIGNAL RECEIVED TO USE DOWSE ABILITY")
-	main.ability_dowse -= 1
+	main.use_ability_charge(AbilityData.Type.DOWSE)
 	board.complete_ability()
 	if board.bomb_tiles.size() > 0:
 		var picked = false

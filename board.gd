@@ -8,11 +8,14 @@ signal on_building_collection_complete
 signal mine_animation_complete
 signal wonder_placed
 signal workshop_placed
+signal workshop_destroyed
 
 signal placing_building_instantiated(building: BaseBuilding)
 signal building_placed
 signal building_selected(building: BaseBuilding)
 signal building_deselected
+
+signal ability_complete
 
 @export var collection_lifespan_seconds: float = 1.5
 
@@ -172,6 +175,7 @@ func queue_ability(ability_name: AbilityData.Type):
 	
 func complete_ability():
 	state = State.Play
+	ability_complete.emit()
 	
 func _on_tile_destroyed(cell_pos: Vector2i):
 	if cell_pos.x < 0 || cell_pos.y < 0 || cell_pos.x >= columns || cell_pos.y >= rows:
@@ -447,6 +451,9 @@ func destroy_selected_building():
 	building.queue_free()
 	
 	state = State.Build
+	
+	if type == BuildingData.Type.WORKSHOP:
+		workshop_destroyed.emit()
 
 func move_selected_building():
 	if state != State.Selected:
@@ -607,7 +614,7 @@ func uncover_tile(tile: BoardTile):
 			bomb.animation_complete.connect(on_bomb_animation_complete)
 		return
 	
-	if get_parent().ability_destroy < 1:
+	if get_parent().get_ability_charge_count(AbilityData.Type.DESTROY) < 1:
 		clearing_tile = false
 		
 	armor_active = false

@@ -98,7 +98,7 @@ func update_margins_for_notch():
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	ability_menu.update_abilities([AbilityData.Type.ARMOR, AbilityData.Type.DESTROY, AbilityData.Type.DOWSE])
+
 	on_dimensions_updated()
 	state = State.PLAY
 
@@ -110,6 +110,14 @@ func update_buildings(buildings_list):
 		print("ERROR: BUILDINGS LIST PROVIDED IS INVALID")
 		return
 	build_menu.update_buildings(buildings_list)
+
+func update_abilities(ability_charge_counts: Dictionary, ability_charge_maximums: Dictionary):
+	var available_abilities = {}
+	for ability_type in ability_charge_maximums.keys():
+		if ability_charge_maximums[ability_type] > 0:
+			available_abilities[ability_type] = true
+	
+	ability_menu.update_abilities(ability_charge_counts, available_abilities)
 
 func on_dimensions_updated():
 	update_margins_for_notch()
@@ -159,7 +167,7 @@ func enter_build_mode():
 
 func enter_play_mode():
 	state = State.PLAY
-	ability_menu.visible = true
+	ability_menu.show_if_abilities_available()
 	# TODO: animate this!
 	build_menu.visible = false
 	to_build_mode_button_container.visible = true
