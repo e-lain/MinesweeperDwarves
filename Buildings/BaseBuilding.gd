@@ -247,12 +247,19 @@ func play_collection_animation(lifespan_seconds: float, icon_path: String):
 	add_child(instance)
 	var amount = 0
 	var data = BuildingData.data[type]
-	if data["stone_cost"] < 0:
-		amount = -data["stone_cost"]
-	if data["steel_cost"] < 0:
-		amount = -data["steel_cost"]
-	if data["population_cost"] < 0:
-		amount = -data["population_cost"]
+	
+	#TODO: Allow for multiple different resources to be collected from a building?
+	
+	var stone = BuildingData.get_cost(type, ResourceData.Resources.STONE)
+	var pop =  BuildingData.get_cost(type, ResourceData.Resources.POPULATION)
+	var steel = BuildingData.get_cost(type, ResourceData.Resources.STEEL)
+	
+	if stone < 0:
+		amount = -stone
+	if steel < 0:
+		amount = -steel
+	if pop < 0:
+		amount = -pop
 	
 	instance.init(amount, lifespan_seconds, icon_path)
 	instance.global_position = global_position + (Vector2(TILE_SIZE, TILE_SIZE) * size / 2.0) + Vector2(0, -16)

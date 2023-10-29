@@ -225,7 +225,6 @@ info_popup = NodePath("../DowsePopup")
 main = NodePath("../../..")
 
 [node name="DestroyPopup" parent="CanvasLayer/AbilityMenu" instance=ExtResource("7_703se")]
-visible = false
 layout_mode = 0
 offset_left = 737.0
 offset_top = 75.0

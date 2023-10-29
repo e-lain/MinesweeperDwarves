@@ -20,7 +20,7 @@ signal destroy_selected_building_pressed
 @onready var build_menu: BuildMenu = $BuildMenu 
 @onready var ability_menu: AbilityMenu = $AbilityMenu
 
-@onready var infobox = $TopMargin/Infobox
+@onready var infobox = $BottomMargin/Infobox
 
 @onready var descend_button_container = $TopMargin/DescendButton
 @onready var descend_button = $TopMargin/DescendButton/Button

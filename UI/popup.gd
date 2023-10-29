@@ -23,9 +23,9 @@ func set_data(type: BuildingData.Type):
 	name_label.text = data["name"]
 	description_label.text = data["description"]
 	
-	var population_cost = data["population_cost"]
-	var stone_cost = data["stone_cost"] 
-	var steel_cost = data["steel_cost"]
+	var population_cost = BuildingData.get_cost(type, ResourceData.Resources.POPULATION)
+	var stone_cost = BuildingData.get_cost(type, ResourceData.Resources.STONE)
+	var steel_cost = BuildingData.get_cost(type, ResourceData.Resources.STEEL)
 	
 	if population_cost == 0:
 		population_box.visible = false

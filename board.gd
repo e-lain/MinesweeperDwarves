@@ -350,14 +350,18 @@ func on_confirm_building_placement():
 	if !stairs_placed:
 		stairs_placed = type == BuildingData.Type.STAIRCASE
 	
-	if data["population_cost"] > 0:
-		Resources.population -= data["population_cost"]
+	var stone_cost = BuildingData.get_cost(type, ResourceData.Resources.STONE)
+	var pop_cost =  BuildingData.get_cost(type, ResourceData.Resources.POPULATION)
+	var steel_cost = BuildingData.get_cost(type, ResourceData.Resources.STEEL)
 	
-	if data["stone_cost"] > 0:
-		Resources.stone -= data["stone_cost"]
+	if pop_cost > 0:
+		Resources.population -= pop_cost
 	
-	if data["steel_cost"] > 0:
-		Resources.steel -= data["steel_cost"]
+	if stone_cost > 0:
+		Resources.stone -= stone_cost
+	
+	if steel_cost > 0:
+		Resources.steel -= steel_cost
 	
 	var tile
 	var world_positions_to_update = get_world_positions_in_area(building_world_pos, size)
@@ -427,14 +431,18 @@ func destroy_selected_building():
 	var data = BuildingData.data[type]
 	var size = data["size"]
 	
-	if data["population_cost"] > 0:
-		Resources.population += data["population_cost"]
+	var stone_cost = BuildingData.get_cost(type, ResourceData.Resources.STONE)
+	var pop_cost =  BuildingData.get_cost(type, ResourceData.Resources.POPULATION)
+	var steel_cost = BuildingData.get_cost(type, ResourceData.Resources.STEEL)
 	
-	if data["stone_cost"] > 0:
-		Resources.stone += data["stone_cost"]
+	if pop_cost > 0:
+		Resources.population += pop_cost
 	
-	if data["steel_cost"] > 0:
-		Resources.steel += data["steel_cost"]
+	if stone_cost > 0:
+		Resources.stone += stone_cost
+	
+	if steel_cost > 0:
+		Resources.steel += steel_cost
 	
 	var world_positions_to_update = get_world_positions_in_area(building_world_pos, size)
 	for world_pos in world_positions_to_update:
@@ -552,9 +560,9 @@ func collect_resources():
 		var adjacent_type = buildings_by_id[tile_id].type
 		var data = BuildingData.data[adjacent_type]
 		
-		var stone_cost = data["stone_cost"]
-		var population_cost = data["population_cost"]
-		var steel_cost = data["steel_cost"]
+		var stone_cost = BuildingData.get_cost(adjacent_type, ResourceData.Resources.STONE)
+		var population_cost =  BuildingData.get_cost(adjacent_type, ResourceData.Resources.POPULATION)
+		var steel_cost = BuildingData.get_cost(adjacent_type, ResourceData.Resources.STEEL)
 		
 		# TODO - animate this
 		if stone_cost < 0: # negative costs are resource gains
