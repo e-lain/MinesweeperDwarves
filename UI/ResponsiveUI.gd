@@ -20,7 +20,7 @@ signal destroy_selected_building_pressed
 @onready var build_menu: BuildMenu = $BuildMenu 
 @onready var ability_menu: AbilityMenu = $AbilityMenu
 
-@onready var infobox = $TopMargin/Infobox
+@onready var infobox = $BottomMargin/Infobox
 
 @onready var descend_button_container = $TopMargin/DescendButton
 @onready var descend_button = $TopMargin/DescendButton/Button
@@ -70,7 +70,7 @@ var selected_building
 
 func _process(delta):
 	if state == State.PLACEMENT_MOVE_BUILDING || state == State.MOVE_BUILDING:
-		cancel_confirm_confirm_button.disabled = !selected_building.can_place()
+		cancel_confirm_confirm_button.disabled = !selected_building.can_place(selected_building.global_position)
 
 func set_stairs_placed(placed: bool):
 	build_menu.set_stairs_placed(placed)
@@ -98,7 +98,7 @@ func update_margins_for_notch():
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	ability_menu.update_abilities([AbilityData.Type.ARMOR, AbilityData.Type.DESTROY, AbilityData.Type.DOWSE])
+
 	on_dimensions_updated()
 	state = State.PLAY
 
@@ -110,6 +110,14 @@ func update_buildings(buildings_list):
 		print("ERROR: BUILDINGS LIST PROVIDED IS INVALID")
 		return
 	build_menu.update_buildings(buildings_list)
+
+func update_abilities(ability_charge_counts: Dictionary, ability_charge_maximums: Dictionary):
+	var available_abilities = {}
+	for ability_type in ability_charge_maximums.keys():
+		if ability_charge_maximums[ability_type] > 0:
+			available_abilities[ability_type] = true
+	
+	ability_menu.update_abilities(ability_charge_counts, available_abilities)
 
 func on_dimensions_updated():
 	update_margins_for_notch()
@@ -159,16 +167,14 @@ func enter_build_mode():
 
 func enter_play_mode():
 	state = State.PLAY
-	ability_menu.visible = true
+	ability_menu.show_if_abilities_available()
 	# TODO: animate this!
 	build_menu.visible = false
 	to_build_mode_button_container.visible = true
 	descend_button_container.visible = false
 	infobox.visible = false
 	
-func enter_place_mode(building: BaseBuilding):
-	selected_building = building
-	var type = building.type
+func enter_place_mode(type: BuildingData.Type):
 	var data = BuildingData.data[type]
 	var name = data["name"]
 	state = State.PLACEMENT_NO_BUILDING
@@ -177,6 +183,10 @@ func enter_place_mode(building: BaseBuilding):
 	cancel_placement_message.text = "Placing %s" % name
 	to_build_mode_button_container.visible = false
 	descend_button_container.visible = false
+
+func on_building_placement_instantiated(building: BaseBuilding):
+	if state == State.PLACEMENT_NO_BUILDING:
+		selected_building = building
 
 func on_building_placed():
 	state = State.PLACEMENT_MOVE_BUILDING
@@ -206,7 +216,7 @@ func on_building_selected(building: BaseBuilding):
 	state = State.SELECTED
 	selected_building = building
 	var data = BuildingData.data[building.type] 
-	infobox.set_building_selection(data["name"], data["description"])
+	infobox.set_building_selection(building.type, data["name"], data["description"])
 	cancel_confirm.visible = false
 	cancel_placement.visible = false
 	infobox.visible = true

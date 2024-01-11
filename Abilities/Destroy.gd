@@ -17,7 +17,7 @@ func _ready():
 
 func _process(delta):
 	main.help_text_bar.text = "Left-click on valid tile to clear it. If it has a bomb, you will not be harmed. Right-click to cancel"
-	if main.ability_destroy < 1 && visible:
+	if main.get_ability_charge_count(AbilityData.Type.DESTROY) < 1 && visible:
 		board.complete_ability()
 		main.help_text_is_overriden = false
 		queue_free()
@@ -38,7 +38,7 @@ func _process(delta):
 				sprite.material = null
 
 func can_place():
-	if main.ability_destroy < 1:
+	if main.get_ability_charge_count(AbilityData.Type.DESTROY) < 1:
 		return false
 	return board.can_use_ability_at_position(global_position, size) #Ability usage validity is opposite of building placement validity
 
@@ -46,7 +46,7 @@ func _input(event):
 	if event is InputEventMouseButton && !placed:
 		if event.is_action_pressed("left_click"):
 			if can_place() && in_bounds:
-				main.ability_destroy -= 1
+				main.use_ability_charge(AbilityData.Type.DESTROY)
 				print("USED DESTROY ABILITY")
 		if event.is_action_pressed("right_click"):
 			board.clearing_tile = false

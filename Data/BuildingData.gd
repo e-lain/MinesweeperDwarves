@@ -16,9 +16,10 @@ static var data = {
 		"type": Type.HOUSE,
 		"name": "House",
 		"description": "Gain 2 Population",
-		"stone_cost": 10,
-		"population_cost": -2,
-		"steel_cost": 0,
+		"costs": {
+			ResourceData.Resources.STONE: 10,
+			ResourceData.Resources.POPULATION: -2,
+		},
 		"size": 2,
 		"icon_path": "res://Assets/Buildings/HouseBuildingDownscaled.png"
 	},
@@ -26,9 +27,9 @@ static var data = {
 		"type": Type.QUARRY,
 		"name": "Quarry",
 		"description": "Gain 4 Stone",
-		"stone_cost": -4,
-		"population_cost": 0,
-		"steel_cost": 0,
+		"costs": {
+			ResourceData.Resources.STONE: -4,
+		},
 		"size": 2,
 		"icon_path": "res://Assets/Buildings/MiningBuildingDownscale.png"
 	},
@@ -36,9 +37,6 @@ static var data = {
 		"type": Type.STAIRCASE,
 		"name": "Staircase",
 		"description": "Opens next floor and allows placing other buildings",
-		"stone_cost": 0,
-		"population_cost": 0,
-		"steel_cost": 0,
 		"size": 1,
 		"icon_path": "res://Assets/Buildings/StairsDown.png"
 	},
@@ -46,9 +44,10 @@ static var data = {
 		"type": Type.WORKSHOP,
 		"name": "Engineer's Workshop",
 		"description": "Gain Active Ability Charge",
-		"stone_cost": 5,
-		"population_cost": 1,
-		"steel_cost": 0,
+		"costs": {
+			ResourceData.Resources.STONE: 5,
+			ResourceData.Resources.POPULATION: 1,
+		},
 		"size": 3,
 		"icon_path": "res://Assets/Buildings/EngineerWorkshopBuildingDownscale.png"
 	},
@@ -56,9 +55,10 @@ static var data = {
 		"type": Type.WONDER,
 		"name": "Beer Hall",
 		"description": "Win the Game",
-		"stone_cost": 100,
-		"population_cost": 5,
-		"steel_cost": 0,
+		"costs": {
+			ResourceData.Resources.STONE: 100,
+			ResourceData.Resources.POPULATION: 5,
+		},
 		"size": 5,
 		"icon_path": "res://Assets/UI/WonderUIIcon.png"
 	},
@@ -66,9 +66,9 @@ static var data = {
 		"type": Type.MINECART,
 		"name": "Minecart",
 		"description": "Collect Resources of Adjacent Buildings",
-		"stone_cost": 0,
-		"population_cost": 0,
-		"steel_cost": 1,
+		"costs": {
+			ResourceData.Resources.STEEL: 1,
+		},
 		"size": 1,
 		"icon_path": "res://Assets/Buildings/minecart downscaled.png"
 	},
@@ -76,20 +76,29 @@ static var data = {
 		"type": Type.LAVA,
 		"name": "Lava Moat",
 		"description": "Needs to be adjacent to build a Forge. Can only connect to other Lava tiles",
-		"stone_cost": 3,
-		"population_cost": 0,
-		"steel_cost": 0,
+		"costs": {
+			ResourceData.Resources.STONE: 3,
+		},
 		"size": 1,
-		"icon_path": "res://Assets/PlaceholderTileBomb.png" # TODO: Replace this with the appropriate texture when available
+		"icon_path": "res://Assets/TempLavaMoat.png" # TODO: Replace this with the appropriate texture when available
 	},
 	Type.FORGE: {
 		"type": Type.FORGE,
 		"name": "Forge",
 		"description": "Needs to be built adjacent to a Lava Moat. Gain ___",
-		"stone_cost": 5,
-		"population_cost": 0,
-		"steel_cost": 1,
+		"costs": {
+			ResourceData.Resources.STONE: 5,
+			ResourceData.Resources.STEEL: 1,
+		},
 		"size": 1,
 		"icon_path": "res://Assets/Buildings/forge.png"
 	}
 }
+
+static func get_costs(building_type: Type) -> Dictionary:
+	var building_data: Dictionary = data[building_type]
+	return {} if !building_data.has("costs") else building_data["costs"]
+	
+static func get_cost(building_type: Type, resource_type: ResourceData.Resources) -> int:
+	var costs = get_costs(building_type)
+	return 0 if !costs.has(resource_type) else costs[resource_type]

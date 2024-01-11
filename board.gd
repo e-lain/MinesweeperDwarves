@@ -8,10 +8,14 @@ signal on_building_collection_complete
 signal mine_animation_complete
 signal wonder_placed
 signal workshop_placed
+signal workshop_destroyed
 
+signal placing_building_instantiated(building: BaseBuilding)
 signal building_placed
 signal building_selected(building: BaseBuilding)
 signal building_deselected
+
+signal ability_complete
 
 @export var collection_lifespan_seconds: float = 1.5
 
@@ -66,6 +70,7 @@ var moving_building_original_world_position
 enum State {
 	Play,
 	Build,
+	MobilePrePlacing,
 	Placing,
 	Ability,
 	Complete,
@@ -94,20 +99,15 @@ func init_board(rows: int, cols: int, bombs: int, tier: int):
 	self.flags = self.bomb_count
 	lava_tiles = {}
 	
-	var fill_cells = []
-	
-	for c in columns:
-		tiles.append([])
-		for r in rows:
-			var t = BoardTile.new()
-			t.label_parent = self
-			var cell_pos = Vector2i(c, r)
-			t.cell_position = cell_pos
-			tiles[c].append(t)
-			fill_cells.append(cell_pos)
-	
-	tilemap.set_cells_terrain_connect(0, fill_cells, 0, 0)
+	tiles = tilemap.fill(columns, rows, tier)
 	set_bombs()
+	
+func _unhandled_input(event):
+	if state == State.MobilePrePlacing and event is InputEventScreenTouch:
+		get_viewport().set_input_as_handled()
+		enter_placing(placing_type)
+		
+		current_placing_instance.place(get_global_mouse_position())
 
 func create_grid_lines():
 	var offset = Vector2(TILE_SIZE, TILE_SIZE)
@@ -151,16 +151,23 @@ func set_bombs():
 
 func queue_building(type: BuildingData.Type):
 	if state == State.Build:
-		state = State.Placing
-		placing_type = type
-		get_parent().help_text_is_overriden = true
-		get_parent().help_text_bar.text = "Left-click on valid space to build. Right-click to cancel"
-		var building = building_prefab.instantiate()
-		add_child(building)
-		building.set_type(type, get_parent().icons[type])
-		current_placing_instance = building
-		current_placing_instance.on_placed.connect(on_building_placed)
-		return current_placing_instance
+		if PlatformUtil.isMobile():
+			state = State.MobilePrePlacing
+			placing_type = type
+			current_placing_instance = null
+		else:
+			enter_placing(type)
+
+func enter_placing(type: BuildingData.Type):
+	state = State.Placing
+	placing_type = type
+	
+	var building = building_prefab.instantiate()
+	add_child(building)
+	building.set_type(type, get_parent().icons[type])
+	current_placing_instance = building
+	current_placing_instance.on_placed.connect(on_building_placed)
+	placing_building_instantiated.emit(current_placing_instance)
 
 func queue_ability(ability_name: AbilityData.Type):
 	state = State.Ability
@@ -168,6 +175,7 @@ func queue_ability(ability_name: AbilityData.Type):
 	
 func complete_ability():
 	state = State.Play
+	ability_complete.emit()
 	
 func _on_tile_destroyed(cell_pos: Vector2i):
 	if cell_pos.x < 0 || cell_pos.y < 0 || cell_pos.x >= columns || cell_pos.y >= rows:
@@ -217,9 +225,12 @@ func enter_build_mode():
 		minesweeper_collection_complete()
 
 func place_lava_from_bomb(tile: BoardTile):
+	if tile.is_flagged: # Should always be true but I'm one paranoid little baby
+		tile.toggle_flag()
 	tile.is_cover = false
 	tiles_uncovered += 1
-	tilemap.set_cells_terrain_connect(0, [tile.cell_position], 0, -1)
+	tilemap.remove_tile(tile.cell_position)
+	tilemap.set_lava_source(tile.cell_position)
 	update_shadows()
 	
 	# Create lava source buliding on tile. THIS IS NOT TREATED AS A BUILDING BY THE LOGIC
@@ -316,6 +327,8 @@ func register_lava_connections(source_uid: String, tile: BoardTile) -> void:
 	return
 
 func on_building_placed():
+	if state == State.Moving:
+		return
 	if state != State.Placing:
 		push_error("Invalid state when building placed!")
 		return
@@ -324,8 +337,9 @@ func on_building_placed():
 	
 func on_cancel_building_placement():
 	state = State.Build
-	current_placing_instance.cancel_placement()
-	current_placing_instance = null
+	if current_placing_instance != null:
+		current_placing_instance.cancel_placement()
+		current_placing_instance = null
 
 func on_confirm_building_placement():
 	var building = current_placing_instance
@@ -344,14 +358,18 @@ func on_confirm_building_placement():
 	if !stairs_placed:
 		stairs_placed = type == BuildingData.Type.STAIRCASE
 	
-	if data["population_cost"] > 0:
-		Resources.population -= data["population_cost"]
+	var stone_cost = BuildingData.get_cost(type, ResourceData.Resources.STONE)
+	var pop_cost =  BuildingData.get_cost(type, ResourceData.Resources.POPULATION)
+	var steel_cost = BuildingData.get_cost(type, ResourceData.Resources.STEEL)
 	
-	if data["stone_cost"] > 0:
-		Resources.stone -= data["stone_cost"]
+	if pop_cost > 0:
+		Resources.population -= pop_cost
 	
-	if data["steel_cost"] > 0:
-		Resources.steel -= data["steel_cost"]
+	if stone_cost > 0:
+		Resources.stone -= stone_cost
+	
+	if steel_cost > 0:
+		Resources.steel -= steel_cost
 	
 	var tile
 	var world_positions_to_update = get_world_positions_in_area(building_world_pos, size)
@@ -377,6 +395,8 @@ func on_confirm_building_placement():
 	if type == BuildingData.Type.LAVA:
 		if tile:
 			lava_tiles[tile.building_id] = (tile)
+			building.set_building_visibility(false)
+			tilemap.set_lava_moat(tile.cell_position)
 			refresh_lava_connections()
 			print("CONNECTIONS: ", building.connected_lava_sources)
 		else:
@@ -384,16 +404,16 @@ func on_confirm_building_placement():
 
 func on_building_selected(building: BaseBuilding):
 	if state == State.Selected && building != selected_building:
-		selected_building.deselect()
+		selected_building.deselect(null)
 	
 	building_selected.emit(building)
 	state = State.Selected
 	selected_building = building
 	selected_building.on_deselected.connect(on_building_deselected)
 	
-func deselect_building():
+func deselect_building(event = null):
 	if state == State.Selected:
-		selected_building.deselect()
+		selected_building.deselect(event)
 
 func on_building_deselected():
 	if state == State.Selected:
@@ -425,14 +445,18 @@ func destroy_selected_building():
 		lava_tiles.erase(id)
 		refresh_lava_connections()
 	
-	if data["population_cost"] > 0:
-		Resources.population += data["population_cost"]
+	var stone_cost = BuildingData.get_cost(type, ResourceData.Resources.STONE)
+	var pop_cost =  BuildingData.get_cost(type, ResourceData.Resources.POPULATION)
+	var steel_cost = BuildingData.get_cost(type, ResourceData.Resources.STEEL)
 	
-	if data["stone_cost"] > 0:
-		Resources.stone += data["stone_cost"]
+	if pop_cost > 0:
+		Resources.population += pop_cost
 	
-	if data["steel_cost"] > 0:
-		Resources.steel += data["steel_cost"]
+	if stone_cost > 0:
+		Resources.stone += stone_cost
+	
+	if steel_cost > 0:
+		Resources.steel += steel_cost
 	
 	var world_positions_to_update = get_world_positions_in_area(building_world_pos, size)
 	for world_pos in world_positions_to_update:
@@ -440,12 +464,20 @@ func destroy_selected_building():
 		var tile = tiles[cell_pos.x][cell_pos.y]
 		tile.has_building = false
 		tile.building_id = 0
+		if type == BuildingData.Type.LAVA:
+			tilemap.remove_tile(cell_pos)
+			lava_tiles.erase(tile)
+			tile.lava_uid = 0
+			refresh_lava_connections()
 	
 	buildings_by_id.erase(id)
 	
 	building.queue_free()
 	
 	state = State.Build
+	
+	if type == BuildingData.Type.WORKSHOP:
+		workshop_destroyed.emit()
 
 func move_selected_building():
 	if state != State.Selected:
@@ -466,7 +498,7 @@ func move_selected_building():
 		tile.has_building = false
 		tile.building_id = 0
 	
-	selected_building.place()
+	selected_building.place(selected_building.global_position)
 	
 
 func confirm_selected_building_move():
@@ -542,9 +574,9 @@ func collect_resources():
 		var adjacent_type = buildings_by_id[tile_id].type
 		var data = BuildingData.data[adjacent_type]
 		
-		var stone_cost = data["stone_cost"]
-		var population_cost = data["population_cost"]
-		var steel_cost = data["steel_cost"]
+		var stone_cost = BuildingData.get_cost(adjacent_type, ResourceData.Resources.STONE)
+		var population_cost =  BuildingData.get_cost(adjacent_type, ResourceData.Resources.POPULATION)
+		var steel_cost = BuildingData.get_cost(adjacent_type, ResourceData.Resources.STEEL)
 		
 		# TODO - animate this
 		if stone_cost < 0: # negative costs are resource gains
@@ -597,7 +629,7 @@ func clear_tile(tile: BoardTile):
 func uncover_tile(tile: BoardTile):
 	tile.is_cover = false
 	tiles_uncovered += 1
-	tilemap.set_cells_terrain_connect(0, [tile.cell_position], 0, -1)
+	tilemap.remove_tile(tile.cell_position)
 	
 	if tile.is_bomb:
 		var bomb = tile.create_bomb(tile.bomb_type)
@@ -606,7 +638,7 @@ func uncover_tile(tile: BoardTile):
 			bomb.animation_complete.connect(on_bomb_animation_complete)
 		return
 	
-	if get_parent().ability_destroy < 1:
+	if get_parent().get_ability_charge_count(AbilityData.Type.DESTROY) < 1:
 		clearing_tile = false
 		
 	armor_active = false
@@ -682,20 +714,7 @@ func _on_flag_toggled(cell_pos: Vector2i):
 	tile.toggle_flag()
 
 func update_shadows():
-	var used_cells = tilemap.get_used_cells(0)
-	var occupied_tiles = {}
-	
-	for pos in used_cells:
-		occupied_tiles[pos] = null
-	var unused_cells = []
-	for x in rows:
-		for y in columns:
-			var cell = Vector2i(x,y)
-			if !occupied_tiles.has(cell):
-				unused_cells.append(cell)
-	
-	tilemap.clear_layer(1)
-	tilemap.set_cells_terrain_connect(1, unused_cells, 0, 1)
+	tilemap.update_shadows(columns, rows)
 
 func can_place_at_position(world_pos: Vector2, size: int):
 	var places_to_check = get_world_positions_in_area(world_pos, size)

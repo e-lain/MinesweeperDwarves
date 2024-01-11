@@ -10,10 +10,10 @@ script = ExtResource("1_ux0p3")
 [node name="TextureRect" type="TextureRect" parent="."]
 z_index = -1
 texture_repeat = 2
-offset_left = -1280.0
-offset_top = -768.0
-offset_right = 1280.0
-offset_bottom = 672.0
+offset_left = -2738.0
+offset_top = -2887.0
+offset_right = 3753.0
+offset_bottom = 3048.0
 mouse_filter = 2
 texture = ExtResource("2_6praf")
 expand_mode = 1

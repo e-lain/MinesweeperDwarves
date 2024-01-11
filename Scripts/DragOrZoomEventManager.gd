@@ -1,5 +1,7 @@
 extends Node
 
+var drag_blocked: bool = false
+
 var dragging: bool = false
 var zooming: bool = false
 

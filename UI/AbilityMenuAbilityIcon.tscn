@@ -13,3 +13,5 @@ texture = ExtResource("1_ho0oh")
 expand_mode = 3
 stretch_mode = 5
 script = ExtResource("2_7a5av")
+
+[connection signal="gui_input" from="." to="." method="_on_gui_input"]

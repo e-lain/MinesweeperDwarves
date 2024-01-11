@@ -10,10 +10,66 @@ signal destroyed(cell_pos: Vector2i)
 var tap_start_time
 var tap_start_pos
 
+var changeset: Dictionary
+
+func fill(size_x: int, size_y: int, tier: int) -> Array:
+	var tiles = []
+	
+	var update = {}
+	for c in size_x:
+		tiles.append([])
+		for r in size_y:
+			var t = BoardTile.new()
+			t.label_parent = self
+			var cell_pos = Vector2i(c, r)
+			t.cell_position = cell_pos
+			tiles[c].append(t)
+			update[cell_pos] = 0
+	
+	changeset = BetterTerrain.create_terrain_changeset(self, 0, update)
+
+	return tiles
+
+func remove_tile(pos: Vector2i) -> void:
+	BetterTerrain.set_cell(self, 0, pos, -1)
+	BetterTerrain.update_terrain_area(self, 0, Rect2i(max(0, pos.x - 2), max(0, pos.y - 2), 4, 4))
+
+func set_lava_source(pos: Vector2i) -> void:
+	BetterTerrain.set_cell(self, 0, pos, 2)
+	BetterTerrain.update_terrain_area(self, 0, Rect2i(max(0, pos.x - 2), max(0, pos.y - 2), 4, 4))
+
+func set_lava_moat(pos: Vector2i) -> void:
+	BetterTerrain.set_cell(self, 0, pos, 3)
+	BetterTerrain.update_terrain_area(self, 0, Rect2i(max(0, pos.x - 2), max(0, pos.y - 2), 4, 4))
+
+func update_shadows(size_x: int, size_y: int) -> void:
+	var used_cells = get_used_cells_by_id(0, 0)
+	var occupied_tiles = {}
+	var update = {}
+	
+	for pos in used_cells:
+		occupied_tiles[pos] = null
+	var unused_cells = []
+	for y in size_y:
+		for x in size_x:
+			var cell = Vector2i(x,y)
+			if !occupied_tiles.has(cell):
+				unused_cells.append(cell)
+	
+	clear_layer(1)
+	set_cells_terrain_connect(1, unused_cells, 0, 1)
+
 func _process(delta):
+	if  BetterTerrain.is_terrain_changeset_ready(changeset):
+		BetterTerrain.apply_terrain_changeset(changeset)
+		changeset = {}
+	
 	if DragOrZoomEventManager.long_tap_started && Time.get_ticks_msec() - tap_start_time > SettingsController.LONG_TAP_DELAY_MS  && !DragOrZoomEventManager.drag_or_zoom_happening():
 		DragOrZoomEventManager.long_tap_started = false
 		DragOrZoomEventManager.long_tap_occurred = true
+			
+		if PlatformUtil.isMobile():
+			Input.vibrate_handheld(100)
 		flag_toggled.emit(tap_start_pos)
 
 func _unhandled_input(event):

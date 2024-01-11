@@ -17,8 +17,6 @@ var help_text_is_overriden: bool = false
 @onready var game_over = $CanvasLayer/GameOver
 @onready var you_win = $CanvasLayer/YouWin
 
-@onready var choose_active = $CanvasLayer/ChooseActive
-
 @onready var camera = $Camera2D
 
 var Board = preload("res://board.tscn")
@@ -26,17 +24,13 @@ var Board = preload("res://board.tscn")
 var build_mode: bool = false
 
 var tier = 1
-var depth = 0
+var depth_by_tier = {}
 var available_buildings = []
  
-var ability_destroy_max = 0
-var ability_destroy = 0
+var ability_charge_maximums = { AbilityData.Type.ARMOR: 0, AbilityData.Type.DESTROY: 0, AbilityData.Type.DOWSE: 0 }
+var ability_charge_counts = {}
 
-var ability_armor_max = 0
-var ability_armor = 0
-
-var ability_dowse_max = 0
-var ability_dowse = 0
+var total_workshop_count = 0
 
 var overlay_toggled: bool = false
 
@@ -58,10 +52,10 @@ func generate_board(difficulty: int):
 	destroy_popup.visible = false
 	armor_popup.visible = false
 	dowse_popup.visible = false
+	
 	# Reset all ability counts
-	ability_destroy = ability_destroy_max
-	ability_armor = ability_armor_max
-	ability_dowse = ability_dowse_max 
+	ability_charge_counts = ability_charge_maximums.duplicate()
+	responsive_ui.update_abilities(ability_charge_counts, ability_charge_maximums)
 	var b = Board.instantiate()
 	if current_board:
 		current_board.queue_free()
@@ -84,41 +78,53 @@ func generate_board(difficulty: int):
 			b.init_board(10,10,10,tier)
 	else:
 		b.init_board(6,6,4,tier)
-		
-	var center = get_viewport_rect().size/2
-	var offset = Vector2(center.x-(b.rows * b.TILE_SIZE/2), center.y-(b.columns * b.TILE_SIZE/2))
-	b.position = offset
+	
+	var board_size_global = Vector2(b.columns * b.TILE_SIZE, b.rows * b.TILE_SIZE)
+	
+	b.position = -(board_size_global / 2)
 	b.create_grid_lines()
 	b.mine_animation_complete.connect(on_mine_animation_complete)
 	b.wonder_placed.connect(on_wonder_placed)
 	b.workshop_placed.connect(on_workshop_placed)
+	b.workshop_destroyed.connect(on_workshop_destroyed)
 	b.on_building_collection_complete.connect(on_building_collection_complete)
 	b.on_minesweeper_collection_complete.connect(on_minesweeper_collection_complete)
+	
+	b.placing_building_instantiated.connect(on_placing_building_instantiated)
 	b.building_placed.connect(on_building_placed)
 	
 	b.building_selected.connect(on_building_selected)
 	b.building_deselected.connect(on_building_deselected)
 	
+	b.ability_complete.connect(on_ability_completed)
+	
 	move_child(camera, -1)
+	camera.reset(Vector2.ZERO, board_size_global)
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	depth_by_tier[tier] = 0
 	for key in BuildingData.data.keys():
 		icons[key] = load(BuildingData.data[key]["icon_path"])
 	
 	# place board in center with correct offset accounting for tile size and board size
 	generate_board(0)
-	test_new_tier()
+	# test_new_tier()
 	responsive_ui.update_buildings(available_buildings)
+	responsive_ui.update_abilities(ability_charge_counts, ability_charge_maximums)
 	responsive_ui.enter_play_mode()
 
 # func test_new_tier():
 	# TESTING
 	# Keep this commented except for when jumping straight to a higher tier for testing
 	# TODO: Re-Comment this when done testing
+
 	# tier = 2
 	# available_buildings.append_array(BiomeData.get_buildings(1))
 	# available_buildings.append_array(BiomeData.get_buildings(tier))
+
+func get_depth() -> int:
+	return depth_by_tier[tier]
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
@@ -126,7 +132,7 @@ func _process(delta):
 	responsive_ui.set_resource_count(ResourceData.Resources.STONE, Resources.stone)
 	responsive_ui.set_resource_count(ResourceData.Resources.STEEL, Resources.steel)
 	responsive_ui.set_resource_count(ResourceData.Resources.SLEDGEHAMMER, Resources.sledgehammer)
-	responsive_ui.set_depth(depth + 1)
+	responsive_ui.set_depth(get_depth() + 1)
 	
 	if get_current_board():
 		responsive_ui.set_flag_count(get_current_board().flags)
@@ -145,24 +151,22 @@ func can_enter_build_mode() -> bool:
 func ability(ability_name: AbilityData.Type):
 	if get_current_board().mine_exploded:
 		return
-	print("func ability, ability_name: ", ability_name)
-	if ability_name == AbilityData.Type.DESTROY && ability_destroy < 1:
-		print("can't use destroy, out of uses")
+		
+	if ability_charge_counts[ability_name] <= 0:
+		print("Cant use %s, out of uses" % str(ability_name))
 		return
-	elif ability_name == AbilityData.Type.ARMOR:
+	
+	
+	print("func ability, ability_name: ", ability_name)
+
+	if ability_name == AbilityData.Type.ARMOR:
 		if get_current_board().armor_active:
 			# Prevent player from stacking armor uses on a single turn
 			return
-		elif ability_armor < 1:
-			print("can't use armor, out of uses")
-			return
 		else:
-			ability_armor -= 1
+			ability_charge_counts[ability_name] -= 1
 	elif ability_name == AbilityData.Type.DOWSE:
-		if ability_dowse < 1:
-			print("can't use dowse, out of uses")
-			return
-		elif get_current_board().flags < 1:
+		if get_current_board().flags < 1:
 			print("can't use dowse, out of flags")
 			return
 		
@@ -171,11 +175,15 @@ func ability(ability_name: AbilityData.Type):
 func start_placement(type: BuildingData.Type):
 	state = State.Placing
 	print("func start_placement, building_name: ", type)
-	var building = get_current_board().queue_building(type)
-	responsive_ui.enter_place_mode(building)
+	
+	responsive_ui.enter_place_mode(type)
+	get_current_board().queue_building(type)
+	
+	DragOrZoomEventManager.drag_blocked = true
 
 func on_building_placed():
 	responsive_ui.on_building_placed()
+	DragOrZoomEventManager.drag_blocked = false
 
 func on_building_selected(building: BaseBuilding):
 	responsive_ui.on_building_selected(building)
@@ -189,11 +197,11 @@ func next_level():
 	get_current_board().queue_free()
 	
 	print("MAIN SCENE RECEIVED NEXT LEVEL CALL")
-	depth += 1
+	depth_by_tier[tier] += 1
 	
 	state = State.Play
 	
-	generate_board(depth)
+	generate_board(get_depth())
 	responsive_ui.update_buildings(available_buildings)
 	responsive_ui.enter_play_mode()
 
@@ -218,23 +226,9 @@ func _on_mine_hit_restart_level_pressed():
 	mine_hit_popup.visible = false
 	greyout.visible = false
 	get_current_board().queue_free()
-	generate_board(depth)
+	generate_board(get_depth())
 	get_tree().paused = false
 
-
-#func _on_page_up_button_pressed():
-#	SoundManager.play_page_turn_sound()
-#	page_one.show()
-#	page_down.disabled = false
-#	page_two.hide()
-#	page_up.disabled = true
-#
-#func _on_page_down_button_pressed():
-#	SoundManager.play_page_turn_sound()
-#	page_one.hide()
-#	page_down.disabled = true
-#	page_two.show()
-#	page_up.disabled = false
 
 func stairs_placed():
 	return get_current_board().stairs_placed
@@ -263,26 +257,32 @@ func on_wonder_placed():
 	get_tree().paused = true
 
 func on_workshop_placed():
+	total_workshop_count += 1
 	# TODO: Some kind of user feedback notifying tier has been progressed
 	if tier < 2:
 		tier += 1
-		depth = -1
-	help_text_is_overriden = false
-	choose_active.show()
-	greyout.show()
-	get_tree().paused = true
-
-func _on_choose_active_ability_chosen(ability_name):
-	choose_active.hide()
-	greyout.hide()
-	get_tree().paused = false
-	if ability_name == "crane":
-		ability_destroy_max += 1
-	elif ability_name == "armor":
-		ability_armor_max += 1
-	elif ability_name == "scanner":
-		ability_dowse_max += 1
+		depth_by_tier[tier] = -1
 		
+	ability_charge_maximums[AbilityData.Type.DESTROY] += 1
+
+
+func on_workshop_destroyed():
+	total_workshop_count -= 1
+	if total_workshop_count == 0:
+		tier -= 1
+	
+	ability_charge_maximums[AbilityData.Type.DESTROY] -= 1
+
+
+func on_ability_completed():
+	responsive_ui.update_abilities(ability_charge_counts, ability_charge_maximums)
+
+func get_ability_charge_count(type: AbilityData.Type):
+	return ability_charge_counts[type]
+
+func use_ability_charge(type: AbilityData.Type):
+	ability_charge_counts[type] -= 1
+
 func _input(event):
 	if event is InputEventKey and Input.is_key_label_pressed(KEY_H):	
 		overlay_toggled = !overlay_toggled
@@ -338,9 +338,8 @@ func _on_camera_2d_drag_complete():
 	pass # Replace with function body.
 
 
-func _on_camera_2d_tap_complete():
-	get_current_board().deselect_building()
-
+func _on_camera_2d_tap_complete(event):
+	get_current_board().deselect_building(event)
 
 func _on_responsive_ui_destroy_selected_building_pressed():
 	get_current_board().destroy_selected_building()
@@ -355,3 +354,6 @@ func _on_responsive_ui_move_selected_building_cancelled():
 
 func _on_responsive_ui_move_selected_building_confirmed():
 	get_current_board().confirm_selected_building_move()
+
+func on_placing_building_instantiated(building: BaseBuilding):
+	responsive_ui.on_building_placement_instantiated(building)

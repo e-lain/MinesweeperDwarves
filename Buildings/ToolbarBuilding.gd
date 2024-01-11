@@ -33,9 +33,9 @@ func _process(delta):
 	current_steel = resources_source.steel
 	stairs_placed = resources_source.stairs_placed()
 	
-	stone_req = data["stone_cost"]
-	pop_req = data["population_cost"]
-	steel_req = data["steel_cost"]
+	stone_req = BuildingData.get_cost(type, ResourceData.Resources.STONE)
+	pop_req =  BuildingData.get_cost(type, ResourceData.Resources.POPULATION)
+	steel_req = BuildingData.get_cost(type, ResourceData.Resources.STEEL)
 	if current_stone >= stone_req && current_pop > pop_req && current_steel >= steel_req && ((type != BuildingData.Type.STAIRCASE && (stairs_placed || type == BuildingData.Type.WONDER)) || (type == BuildingData.Type.STAIRCASE && !stairs_placed)):
 		modulate = Color.WHITE
 		clickable = true

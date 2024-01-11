@@ -41,6 +41,11 @@ var move_begin_offset = Vector2.ZERO
 
 var mouse_in = false
 
+var touch_events = {}
+
+var selection_event
+var deselection_event
+
 enum State {
 	Unplaced,
 	PlacedUnconfirmed,
@@ -58,11 +63,18 @@ func set_type(value, icon):
 	handle_arrows.scale.x = size
 	handle_arrows.scale.y = size
 
+func snap_position(pos: Vector2) -> Vector2:
+	return Vector2(snapped(pos.x-TILE_SIZE/2, TILE_SIZE), snapped(pos.y-TILE_SIZE/2, TILE_SIZE))
+
 func _process(delta):
 	if state == State.PlacedUnconfirmed:
 		handle_arrows.visible = true
 	else:
 		handle_arrows.visible = false
+		
+	if state == State.Confirmed:
+		sprite.material = null
+		cant_build_label.visible = false
 	
 	if state == State.Unplaced || state == State.Moving:
 		var mouse = board.get_local_mouse_position()
@@ -70,26 +82,26 @@ func _process(delta):
 			mouse -= move_begin_offset
 		
 		# in-bounds with grid check
-		var snapped = Vector2(snapped(mouse.x-TILE_SIZE/2, TILE_SIZE), snapped(mouse.y-TILE_SIZE/2, TILE_SIZE))
+		var snapped = snap_position(mouse)
 		position = snapped
 
-		if !can_place():
+		if !can_place(global_position):
 			sprite.material = building_placement_material
 			cant_build_label.visible = true
 		else:
 			sprite.material = null
 			cant_build_label.visible = false
 		
-		if size == 1:
-			background_sprite.visible = false
-		else:
-			background_sprite.position = bg_offset
-			var cell_pos = board.world_to_cell(global_position)
-			var region_x = bg_offset.x if cell_pos.x % 2 == 0 else 64 + bg_offset.x
-			var region_y = bg_offset.y if cell_pos.y % 2 == 0 else 64 + bg_offset.y
-			var region_w = size * TILE_SIZE - bg_offset.x * 2
-			var region_h = size * TILE_SIZE - bg_offset.y * 2
-			background_sprite.region_rect = Rect2(region_x, region_y, region_w, region_h)
+	if size == 1:
+		background_sprite.visible = false
+	else:
+		background_sprite.position = bg_offset
+		var cell_pos = board.world_to_cell(global_position)
+		var region_x = bg_offset.x if cell_pos.x % 2 == 0 else 64 + bg_offset.x
+		var region_y = bg_offset.y if cell_pos.y % 2 == 0 else 64 + bg_offset.y
+		var region_w = size * TILE_SIZE - bg_offset.x * 2
+		var region_h = size * TILE_SIZE - bg_offset.y * 2
+		background_sprite.region_rect = Rect2(region_x, region_y, region_w, region_h)
 	
 	if (type == BuildingData.Type.HOUSE || type == BuildingData.Type.QUARRY):
 		var next_to_minecart = next_to_minecart()
@@ -106,10 +118,10 @@ func _process(delta):
 			main.help_text_is_overriden = false
 			took_help_text_override = false
 
-func can_place():
+func can_place(placement_position: Vector2):
 	if type == BuildingData.Type.LAVA && !next_to_lava():
 		return false
-	return board.can_place_at_position(global_position, size)
+	return board.can_place_at_position(placement_position, size)
 
 func next_to_minecart() -> bool:
 	return board.building_is_next_to_minecart(self) || board.player_placing_minecart_next_to_building(self)
@@ -117,58 +129,111 @@ func next_to_minecart() -> bool:
 func next_to_lava() -> bool:
 	return board.building_is_next_to_lava(self) 
 
-func place():
+func place(world_pos: Vector2):
+	global_position = snap_position(world_pos)
 	state = State.PlacedUnconfirmed
 	sprite.material = null
+	on_placed.emit()
+
+func set_building_visibility(val: bool) -> void:
+	# used by lava moat tile to hide building in favor of lava moat tile
+	sprite.visible = val
 
 func _unhandled_input(event):
+	if PlatformUtil.isMobile():
+		_handle_touch_input(event)
+	else:
+		_handle_mouse_input(event)
+
+func _handle_touch_input(event):
+	if !event is InputEventScreenTouch && !event is InputEventScreenDrag:
+		return
+	
+	var event_world_position = get_global_mouse_position()
+	
+	var bounds = Rect2(global_position, Vector2(TILE_SIZE, TILE_SIZE) * size)
+	var in_bounds = bounds.has_point(event_world_position)
+
+	
+	if event is InputEventScreenTouch:
+		if event.pressed:
+			touch_events[event.index] = event
+			if !DragOrZoomEventManager.drag_or_zoom_happening() && in_bounds:
+				if touch_events.size() == 1 && state == State.PlacedUnconfirmed:
+					enter_move_state()
+		else:
+			touch_events.erase(event.index)
+			if touch_events.size() == 0 && !DragOrZoomEventManager.drag_or_zoom_happening() && in_bounds:
+				if state == State.Confirmed:
+					select(event)
+				elif state == State.Selected:
+					deselect(event)
+			
+			if state == State.Moving && DragOrZoomEventManager.drag_began_in_unconfirmed_building:
+				exit_move_state()
+	if event is InputEventScreenDrag && !DragOrZoomEventManager.drag_blocked:
+		touch_events[event.index] = event
+
+func _handle_mouse_input(event):
 	if !mouse_in:
 		return 
 	
 	# Left-click to place building logic
 	if event is InputEventMouseButton && state == State.Unplaced:
 		if event.is_action_pressed("left_click"):
-			if !can_place():
+			if !can_place(global_position):
 				SoundManager.play_negative()
 
 			if type == BuildingData.Type.STAIRCASE and board.stairs_placed:
 				main.help_text_bar.text = "Stairs already placed! Can't have more than one staircase per floor"
 				print("Stairs already placed!")
-			if can_place():
-				place()
-				on_placed.emit()
+			if can_place(global_position):
+				place(global_position)
+				
 				return
 				
 	if state == State.PlacedUnconfirmed:
 		if event is InputEventMouseButton and event.is_action_pressed("left_click"):
-			DragOrZoomEventManager.drag_began_in_unconfirmed_building = true
-			state = State.Moving
-			move_begin_offset = Vector2.ZERO
-			var reference_pos = position + Vector2(TILE_SIZE, TILE_SIZE)
-			while (board.get_local_mouse_position().x - move_begin_offset.x > reference_pos.x):
-				move_begin_offset.x += TILE_SIZE
-			while (board.get_local_mouse_position().y - move_begin_offset.y > reference_pos.y):
-				move_begin_offset.y += TILE_SIZE
-	
+			enter_move_state()
 	
 	if state == State.Moving:
 		if event is InputEventMouseButton and event.is_action_released("left_click") and DragOrZoomEventManager.drag_began_in_unconfirmed_building:
-			state = State.PlacedUnconfirmed
-			move_begin_offset = Vector2.ZERO
-			DragOrZoomEventManager.drag_began_in_unconfirmed_building = false
+			exit_move_state()
 
 	if event is InputEventMouseButton and event.is_action_released("left_click") and !DragOrZoomEventManager.drag_or_zoom_happening():
 		if state == State.Confirmed:
-			select()
+			select(event)
 		elif state == State.Selected:
-			deselect()
+			deselect(event)
 
-func select():
+func enter_move_state():
+	DragOrZoomEventManager.drag_began_in_unconfirmed_building = true
+	state = State.Moving
+	move_begin_offset = Vector2.ZERO
+	var reference_pos = position + Vector2(TILE_SIZE, TILE_SIZE)
+	while (board.get_local_mouse_position().x - move_begin_offset.x > reference_pos.x):
+		move_begin_offset.x += TILE_SIZE
+	while (board.get_local_mouse_position().y - move_begin_offset.y > reference_pos.y):
+		move_begin_offset.y += TILE_SIZE
+
+func exit_move_state():
+	state = State.PlacedUnconfirmed
+	move_begin_offset = Vector2.ZERO
+	DragOrZoomEventManager.drag_began_in_unconfirmed_building = false
+
+func select(event):
+	if event != null && event == deselection_event:
+		return
 	state = State.Selected
+	selection_event = event
 	on_selected.emit(self)
 
-func deselect():
+func deselect(event):
+	if event != null && event == selection_event:
+		return
+	
 	state = State.Confirmed
+	deselection_event = event
 	on_deselected.emit()
 
 func confirm_placement():
@@ -186,12 +251,19 @@ func play_collection_animation(lifespan_seconds: float, icon_path: String):
 	add_child(instance)
 	var amount = 0
 	var data = BuildingData.data[type]
-	if data["stone_cost"] < 0:
-		amount = -data["stone_cost"]
-	if data["steel_cost"] < 0:
-		amount = -data["steel_cost"]
-	if data["population_cost"] < 0:
-		amount = -data["population_cost"]
+	
+	#TODO: Allow for multiple different resources to be collected from a building?
+	
+	var stone = BuildingData.get_cost(type, ResourceData.Resources.STONE)
+	var pop =  BuildingData.get_cost(type, ResourceData.Resources.POPULATION)
+	var steel = BuildingData.get_cost(type, ResourceData.Resources.STEEL)
+	
+	if stone < 0:
+		amount = -stone
+	if steel < 0:
+		amount = -steel
+	if pop < 0:
+		amount = -pop
 	
 	instance.init(amount, lifespan_seconds, icon_path)
 	instance.global_position = global_position + (Vector2(TILE_SIZE, TILE_SIZE) * size / 2.0) + Vector2(0, -16)

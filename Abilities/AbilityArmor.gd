@@ -14,7 +14,7 @@ func _ready():
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
-	use_count = main.ability_armor
+	use_count = main.get_ability_charge_count(AbilityData.Type.ARMOR)
 	$Uses.text = str(use_count)
 	if use_count <= 0 || main.get_current_board().armor_active:
 		var new_color = Color.WHITE
