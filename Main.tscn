@@ -1,24 +1,23 @@
-[gd_scene load_steps=22 format=3 uid="uid://iqvlmmwy7d46"]
+[gd_scene load_steps=21 format=3 uid="uid://iqvlmmwy7d46"]
 
 [ext_resource type="Script" path="res://Main.gd" id="1_t2km6"]
 [ext_resource type="Theme" uid="uid://b6iv3a38m6uhb" path="res://UI.tres" id="2_b2qml"]
-[ext_resource type="Script" path="res://Scripts/CameraController.gd" id="2_sxoug"]
 [ext_resource type="Texture2D" uid="uid://c5ocuxxxsbgne" path="res://Assets/UI/UIMapBackgroundAndBorder.png" id="3_c74ye"]
 [ext_resource type="PackedScene" uid="uid://dnr83m4pqs7mp" path="res://UI/ResponsiveUI.tscn" id="3_uhbjp"]
 [ext_resource type="Texture2D" uid="uid://du5p0tvlhojks" path="res://Assets/UI/PopIcon.png" id="4_wg3lp"]
 [ext_resource type="Texture2D" uid="uid://ca5lct0ctr37m" path="res://Assets/UI/StoneIcon.png" id="5_o2ngn"]
 [ext_resource type="Texture2D" uid="uid://byetswoeyw7gd" path="res://Assets/UI/steeldownscaledicon.png" id="6_jm4fe"]
 [ext_resource type="Texture2D" uid="uid://d0o6bpct5y38h" path="res://Assets/UI/Popup.png" id="6_nia6k"]
-[ext_resource type="StyleBox" uid="uid://b8qlwed3vhkld" path="res://UI/OuterButtonStyle.tres" id="7_2o6rd"]
+[ext_resource type="StyleBox" uid="uid://767un3ynwawo" path="res://UI/OuterButtonStyle.tres" id="7_2o6rd"]
 [ext_resource type="PackedScene" uid="uid://doi658hn04jhv" path="res://UI/popup.tscn" id="7_703se"]
 [ext_resource type="PackedScene" uid="uid://b8qmhoccrox3y" path="res://UI/GameOver.tscn" id="7_wj57j"]
-[ext_resource type="StyleBox" uid="uid://bl0eiutsew477" path="res://UI/HoveredOuterButtonStyle.tres" id="8_pyn5i"]
+[ext_resource type="StyleBox" uid="uid://c5pcr2jlvlpd" path="res://UI/HoveredOuterButtonStyle.tres" id="8_pyn5i"]
 [ext_resource type="PackedScene" uid="uid://cp25vmlk0k3ck" path="res://Abilities/AbilityDestroy.tscn" id="10_bm3kx"]
 [ext_resource type="Texture2D" uid="uid://7an4owy3gbe2" path="res://Assets/UI/ArrowUp.png" id="11_gm014"]
 [ext_resource type="PackedScene" uid="uid://cbn0lpatmkt08" path="res://UI/MineHitPopup.tscn" id="12_4reet"]
 [ext_resource type="PackedScene" uid="uid://dc8igqfayfl61" path="res://Abilities/AbilityArmor.tscn" id="16_hhtyy"]
-[ext_resource type="PackedScene" uid="uid://bqrac1jbrmwcd" path="res://UI/ChooseActive.tscn" id="17_r6xie"]
 [ext_resource type="PackedScene" uid="uid://pv3mpwrce0vs" path="res://Abilities/AbilityDowse.tscn" id="17_sj1ur"]
+[ext_resource type="Script" path="res://Controllers/CameraController.gd" id="20_h7imp"]
 [ext_resource type="Texture2D" uid="uid://te50q3hpxrqb" path="res://Assets/Buildings/WonderFlattenedDownscaled.png" id="20_yhfny"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_qk65p"]
@@ -226,7 +225,6 @@ info_popup = NodePath("../DowsePopup")
 main = NodePath("../../..")
 
 [node name="DestroyPopup" parent="CanvasLayer/AbilityMenu" instance=ExtResource("7_703se")]
-visible = false
 layout_mode = 0
 offset_left = 737.0
 offset_top = 75.0
@@ -261,14 +259,6 @@ offset_bottom = 1465.0
 grow_horizontal = 2
 grow_vertical = 2
 color = Color(0, 0, 0, 0.333333)
-
-[node name="ChooseActive" parent="CanvasLayer" instance=ExtResource("17_r6xie")]
-process_mode = 2
-visible = false
-offset_left = 300.0
-offset_top = 72.0
-offset_right = 300.0
-offset_bottom = 72.0
 
 [node name="GameOver" parent="CanvasLayer" instance=ExtResource("7_wj57j")]
 process_mode = 2
@@ -707,8 +697,7 @@ mouse_filter = 2
 color = Color(0.639216, 0.380392, 0.109804, 0.0627451)
 
 [node name="Camera2D" type="Camera2D" parent="."]
-position = Vector2(690, 360)
-script = ExtResource("2_sxoug")
+script = ExtResource("20_h7imp")
 
 [connection signal="ability_menu_item_pressed" from="ResponsiveUICanvas/ResponsiveUI" to="." method="_on_responsive_ui_ability_menu_item_pressed"]
 [connection signal="build_menu_item_pressed" from="ResponsiveUICanvas/ResponsiveUI" to="." method="_on_responsive_ui_build_menu_item_pressed"]
@@ -723,7 +712,6 @@ script = ExtResource("2_sxoug")
 [connection signal="mouse_entered" from="CanvasLayer/UI/EndLevelBtn" to="." method="_on_end_level_btn_mouse_entered"]
 [connection signal="mouse_exited" from="CanvasLayer/UI/EndLevelBtn" to="." method="_on_end_level_btn_mouse_exited"]
 [connection signal="pressed" from="CanvasLayer/UI/NextFloorBtn" to="." method="_on_next_floor_btn_pressed"]
-[connection signal="ability_chosen" from="CanvasLayer/ChooseActive" to="." method="_on_choose_active_ability_chosen"]
 [connection signal="pressed" from="CanvasLayer/GameOver/Panel/RestartButton" to="." method="_on_loss_restart_button_pressed"]
 [connection signal="pressed" from="CanvasLayer/YouWin/Panel/RestartButton" to="." method="_on_win_restart_button_pressed"]
 [connection signal="pressed" from="CanvasLayer/MineHitPopup/Button" to="." method="_on_mine_hit_restart_level_pressed"]
