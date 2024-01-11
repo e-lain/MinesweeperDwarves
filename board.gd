@@ -48,9 +48,8 @@ var total_tiles = rows*columns
 
 var tiles = []
 var bomb_tiles = []
-var lava_tiles = []
-# TODO: Once building removal during build mode has been implemented, lava_tiles needs to be pruned accordingly
-# NOTE: Lava source tiles are placed via some building placement logic, but ARE NOT TREATED AS BULIDINGS
+var lava_tiles = {} # NOTE: Lava source tiles are placed via some building placement logic, but ARE NOT TREATED AS BULIDINGS
+# They are not classified as such, and consequently do not have building id either
 
 var stairs_placed: bool = false
 
@@ -93,7 +92,7 @@ func init_board(rows: int, cols: int, bombs: int, tier: int):
 	self.columns = cols
 	self.bomb_count = bombs
 	self.flags = self.bomb_count
-	lava_tiles = []
+	lava_tiles = {}
 	
 	var fill_cells = []
 	
@@ -235,43 +234,40 @@ func place_lava_from_bomb(tile: BoardTile):
 	building.position = snapped
 	building.sprite.material = null
 	
-	# Add tile to lava_tiles array, assign UID to lava source
-	lava_tiles.append(tile)
-	tile.lava_uid = lava_tiles.size()
+	# Add tile to lava_tiles dictionary, assign UID to lava source
+	tile.lava_uid = "s" + str(lava_tiles.size())
+	lava_tiles[tile.lava_uid] = tile
 	
 # Iterate through each lava tile in lava_tiles and refresh its connected_sources values
 # Logic controls lava pathing and validity
-# TODO: This needs to be called once building deletion during build mode is implemented 
 func refresh_lava_connections() -> void:
 	# Wipe all existing connected_sources
 	print("lava tiles: ", lava_tiles)
-	for tile in lava_tiles:
-		if tile.has_building:
-			buildings_by_id[tile.building_id].connected_lava_sources = []
+	for tile in lava_tiles.values():
+		buildings_by_id[tile.building_id].connected_lava_sources = []
 	
 	# Path out from all source tiles, to register all connected moats as linked to it
-	for tile in lava_tiles:
+	for tile in lava_tiles.values():
 		if tile.is_bomb && tile.bomb_type == BombData.Type.LAVA:
-			var source_uid = tile.lava_uid
-			var offsets = [Vector2i.UP, Vector2i.DOWN, Vector2i.LEFT, Vector2i.RIGHT]
-			for offset in offsets:
-				var check = tile.cell_position + offset
-				if check.x < 0 || check.x >= columns || check.y < 0 || check.y >= rows:
+			var source_uid = str(tile.lava_uid)
+			var adjacent_tiles = get_adjacent_tiles(tile)
+			for adj_tile in adjacent_tiles:
+				var check = adj_tile.cell_position
+				if tile_out_of_bounds(adj_tile):
 					print("Adjacent to source: out of bounds!")
 					continue
-				var adjacent_tile = tiles[check.x][check.y]
-				if !adjacent_tile.has_building:
+				if !adj_tile.has_building:
 					print("Adjacent to source: no moat")
 					continue
-				print("Adjacent to source: Building Type is ", buildings_by_id[adjacent_tile.building_id].type)
-				if buildings_by_id[adjacent_tile.building_id].type == BuildingData.Type.LAVA:
-					print("Lava source ", source_uid, " has an adjacent lava tile at ", adjacent_tile.cell_position)
-					register_lava_connections(source_uid, adjacent_tile)
+				print("Adjacent to source: Building Type is ", buildings_by_id[adj_tile.building_id].type)
+				if buildings_by_id[adj_tile.building_id].type == BuildingData.Type.LAVA:
+					print("Lava source ", source_uid, " has an adjacent lava tile at ", adj_tile.cell_position)
+					register_lava_connections(source_uid, adj_tile)
 				else:
 					print("Adjacent to source: Something went wrong")
 
 	# Update visual icon of lava moats to reflect whether or not they are connected
-	for tile in lava_tiles:
+	for tile in lava_tiles.values():
 		var building_on_tile
 		if tile.has_building && buildings_by_id[tile.building_id].type == BuildingData.Type.LAVA:
 			building_on_tile = buildings_by_id[tile.building_id]
@@ -285,7 +281,7 @@ func refresh_lava_connections() -> void:
 	
 # Recursive function which will register connected lava source, and then recurse to neighboring lava moats
 # Terminates upon reaching a lava source, or if the tile source is already registered to the provided source (it is doubling back)
-func register_lava_connections(source_uid: int, tile: BoardTile) -> void:
+func register_lava_connections(source_uid: String, tile: BoardTile) -> void:
 	# Get connected_lava_sources array, if able
 	var building_on_tile
 	var connected_sources
@@ -377,10 +373,10 @@ func on_confirm_building_placement():
 		
 	state = State.Build
 	
-	# If placed building is a lava moat, register it with the lava_tiles list in board, and refresh board's lava pathing
+	# If placed building is a lava moat, register it with the lava_tiles dictionary in board, and refresh board's lava pathing
 	if type == BuildingData.Type.LAVA:
 		if tile:
-			lava_tiles.append(tile)
+			lava_tiles[tile.building_id] = (tile)
 			refresh_lava_connections()
 			print("CONNECTIONS: ", building.connected_lava_sources)
 		else:
@@ -422,6 +418,12 @@ func destroy_selected_building():
 	
 	var data = BuildingData.data[type]
 	var size = data["size"]
+
+	# Remove from lava_tiles list if it's a lava moat
+	# Refresh moat connection status icons
+	if type == BuildingData.Type.LAVA:
+		lava_tiles.erase(id)
+		refresh_lava_connections()
 	
 	if data["population_cost"] > 0:
 		Resources.population += data["population_cost"]
@@ -652,7 +654,6 @@ func get_adjacent_tiles(tile: BoardTile) -> Array[BoardTile]:
 		if adjacent.x >= 0 && adjacent.x < columns && adjacent.y >= 0 && adjacent.y < rows:
 			surroundings.append(tiles[adjacent.x][adjacent.y])
 	return surroundings
-	
 
 func _on_flag_toggled(cell_pos: Vector2i):
 	var tile = tiles[cell_pos.x][cell_pos.y]
@@ -719,8 +720,53 @@ func can_use_ability_at_position(world_pos: Vector2, size: int):
 			return false
 	return !can_place_at_position(world_pos, size)
 
+func tile_out_of_bounds(tile: BoardTile) -> bool:
+	var cell_pos = tile.cell_position 
+	var x = cell_pos.x
+	var y = cell_pos.y
+	
+	if x < 0 || x >= columns || y < 0 || y >= rows:
+		return true
+	return false
+
+# Returns array of adjacent board coordinates from provided array of global positions
+# NOTE: INPUT POSITIONS ARE GLOBAL, RETURNED POSITIONS ARE BOARD-RELATIVE
+func get_adjacent_positions(global_positions: Array[Vector2]) -> Array[Vector2]:
+	var offsets = [Vector2i.UP, Vector2i.DOWN, Vector2i.LEFT, Vector2i.RIGHT]
+	var board_adjacent_coordinates: Array[Vector2] = []
+	
+	for pos in global_positions:
+		for offset in offsets:
+			board_adjacent_coordinates.append(tilemap.local_to_map(tilemap.to_local(pos)) + offset)
+	return board_adjacent_coordinates
+
+# Returns the board tiles of provided array of global positions 
+func get_tiles_from_positions(positions: Array[Vector2]) -> Array[BoardTile]:
+	var output_tiles: Array[BoardTile] = []
+	
+	for pos in positions:
+		output_tiles.append(tiles[pos.x][pos.y])
+	return output_tiles
+
+# Returns array of tiles a building is on
+func get_tiles_of_building(building: BaseBuilding) -> Array[BoardTile]:
+	var positions_to_check = get_world_positions_in_area(building.global_position, building.size)
+	var building_tiles = get_tiles_from_positions(positions_to_check)
+	return building_tiles
+
+# Returns if tile provided is next to a certain type of building
+func tile_is_next_to_building_type(tile: BoardTile, type: BuildingData.Type) -> bool:
+	var adjacent_tiles = get_adjacent_tiles(tile)
+	for adj_tile in adjacent_tiles:
+		if adj_tile.has_building && buildings_by_id[adj_tile.building_id] == type:
+			return true
+	return false
+
 func building_is_next_to_minecart(building: BaseBuilding) -> bool:
 	var places_to_check = get_world_positions_in_area(building.global_position, building.size)
+	var adjacent_positions = get_adjacent_positions(places_to_check)
+	var adjacent_tiles = get_tiles_from_positions(adjacent_positions) #TODO: RIGHT HERE
+	
 	var offsets = [Vector2i.UP, Vector2i.DOWN, Vector2i.LEFT, Vector2i.RIGHT]	
 
 	for pos in places_to_check:
@@ -736,17 +782,6 @@ func building_is_next_to_minecart(building: BaseBuilding) -> bool:
 			if other_building.type == BuildingData.Type.MINECART:
 				return true
 	return false
-	
-# Given a coordinate position, fetch the tile at that position
-# Return:  null if out of bounds
-func get_tile_from_position(global_pos: Vector2) -> BoardTile:
-	var cell_pos = tilemap.local_to_map(tilemap.to_local(global_pos))
-	
-	# Return null for out of bounds
-	if cell_pos.x < 0 || cell_pos.x >= columns || cell_pos.y < 0 || cell_pos.y >= rows:
-			return null
-	var tile = tiles[cell_pos.x][cell_pos.y]
-	return tile
 
 func building_is_next_to_lava(building: BaseBuilding) -> bool:
 	var places_to_check = get_world_positions_in_area(building.global_position, building.size)
@@ -762,7 +797,6 @@ func building_is_next_to_lava(building: BaseBuilding) -> bool:
 			var other_building
 			if tile.has_building:
 				other_building = buildings_by_id[tile.building_id]
-			# TODO: Adjust once logic for valid lava is implemented
 			# Ensure adjacent building is lava source or valid lava building
 			if (other_building && other_building.type == BuildingData.Type.LAVA) || (tile.is_bomb && tile.bomb_type == BombData.Type.LAVA):
 				return true

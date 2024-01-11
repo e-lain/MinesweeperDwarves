@@ -108,17 +108,17 @@ func _ready():
 	
 	# place board in center with correct offset accounting for tile size and board size
 	generate_board(0)
-	new_tier()
+	test_new_tier()
 	responsive_ui.update_buildings(available_buildings)
 	responsive_ui.enter_play_mode()
 
-func new_tier():
+# func test_new_tier():
+	# TESTING
 	# Keep this commented except for when jumping straight to a higher tier for testing
 	# TODO: Re-Comment this when done testing
 	# tier = 2
 	# available_buildings.append_array(BiomeData.get_buildings(1))
-	
-	available_buildings.append_array(BiomeData.get_buildings(tier))
+	# available_buildings.append_array(BiomeData.get_buildings(tier))
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):

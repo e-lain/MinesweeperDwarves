@@ -6,7 +6,7 @@ var bomb_prefab: PackedScene = preload("res://Prefabs/Bomb.tscn")
 
 const TILE_SIZE = 64
 
-var cell_position: Vector2i
+var cell_position: Vector2i #Grid coordinates for tile, NOT planar coordinates
 
 var is_cover: bool = true
 var is_flagged: bool = false
@@ -17,7 +17,7 @@ var bomb_type: BombData.Type
 var has_building: bool = false
 var building_id: int
 # Only used if bomb is a lava source
-var lava_uid: int
+var lava_uid: String
 
 var label
 var flag

@@ -175,6 +175,10 @@ func confirm_placement():
 	state = State.Confirmed
 
 func cancel_placement():
+	# Handling for specific building logic on cancel
+	if type == BuildingData.Type.LAVA:
+		connected_lava_sources = []
+		board.refresh_lava_connections()
 	queue_free()
 
 func play_collection_animation(lifespan_seconds: float, icon_path: String):
