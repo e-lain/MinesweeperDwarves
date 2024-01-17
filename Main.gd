@@ -109,19 +109,18 @@ func _ready():
 	
 	# place board in center with correct offset accounting for tile size and board size
 	generate_board(0)
-	# test_new_tier()
+	test_new_tier()
 	responsive_ui.update_buildings(available_buildings)
 	responsive_ui.update_abilities(ability_charge_counts, ability_charge_maximums)
 	responsive_ui.enter_play_mode()
 
-# func test_new_tier():
-	# TESTING
+func test_new_tier():
+	#TESTING
 	# Keep this commented except for when jumping straight to a higher tier for testing
 	# TODO: Re-Comment this when done testing
 
-	# tier = 2
-	# available_buildings.append_array(BiomeData.get_buildings(1))
-	# available_buildings.append_array(BiomeData.get_buildings(tier))
+	tier = 1  #2
+	available_buildings.append_array(BiomeData.get_buildings(tier))
 
 func get_depth() -> int:
 	return depth_by_tier[tier]

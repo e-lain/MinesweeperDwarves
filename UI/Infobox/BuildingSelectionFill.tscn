@@ -2,9 +2,9 @@
 
 [ext_resource type="PackedScene" uid="uid://il5em7k3ysis" path="res://UI/Infobox/LabelFill.tscn" id="1_cehmd"]
 [ext_resource type="Script" path="res://UI/Infobox/BuildingSelectionFill.gd" id="1_evmko"]
-[ext_resource type="StyleBox" uid="uid://7xwe0gnyaoba" path="res://UI/ConfirmButton.tres" id="2_kmir7"]
+[ext_resource type="StyleBox" uid="uid://bhedllo7bijl1" path="res://UI/ConfirmButton.tres" id="2_kmir7"]
 [ext_resource type="Texture2D" uid="uid://dr83dy41g1kvp" path="res://Assets/UI/CraneSmaller.png" id="3_vrrcn"]
-[ext_resource type="StyleBox" uid="uid://bbgl381yuqd6v" path="res://UI/CancelButton.tres" id="4_cjsex"]
+[ext_resource type="StyleBox" uid="uid://ddf7prbo71hl3" path="res://UI/CancelButton.tres" id="4_cjsex"]
 [ext_resource type="Texture2D" uid="uid://bsrr1hjdprcj2" path="res://Assets/PlaceholderDestroy.png" id="5_jl3ok"]
 
 [node name="BuildingSelectionFill" type="HBoxContainer"]

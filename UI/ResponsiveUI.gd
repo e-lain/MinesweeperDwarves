@@ -98,7 +98,7 @@ func update_margins_for_notch():
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-
+	get_tree().get_root().size_changed.connect(on_dimensions_updated)
 	on_dimensions_updated()
 	state = State.PLAY
 
@@ -126,10 +126,9 @@ func on_dimensions_updated():
 	
 	var min_height = screen_size.y * 0.05
 	
-	var top_panel_new_size = max(min_height, current_size.y)
+	var top_panel_new_size = max(91, screen_size.y * 0.05)
 
 	top_panel.custom_minimum_size.y = top_panel_new_size
-	build_menu.custom_minimum_size.y = min_height * 2.5
 	
 	cancel_confirm.custom_minimum_size.y = min_height * 2
 	
@@ -137,8 +136,6 @@ func on_dimensions_updated():
 		# Landscape mode / Desktop mode
 
 		top_panel.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
-		build_menu.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
-		build_menu.custom_minimum_size.x = screen_size.x * 0.66
 		top_margin.add_theme_constant_override("margin_top", 0)
 		floors_and_flags_landscape.add_theme_constant_override("margin_top", top_panel_new_size)
 		floors_and_flags_portrait.visible = false
@@ -147,7 +144,6 @@ func on_dimensions_updated():
 		# Portrait / Mobile Mode
 
 		top_panel.size_flags_horizontal = Control.SIZE_FILL
-		build_menu.size_flags_horizontal = Control.SIZE_FILL
 		top_margin.add_theme_constant_override("margin_top", top_panel_new_size)
 		floors_and_flags_portrait.visible = true
 		floors_and_flags_landscape.visible = false
