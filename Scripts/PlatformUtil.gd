@@ -22,3 +22,6 @@ func isMobile():
 	
 func isWeb():
 	return __isWeb
+
+func is_debug_build():
+	return OS.has_feature("debug")

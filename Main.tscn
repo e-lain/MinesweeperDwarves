@@ -43,7 +43,7 @@ fill_from = Vector2(0.5, 0.5)
 fill_to = Vector2(1, 0.5)
 metadata/_snap_enabled = true
 
-[node name="Main" type="Node2D"]
+[node name="Main" type="Node2D" groups=["main"]]
 script = ExtResource("1_t2km6")
 
 [node name="ResponsiveUICanvas" type="CanvasLayer" parent="."]

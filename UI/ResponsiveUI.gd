@@ -209,7 +209,7 @@ func set_descend_disabled(val: bool):
 	descend_button.disabled = val
 
 func on_building_selected(building: BaseBuilding):
-	state = State.SELECTED
+	state = State.SELECTED 
 	selected_building = building
 	var data = BuildingData.data[building.type] 
 	infobox.set_building_selection(building.type, data["name"], data["description"])

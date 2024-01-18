@@ -23,6 +23,8 @@ DragOrZoomEventManager="*res://Scripts/DragOrZoomEventManager.gd"
 SettingsController="*res://Scripts/SettingsController.gd"
 Resources="*res://Scripts/Resources.gd"
 BetterTerrain="*res://addons/better-terrain/BetterTerrain.gd"
+Console="*res://addons/console/Console.gd"
+Cheats="*res://Scripts/Cheats.gd"
 
 [display]
 
@@ -36,7 +38,7 @@ window/handheld/orientation=6
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/better-terrain/plugin.cfg")
+enabled=PackedStringArray("res://addons/better-terrain/plugin.cfg", "res://addons/console/plugin.cfg")
 
 [input]
 

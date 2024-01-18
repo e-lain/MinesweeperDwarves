@@ -49,7 +49,6 @@ enum State {
 	Placing
 }
 
-
 func generate_board(difficulty: int):
 	help_text_is_overriden = false
 	destroy_popup.visible = false
@@ -370,3 +369,8 @@ func _on_responsive_ui_move_selected_building_confirmed():
 
 func on_placing_building_instantiated(building: BaseBuilding):
 	responsive_ui.on_building_placement_instantiated(building)
+
+func override_tier(new_tier):
+	tier = new_tier
+	depth_by_tier[tier] = -1
+	next_level()
