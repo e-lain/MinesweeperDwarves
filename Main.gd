@@ -1,4 +1,5 @@
 extends Node2D
+class_name GameController
 
 @onready var mine_hit_popup = $CanvasLayer/MineHitPopup
 @onready var greyout = $CanvasLayer/ColorRect
@@ -245,10 +246,13 @@ func _on_mine_hit_restart_level_pressed():
 func stairs_placed():
 	return get_current_board().stairs_placed
 
-func get_current_board():
+func get_current_board() -> Board:
 	return current_board
 
-func _on_responsive_ui_descend_pressed():
+func _on_responsive_ui_descend_pressed(force: bool = false):
+	if !force && !get_current_board().are_all_buildings_being_exploited():
+		responsive_ui.show_floor_descend_warning(_on_responsive_ui_descend_pressed.bind(true))
+		return
 	get_current_board().collect_resources()
 
 func on_resource_collection_complete():
@@ -369,17 +373,3 @@ func _on_responsive_ui_move_selected_building_confirmed():
 
 func on_placing_building_instantiated(building: BaseBuilding):
 	responsive_ui.on_building_placement_instantiated(building)
-
-# Cheating
-func override_tier(new_tier):
-	tier = new_tier
-	depth_by_tier[tier] = -1
-	available_buildings = []
-	if tier == 1:
-		total_workshop_count = 0
-	else:
-		total_workshop_count = 1
-	for i in new_tier + 1:
-		available_buildings.append_array(BiomeData.get_buildings(i))
-	
-	next_level()

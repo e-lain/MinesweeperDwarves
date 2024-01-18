@@ -849,3 +849,12 @@ func get_world_positions_in_area(origin_world_pos: Vector2, size: int) -> Array[
 
 func world_to_cell(world):
 	return tilemap.local_to_map(tilemap.to_local(world))
+
+func are_all_buildings_being_exploited() -> bool:
+	for building in buildings_by_id.values():
+		if building.requires_minecart_adjacency() && !building.next_to_minecart():
+			return false
+		if building.requires_lava_adjacency() && !building.next_to_lava():
+			return false
+	
+	return true

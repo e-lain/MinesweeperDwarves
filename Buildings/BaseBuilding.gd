@@ -105,7 +105,7 @@ func _process(delta):
 		var region_h = size * TILE_SIZE - bg_offset.y * 2
 		background_sprite.region_rect = Rect2(region_x, region_y, region_w, region_h)
 	
-	if (type == BuildingData.Type.HOUSE || type == BuildingData.Type.QUARRY):
+	if requires_minecart_adjacency():
 		var next_to_minecart = next_to_minecart()
 		no_minecart_sprite.visible = !next_to_minecart
 		sprite.modulate.a = 1 if next_to_minecart else 0.7 
@@ -124,6 +124,12 @@ func can_place(placement_position: Vector2):
 	if type == BuildingData.Type.LAVA && !next_to_lava():
 		return false
 	return board.can_place_at_position(placement_position, size)
+
+func requires_minecart_adjacency():
+	return type == BuildingData.Type.HOUSE || type == BuildingData.Type.QUARRY
+
+func requires_lava_adjacency():
+	return type == BuildingData.Type.FORGE
 
 func next_to_minecart() -> bool:
 	return board.building_is_next_to_minecart(self) || board.player_placing_minecart_next_to_building(self)

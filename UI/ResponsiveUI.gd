@@ -46,6 +46,7 @@ signal destroy_selected_building_pressed
 @onready var to_build_mode_button_container = $TopMargin/ToBuildModeButton
 @onready var to_build_mode_button = $TopMargin/ToBuildModeButton/Button
 
+@onready var alert_box = $AlertBox
 
 # If we want to have margins around the UI, this would be where to assign them 
 # as they will be overwritten by notch code
@@ -61,12 +62,14 @@ enum State {
 	PLACEMENT_MOVE_BUILDING,
 	SELECTED,
 	MOVE_BUILDING,
-	DESTROY_BUILDING
+	DESTROY_BUILDING,
+	ALERT
 }
 
 var state
 var selected_building
 
+var alert_proceed_callback
 
 func _process(delta):
 	if state == State.PLACEMENT_MOVE_BUILDING || state == State.MOVE_BUILDING:
@@ -226,9 +229,30 @@ func on_building_deselected():
 	build_menu.visible = true
 	selected_building = null
 	descend_button_container.visible = true
+	alert_box.visible = false
 
 func _on_descend_button_pressed():
 	descend_pressed.emit()
+	
+func show_floor_descend_warning(proceed_callback: Callable):
+	state = State.ALERT
+	alert_proceed_callback = proceed_callback
+	alert_box.visible = true
+	cancel_confirm.visible = false
+	infobox.visible = false
+	build_menu.visible = false
+	selected_building = null
+	descend_button_container.visible = false
+
+func _on_alert_box_cancel_pressed():
+	alert_proceed_callback = null
+	on_building_deselected()
+
+func _on_alert_box_proceed_pressed():
+	on_building_deselected()
+	if alert_proceed_callback != null and alert_proceed_callback is Callable:
+		alert_proceed_callback.call()
+	alert_proceed_callback = null
 
 func _on_to_build_mode_button_pressed():
 	enter_build_mode_pressed.emit()
