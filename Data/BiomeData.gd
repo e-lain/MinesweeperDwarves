@@ -11,6 +11,8 @@ static func get_buildings(tier: int):
 			return data[Type.DEFAULT].buildings
 		2: 
 			return data[Type.LAVA].buildings
+		_:
+			return []
 
 static func get_bombs(tier: int):
 	match tier:
@@ -18,6 +20,8 @@ static func get_bombs(tier: int):
 			return data[Type.DEFAULT].bombs
 		2:
 			return data[Type.LAVA].bombs
+		_:
+			return []
 
 static var data = {
 	Type.DEFAULT: {

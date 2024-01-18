@@ -370,7 +370,16 @@ func _on_responsive_ui_move_selected_building_confirmed():
 func on_placing_building_instantiated(building: BaseBuilding):
 	responsive_ui.on_building_placement_instantiated(building)
 
+# Cheating
 func override_tier(new_tier):
 	tier = new_tier
 	depth_by_tier[tier] = -1
+	available_buildings = []
+	if tier == 1:
+		total_workshop_count = 0
+	else:
+		total_workshop_count = 1
+	for i in new_tier + 1:
+		available_buildings.append_array(BiomeData.get_buildings(i))
+	
 	next_level()

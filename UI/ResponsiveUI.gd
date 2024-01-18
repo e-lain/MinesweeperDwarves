@@ -217,6 +217,7 @@ func on_building_selected(building: BaseBuilding):
 	cancel_placement.visible = false
 	infobox.visible = true
 	build_menu.visible = false
+	descend_button_container.visible = false
 
 func on_building_deselected():
 	state = State.BUILD
@@ -224,6 +225,7 @@ func on_building_deselected():
 	infobox.visible = false
 	build_menu.visible = true
 	selected_building = null
+	descend_button_container.visible = true
 
 func _on_descend_button_pressed():
 	descend_pressed.emit()
