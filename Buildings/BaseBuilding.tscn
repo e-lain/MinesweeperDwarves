@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://cv6moqrk0o3nj"]
+[gd_scene load_steps=10 format=3 uid="uid://cv6moqrk0o3nj"]
 
 [ext_resource type="Script" path="res://Buildings/BaseBuilding.gd" id="1_ghdmy"]
 [ext_resource type="Material" uid="uid://nqpwbe45b8cn" path="res://Shaders/InvalidBuildingPlacement.tres" id="2_8r5no"]
@@ -7,6 +7,18 @@
 [ext_resource type="Texture2D" uid="uid://dbis5jfyeq0u6" path="res://Assets/UI/nominecart.png" id="4_wjvxv"]
 [ext_resource type="Texture2D" uid="uid://cxnwi8bt7vm5k" path="res://Assets/UI/ArrowRightSource.png" id="6_e72s1"]
 [ext_resource type="Theme" uid="uid://b6iv3a38m6uhb" path="res://UI.tres" id="7_tes3t"]
+
+[sub_resource type="Gradient" id="Gradient_xdb0i"]
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_ff2kk"]
+gradient = SubResource("Gradient_xdb0i")
+width = 1024
+height = 1024
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(1, 0.5)
+metadata/_snap_enabled = true
 
 [node name="BaseBuilding" type="Node2D"]
 script = ExtResource("1_ghdmy")
@@ -123,6 +135,13 @@ offset_bottom = -18.0
 theme = ExtResource("7_tes3t")
 theme_override_colors/font_color = Color(1, 0, 0, 1)
 text = "Can't Build Here"
+
+[node name="PointLight2D" type="PointLight2D" parent="."]
+visible = false
+position = Vector2(32, 32)
+color = Color(1, 0.368627, 0.0509804, 1)
+texture = SubResource("GradientTexture2D_ff2kk")
+texture_scale = 0.2
 
 [connection signal="mouse_entered" from="Control" to="." method="_on_control_mouse_entered"]
 [connection signal="mouse_exited" from="Control" to="." method="_on_control_mouse_exited"]

@@ -101,6 +101,7 @@ func init_board(rows: int, cols: int, bombs: int, tier: int):
 	
 	tiles = tilemap.fill(columns, rows, tier)
 	set_bombs()
+
 	
 func _unhandled_input(event):
 	if state == State.MobilePrePlacing and event is InputEventScreenTouch:

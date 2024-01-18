@@ -1,0 +1,12 @@
+[gd_resource type="ShaderMaterial" load_steps=3 format=3 uid="uid://cwpo46xjsxgdg"]
+
+[ext_resource type="Shader" path="res://Shaders/Tilemap.gdshader" id="1_fujk4"]
+[ext_resource type="Texture2D" uid="uid://bsi4m22j2u0j2" path="res://Assets/background.png" id="2_14oqr"]
+
+[resource]
+shader = ExtResource("1_fujk4")
+shader_parameter/background_color_tint = Color(0.941176, 0.941176, 1, 1)
+shader_parameter/background_scale = Vector2(1, 1)
+shader_parameter/background_offset = Vector2(1.59, 1.865)
+shader_parameter/global_transform = null
+shader_parameter/image = ExtResource("2_14oqr")

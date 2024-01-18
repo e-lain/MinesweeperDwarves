@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=3 uid="uid://iqvlmmwy7d46"]
+[gd_scene load_steps=23 format=3 uid="uid://iqvlmmwy7d46"]
 
 [ext_resource type="Script" path="res://Main.gd" id="1_t2km6"]
 [ext_resource type="Theme" uid="uid://b6iv3a38m6uhb" path="res://UI.tres" id="2_b2qml"]
@@ -29,6 +29,19 @@ texture_margin_bottom = 13.0
 axis_stretch_horizontal = 2
 axis_stretch_vertical = 2
 modulate_color = Color(1, 1, 1, 0.403922)
+
+[sub_resource type="Gradient" id="Gradient_c7dog"]
+offsets = PackedFloat32Array(0, 0.36612, 1)
+colors = PackedColorArray(1, 1, 1, 1, 0.803279, 0.803279, 0.803279, 0.803279, 0, 0, 0, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_wnw1g"]
+gradient = SubResource("Gradient_c7dog")
+width = 1024
+height = 1024
+fill = 2
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(1, 0.5)
+metadata/_snap_enabled = true
 
 [node name="Main" type="Node2D"]
 script = ExtResource("1_t2km6")
@@ -689,15 +702,30 @@ You will be awarded steel for bombs correctly flagged.
 Build mode will begin"
 
 [node name="ColorRect2" type="ColorRect" parent="CanvasLayer"]
-offset_left = -1398.0
-offset_top = -1555.0
-offset_right = 2698.0
-offset_bottom = 2541.0
+offset_left = -7749.0
+offset_top = -7480.0
+offset_right = 9235.0
+offset_bottom = 9325.0
 mouse_filter = 2
 color = Color(0.639216, 0.380392, 0.109804, 0.0627451)
 
 [node name="Camera2D" type="Camera2D" parent="."]
 script = ExtResource("20_h7imp")
+
+[node name="CanvasModulate" type="CanvasModulate" parent="."]
+visible = false
+light_mask = 2
+visibility_layer = 0
+z_as_relative = false
+color = Color(0, 0, 0, 1)
+
+[node name="PointLight2D" type="PointLight2D" parent="."]
+visible = false
+light_mask = 2
+visibility_layer = 0
+color = Color(1, 0.941176, 0.780392, 1)
+texture = SubResource("GradientTexture2D_wnw1g")
+texture_scale = 1.21
 
 [connection signal="ability_menu_item_pressed" from="ResponsiveUICanvas/ResponsiveUI" to="." method="_on_responsive_ui_ability_menu_item_pressed"]
 [connection signal="build_menu_item_pressed" from="ResponsiveUICanvas/ResponsiveUI" to="." method="_on_responsive_ui_build_menu_item_pressed"]

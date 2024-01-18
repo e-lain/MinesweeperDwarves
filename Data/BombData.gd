@@ -15,6 +15,6 @@ static var data = {
 	Type.LAVA: {
 		"type": Type.LAVA,
 		"name": "Lava",
-		"texture": "res://Assets/walltiles/LavaBlock.png" # TODO: Replace with legit texture once available
+		"texture": "res://Assets/walltiles/LavaPoolDownscaled.png" # TODO: Replace with legit texture once available
 	}
 }

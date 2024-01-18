@@ -19,6 +19,9 @@ var help_text_is_overriden: bool = false
 
 @onready var camera = $Camera2D
 
+@onready var canvas_modulate = $CanvasModulate
+@onready var pointlight = $PointLight2D
+
 var Board = preload("res://board.tscn")
 
 var build_mode: bool = false
@@ -63,6 +66,9 @@ func generate_board(difficulty: int):
 	
 	add_child(b)
 	
+	canvas_modulate.visible = tier > 1
+	pointlight.visible = tier > 1
+
 	if tier == 1:
 		b.init_board(6,6,4,tier)
 	elif tier == 2:
@@ -108,8 +114,9 @@ func _ready():
 		icons[key] = load(BuildingData.data[key]["icon_path"])
 	
 	# place board in center with correct offset accounting for tile size and board size
-	generate_board(0)
 	test_new_tier()
+	generate_board(0)
+
 	responsive_ui.update_buildings(available_buildings)
 	responsive_ui.update_abilities(ability_charge_counts, ability_charge_maximums)
 	responsive_ui.enter_play_mode()
@@ -119,7 +126,9 @@ func test_new_tier():
 	# Keep this commented except for when jumping straight to a higher tier for testing
 	# TODO: Re-Comment this when done testing
 
-	tier = 1  #2
+#	tier = 2
+#	depth_by_tier[tier] = 0
+#	available_buildings.append_array(BiomeData.get_buildings(1))
 	available_buildings.append_array(BiomeData.get_buildings(tier))
 
 func get_depth() -> int:
@@ -142,6 +151,11 @@ func _process(delta):
 	
 	if !help_text_is_overriden:
 		help_text_bar.text = "Press \'H\' for help overlay"
+	
+	if (Input.is_action_just_pressed("Test_1")):
+		await RenderingServer.frame_post_draw
+		get_viewport().get_texture().get_image().save_png("res://Screenshot.png")
+
 
 
 func can_enter_build_mode() -> bool:

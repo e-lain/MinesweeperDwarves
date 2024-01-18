@@ -80,7 +80,7 @@ static var data = {
 			ResourceData.Resources.STONE: 3,
 		},
 		"size": 1,
-		"icon_path": "res://Assets/TempLavaMoat.png" # TODO: Replace this with the appropriate texture when available
+		"icon_path": "res://Assets/walltiles/LavaPoolDownscaled.png" # TODO: Replace this with the appropriate texture when available
 	},
 	Type.FORGE: {
 		"type": Type.FORGE,

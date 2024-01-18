@@ -71,6 +71,12 @@ func _process(delta):
 		if PlatformUtil.isMobile():
 			Input.vibrate_handheld(100)
 		flag_toggled.emit(tap_start_pos)
+	
+
+#	var used_cells = get_used_cells(0)
+#	if used_cells.size() > 0:
+#		get_cell_tile_data(0, used_cells[0]).material.set_shader_parameter("global_transform", get_global_transform())
+
 
 func _unhandled_input(event):
 	if !default_behavior:

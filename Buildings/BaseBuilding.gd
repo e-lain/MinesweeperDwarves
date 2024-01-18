@@ -17,7 +17,7 @@ signal on_deselected
 
 @onready var handle_arrows = $HandleArrows
 @onready var cant_build_label = $CantBuildLabel
-
+@onready var pointlight = $PointLight2D
 
 var building_placement_material: ShaderMaterial = preload("res://Shaders/InvalidBuildingPlacement.tres")
 
@@ -62,6 +62,8 @@ func set_type(value, icon):
 	sprite.texture = icon
 	handle_arrows.scale.x = size
 	handle_arrows.scale.y = size
+	if type == BuildingData.Type.LAVA:
+		pointlight.visible = true
 
 func snap_position(pos: Vector2) -> Vector2:
 	return Vector2(snapped(pos.x-TILE_SIZE/2, TILE_SIZE), snapped(pos.y-TILE_SIZE/2, TILE_SIZE))
