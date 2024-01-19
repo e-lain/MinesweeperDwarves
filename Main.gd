@@ -4,7 +4,7 @@ class_name GameController
 @onready var mine_hit_popup = $CanvasLayer/MineHitPopup
 @onready var greyout = $CanvasLayer/ColorRect
 
-@onready var responsive_ui = $ResponsiveUICanvas/ResponsiveUI
+@onready var responsive_ui: ResponsiveUI = $ResponsiveUICanvas/ResponsiveUI
 
 @onready var destroy_popup = $CanvasLayer/AbilityMenu/DestroyPopup
 @onready var armor_popup = $CanvasLayer/AbilityMenu/ArmorPopup
@@ -29,7 +29,8 @@ var build_mode: bool = false
 
 var tier = 1
 var depth_by_tier = {}
-var available_buildings = []
+var available_buildings: Array[BuildingData.Type] = []
+var available_resources: Array[ResourceData.Resources] = []
  
 var ability_charge_maximums = { AbilityData.Type.ARMOR: 0, AbilityData.Type.DESTROY: 0, AbilityData.Type.DOWSE: 0 }
 var ability_charge_counts = {}
@@ -118,6 +119,7 @@ func _ready():
 	generate_board(0)
 
 	responsive_ui.update_buildings(available_buildings)
+	responsive_ui.update_resources(available_resources)
 	responsive_ui.update_abilities(ability_charge_counts, ability_charge_maximums)
 	responsive_ui.enter_play_mode()
 
@@ -129,17 +131,18 @@ func test_new_tier():
 #	tier = 2
 #	depth_by_tier[tier] = 0
 #	available_buildings.append_array(BiomeData.get_buildings(1))
+#	available_buildings.append_array(BiomeData.get_resources(1))
 	available_buildings.append_array(BiomeData.get_buildings(tier))
+	available_resources.append_array(BiomeData.get_resources(tier))
 
 func get_depth() -> int:
 	return depth_by_tier[tier]
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
-	responsive_ui.set_resource_count(ResourceData.Resources.POPULATION, Resources.population)
-	responsive_ui.set_resource_count(ResourceData.Resources.STONE, Resources.stone)
-	responsive_ui.set_resource_count(ResourceData.Resources.STEEL, Resources.steel)
-	responsive_ui.set_resource_count(ResourceData.Resources.SLEDGEHAMMER, Resources.sledgehammer)
+	for type in ResourceData.Resources.values():
+		responsive_ui.set_resource_count(type, Resources.amounts[type])
+
 	responsive_ui.set_depth(get_depth() + 1)
 	
 	if get_current_board():
@@ -206,7 +209,6 @@ func on_building_deselected():
 
 
 func next_level():
-	responsive_ui.set_tier(tier)
 	get_current_board().queue_free()
 	
 	print("MAIN SCENE RECEIVED NEXT LEVEL CALL")
@@ -214,8 +216,11 @@ func next_level():
 	
 	state = State.Play
 	
+	reset_available_for_tier_data()
+	
 	generate_board(get_depth())
 	responsive_ui.update_buildings(available_buildings)
+	responsive_ui.update_resources(available_resources)
 	responsive_ui.enter_play_mode()
 
 func _on_responsive_ui_enter_build_mode_pressed():
@@ -228,10 +233,12 @@ func _on_responsive_ui_enter_build_mode_pressed():
 func on_mine_animation_complete():
 	get_tree().paused = true
 	SoundManager.play_negative()
-	if Resources.population > 0:
+	var pop = Resources.amounts[ResourceData.Resources.POPULATION]
+	
+	if pop > 0:
 		mine_hit_popup.visible = true
 		greyout.visible = true
-	elif Resources.population == 0:
+	elif pop == 0:
 		game_over.show()
 		greyout.show()
 
@@ -373,3 +380,10 @@ func _on_responsive_ui_move_selected_building_confirmed():
 
 func on_placing_building_instantiated(building: BaseBuilding):
 	responsive_ui.on_building_placement_instantiated(building)
+
+func reset_available_for_tier_data():
+	available_buildings = []
+	available_resources = []
+	for i in tier + 1:
+		available_buildings.append_array(BiomeData.get_buildings(i))
+		available_resources.append_array(BiomeData.get_resources(i))

@@ -24,10 +24,8 @@ var cheats = {
 		"func":
 			func giveme(amount) -> void:
 				amount = int(amount)
-				Resources.steel += amount
-				Resources.stone += amount
-				Resources.population += amount
-				Resources.sledgehammer += amount,
+				for type in ResourceData.Resources.values():
+					Resources.amounts[type] += amount,
 		"param_count": 1
 	},
 	"solve": {

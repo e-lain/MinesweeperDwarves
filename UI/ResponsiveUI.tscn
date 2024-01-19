@@ -1,13 +1,11 @@
-[gd_scene load_steps=23 format=3 uid="uid://dnr83m4pqs7mp"]
+[gd_scene load_steps=21 format=3 uid="uid://dnr83m4pqs7mp"]
 
 [ext_resource type="Theme" uid="uid://b6iv3a38m6uhb" path="res://UI.tres" id="1_u5axg"]
-[ext_resource type="Texture2D" uid="uid://ca5lct0ctr37m" path="res://Assets/UI/StoneIcon.png" id="2_7bcyx"]
 [ext_resource type="Script" path="res://UI/ResponsiveUI.gd" id="2_bkf2v"]
 [ext_resource type="StyleBox" uid="uid://dt1oma3or8xpd" path="res://UI/PanelContainerStyle.tres" id="3_8e3sj"]
 [ext_resource type="Script" path="res://UI/ResourceBar.gd" id="3_km0c7"]
-[ext_resource type="Texture2D" uid="uid://du5p0tvlhojks" path="res://Assets/UI/PopIcon.png" id="3_tt564"]
-[ext_resource type="Texture2D" uid="uid://byetswoeyw7gd" path="res://Assets/UI/steeldownscaledicon.png" id="4_0svmv"]
 [ext_resource type="Texture2D" uid="uid://cfn88x8dv058h" path="res://Assets/Buildings/StairsUp.png" id="5_3xw3f"]
+[ext_resource type="PackedScene" uid="uid://db1xxa8k04j5p" path="res://UI/ResourceBarResource.tscn" id="5_pwklv"]
 [ext_resource type="Texture2D" uid="uid://bl2ixi00xkp8y" path="res://Assets/exclamation.png" id="6_ppse3"]
 [ext_resource type="StyleBox" uid="uid://b8qlwed3vhkld" path="res://UI/OuterButtonStyle.tres" id="8_vwt44"]
 [ext_resource type="StyleBox" uid="uid://bl0eiutsew477" path="res://UI/HoveredOuterButtonStyle.tres" id="9_dawhi"]
@@ -79,114 +77,11 @@ layout_mode = 2
 mouse_filter = 0
 script = ExtResource("3_km0c7")
 
-[node name="Stone" type="HBoxContainer" parent="TopPanel/ResourceBar"]
+[node name="Stone" parent="TopPanel/ResourceBar" instance=ExtResource("5_pwklv")]
 layout_mode = 2
-mouse_filter = 0
 
-[node name="TextureRect" type="TextureRect" parent="TopPanel/ResourceBar/Stone"]
-modulate = Color(0, 0, 0, 1)
+[node name="Stone2" parent="TopPanel/ResourceBar" instance=ExtResource("5_pwklv")]
 layout_mode = 2
-mouse_filter = 0
-texture = ExtResource("2_7bcyx")
-expand_mode = 2
-stretch_mode = 5
-
-[node name="Label" type="Label" parent="TopPanel/ResourceBar/Stone"]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 1
-mouse_filter = 0
-theme_override_font_sizes/font_size = 72
-text = "x 3"
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="Population" type="HBoxContainer" parent="TopPanel/ResourceBar"]
-layout_mode = 2
-mouse_filter = 0
-
-[node name="TextureRect" type="TextureRect" parent="TopPanel/ResourceBar/Population"]
-modulate = Color(0, 0, 0, 1)
-layout_mode = 2
-mouse_filter = 0
-texture = ExtResource("3_tt564")
-expand_mode = 2
-stretch_mode = 5
-
-[node name="Label" type="Label" parent="TopPanel/ResourceBar/Population"]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 1
-mouse_filter = 0
-theme_override_font_sizes/font_size = 72
-text = "x 3"
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="Steel" type="HBoxContainer" parent="TopPanel/ResourceBar"]
-layout_mode = 2
-mouse_filter = 0
-
-[node name="TextureRect" type="TextureRect" parent="TopPanel/ResourceBar/Steel"]
-modulate = Color(0, 0, 0, 1)
-layout_mode = 2
-mouse_filter = 0
-texture = ExtResource("4_0svmv")
-expand_mode = 2
-stretch_mode = 5
-
-[node name="Label" type="Label" parent="TopPanel/ResourceBar/Steel"]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 1
-mouse_filter = 0
-theme_override_font_sizes/font_size = 72
-text = "x 3"
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="Sledgehammer" type="HBoxContainer" parent="TopPanel/ResourceBar"]
-visible = false
-layout_mode = 2
-mouse_filter = 0
-
-[node name="TextureRect" type="TextureRect" parent="TopPanel/ResourceBar/Sledgehammer"]
-modulate = Color(0, 0, 0, 1)
-layout_mode = 2
-mouse_filter = 0
-texture = ExtResource("4_0svmv")
-expand_mode = 2
-stretch_mode = 5
-
-[node name="Label" type="Label" parent="TopPanel/ResourceBar/Sledgehammer"]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 1
-mouse_filter = 0
-theme_override_font_sizes/font_size = 72
-text = "x 0"
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="Lava" type="HBoxContainer" parent="TopPanel/ResourceBar"]
-layout_mode = 2
-mouse_filter = 0
-
-[node name="TextureRect" type="TextureRect" parent="TopPanel/ResourceBar/Lava"]
-modulate = Color(0, 0, 0, 1)
-layout_mode = 2
-texture = ExtResource("2_7bcyx")
-expand_mode = 2
-stretch_mode = 5
-
-[node name="Label" type="Label" parent="TopPanel/ResourceBar/Lava"]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 1
-theme_override_font_sizes/font_size = 72
-text = "x 3"
-horizontal_alignment = 1
-vertical_alignment = 1
 
 [node name="FloorsAndFlags" type="HBoxContainer" parent="TopPanel"]
 layout_mode = 2

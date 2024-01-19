@@ -35,15 +35,15 @@ func set_type(val: BuildingData.Type):
 			cost_ui_instance.set_data(cost_type, cost_value)
 
 func _process(delta):
-	current_stone = Resources.stone
-	current_pop = Resources.population
-	current_steel = Resources.steel
+	var building_costs = BuildingData.get_costs(type)
+	var cant_afford = false
 	
-	var data = BuildingData.data[type]
-	stone_req = BuildingData.get_cost(type, ResourceData.Resources.STONE)
-	pop_req =  BuildingData.get_cost(type, ResourceData.Resources.POPULATION)
-	steel_req = BuildingData.get_cost(type, ResourceData.Resources.STEEL)
-	if current_stone >= stone_req && current_pop > pop_req && current_steel >= steel_req && ((type != BuildingData.Type.STAIRCASE && (stairs_placed || type == BuildingData.Type.WONDER)) || (type == BuildingData.Type.STAIRCASE && !stairs_placed)):
+	for cost_type in building_costs.keys():
+		if Resources.amounts[cost_type] < building_costs[cost_type]:
+			cant_afford = true
+			break
+
+	if !cant_afford && ((type != BuildingData.Type.STAIRCASE && (stairs_placed || type == BuildingData.Type.WONDER)) || (type == BuildingData.Type.STAIRCASE && !stairs_placed)):
 		modulate = Color.WHITE
 		clickable = true
 	else:

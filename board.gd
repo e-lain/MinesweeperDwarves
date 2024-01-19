@@ -195,7 +195,7 @@ func _on_tile_uncovered(cell_pos: Vector2i):
 	if tile.is_bomb:
 		print("status of armor active: ", armor_active)
 		if !armor_active:
-			Resources.population -= 1
+			Resources.amounts[ResourceData.Resources.POPULATION] -= 1
 			explode_mine()
 	
 	SoundManager.play_uncover_tile_sound()
@@ -210,7 +210,7 @@ func enter_build_mode():
 			var tile = tiles[x][y]
 			if tile.is_bomb && tile.is_flagged:
 				if tile.bomb_type == BombData.Type.DEFAULT:
-					Resources.steel += 1
+					Resources.amounts[ResourceData.Resources.STEEL] += 1
 					var instance = collection_prefab.instantiate()
 					add_child(instance)
 					instance.position = Vector2(tile.get_position()) + (Vector2(TILE_SIZE, TILE_SIZE) / 2.0) + Vector2(-16, -16)
@@ -359,19 +359,14 @@ func on_confirm_building_placement():
 	if !stairs_placed:
 		stairs_placed = type == BuildingData.Type.STAIRCASE
 	
-	var stone_cost = BuildingData.get_cost(type, ResourceData.Resources.STONE)
-	var pop_cost =  BuildingData.get_cost(type, ResourceData.Resources.POPULATION)
-	var steel_cost = BuildingData.get_cost(type, ResourceData.Resources.STEEL)
 	
-	if pop_cost > 0:
-		Resources.population -= pop_cost
+	var costs = BuildingData.get_costs(type)
 	
-	if stone_cost > 0:
-		Resources.stone -= stone_cost
+	for cost_type in costs.keys():
+		if costs[cost_type] > 0:
+			Resources.amounts[cost_type] -= costs[cost_type]
 	
-	if steel_cost > 0:
-		Resources.steel -= steel_cost
-	
+
 	var tile
 	var world_positions_to_update = get_world_positions_in_area(building_world_pos, size)
 	for world_pos in world_positions_to_update:
@@ -446,18 +441,11 @@ func destroy_selected_building():
 		lava_tiles.erase(id)
 		refresh_lava_connections()
 	
-	var stone_cost = BuildingData.get_cost(type, ResourceData.Resources.STONE)
-	var pop_cost =  BuildingData.get_cost(type, ResourceData.Resources.POPULATION)
-	var steel_cost = BuildingData.get_cost(type, ResourceData.Resources.STEEL)
+	var costs = BuildingData.get_costs(type)
 	
-	if pop_cost > 0:
-		Resources.population += pop_cost
-	
-	if stone_cost > 0:
-		Resources.stone += stone_cost
-	
-	if steel_cost > 0:
-		Resources.steel += steel_cost
+	for cost_type in costs.keys():
+		if costs[cost_type] > 0:
+			Resources.amounts[cost_type] += costs[cost_type]
 	
 	var world_positions_to_update = get_world_positions_in_area(building_world_pos, size)
 	for world_pos in world_positions_to_update:
@@ -573,27 +561,16 @@ func collect_resources():
 	var collected_resources = false
 	for tile_id in tiles_to_collect_from.keys():
 		var adjacent_type = buildings_by_id[tile_id].type
-		var data = BuildingData.data[adjacent_type]
 		
-		var stone_cost = BuildingData.get_cost(adjacent_type, ResourceData.Resources.STONE)
-		var population_cost =  BuildingData.get_cost(adjacent_type, ResourceData.Resources.POPULATION)
-		var steel_cost = BuildingData.get_cost(adjacent_type, ResourceData.Resources.STEEL)
+		var costs = BuildingData.get_costs(adjacent_type)
+	
+		for cost_type in costs.keys():
+			if costs[cost_type] < 0:
+				Resources.amounts[cost_type] -= costs[cost_type]
+				buildings_by_id[tile_id].play_collection_animation(collection_lifespan_seconds, "res://Assets/UI/StoneIcon.png")
+				collected_resources = true
 		
-		# TODO - animate this
-		if stone_cost < 0: # negative costs are resource gains
-			Resources.stone -= stone_cost
-			buildings_by_id[tile_id].play_collection_animation(collection_lifespan_seconds, "res://Assets/UI/StoneIcon.png")
-			collected_resources = true
 		
-		if population_cost < 0:
-			Resources.population -= population_cost
-			buildings_by_id[tile_id].play_collection_animation(collection_lifespan_seconds, "res://Assets/UI/PopIcon.png")
-			collected_resources = true
-		
-		if steel_cost < 0:
-			Resources.steel -= steel_cost
-			buildings_by_id[tile_id].play_collection_animation(collection_lifespan_seconds, "res://Assets/UI/steeldownscaledicon.png")
-			collected_resources = true
 	
 	if collected_resources:
 		var timer = get_tree().create_timer(collection_lifespan_seconds)

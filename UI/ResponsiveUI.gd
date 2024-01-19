@@ -105,22 +105,22 @@ func _ready():
 	on_dimensions_updated()
 	state = State.PLAY
 
-func set_tier(tier: int):
-	resource_bar.set_tier(tier)
-
-func update_buildings(buildings_list):
+func update_buildings(buildings_list: Array[BuildingData.Type]) -> void:
 	if !buildings_list:
 		print("ERROR: BUILDINGS LIST PROVIDED IS INVALID")
 		return
 	build_menu.update_buildings(buildings_list)
 
-func update_abilities(ability_charge_counts: Dictionary, ability_charge_maximums: Dictionary):
+func update_abilities(ability_charge_counts: Dictionary, ability_charge_maximums: Dictionary) -> void:
 	var available_abilities = {}
 	for ability_type in ability_charge_maximums.keys():
 		if ability_charge_maximums[ability_type] > 0:
 			available_abilities[ability_type] = true
 	
 	ability_menu.update_abilities(ability_charge_counts, available_abilities)
+
+func update_resources(abilities_list: Array[ResourceData.Resources]) -> void:
+	resource_bar.update_available_resources(abilities_list)
 
 func on_dimensions_updated():
 	update_margins_for_notch()

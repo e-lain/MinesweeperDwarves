@@ -1,28 +1,18 @@
 extends HBoxContainer
 class_name ResourceBar
 
-@onready var stone_label = $Stone/Label
-@onready var population_label = $Population/Label
-@onready var steel_label = $Steel/Label
-@onready var lava_label = $Lava/Label
-@onready var sledgehammer_label = $Sledgehammer/Label
+var resource_prefab = preload("res://UI/ResourceBarResource.tscn")
 
-func set_tier(tier: int):
-	# TODO: Move this logic to BiomeData
-	if tier == 2:
-		$Sledgehammer.show()
+func update_available_resources(available_resources: Array[ResourceData.Resources]) -> void:
+	for child in get_children():
+		child.queue_free()
+	
+	for resource in available_resources:
+		var instance = resource_prefab.instantiate()
+		add_child(instance)
+		instance.set_data(resource, 0)
 		
 func set_resource_count(type: ResourceData.Resources, val: int):
-	var label
-	match type:
-		ResourceData.Resources.STONE:
-			label = stone_label
-		ResourceData.Resources.POPULATION:
-			label = population_label
-		ResourceData.Resources.STEEL:
-			label = steel_label
-		ResourceData.Resources.SLEDGEHAMMER: 
-			label = sledgehammer_label
-		ResourceData.Resources.LAVA:
-			label = lava_label
-	label.text = "x %d" % val
+	for child in get_children():
+		if child.type == type:
+			child.update_amount(val)
