@@ -13,6 +13,8 @@ signal move_selected_building_cancelled
 signal move_selected_building_confirmed
 signal destroy_selected_building_pressed
 
+signal tier_transition_midpoint 
+
 @onready var top_margin = $TopMargin
 @onready var bottom_margin = $BottomMargin
 
@@ -47,6 +49,10 @@ signal destroy_selected_building_pressed
 @onready var to_build_mode_button = $TopMargin/ToBuildModeButton/Button
 
 @onready var alert_box = $AlertBox
+
+@onready var transition = $Transition
+@onready var transition_text = $Transition/TransitionText
+
 
 # If we want to have margins around the UI, this would be where to assign them 
 # as they will be overwritten by notch code
@@ -237,7 +243,7 @@ func _on_descend_button_pressed():
 func show_floor_descend_warning(proceed_callback: Callable):
 	state = State.ALERT
 	alert_proceed_callback = proceed_callback
-	alert_box.visible = true
+	alert_box.show_content("[center]Watch Out![/center]", "[center]There are buildings which will not generate resources. Proceed?[/center]", Vector2(480, 360), AlertBox.ButtonStyle.Proceed, _on_alert_box_proceed_pressed, _on_alert_box_cancel_pressed)
 	cancel_confirm.visible = false
 	infobox.visible = false
 	build_menu.visible = false
@@ -291,3 +297,21 @@ func _on_destroy_selected_building_pressed():
 	infobox.visible = false
 	cancel_confirm.visible = true
 	cancel_confirm_message.text = "Destroy Building?"
+
+
+func show_transition(to_tier: int):
+	transition.modulate = Color(1, 1, 1, 0)
+	transition.visible = true
+	transition_text.text = "[center][wave amp=50.0 freq=10.0]%s[/wave][/center]" % BiomeData.data[to_tier]["name"]
+	var tween = create_tween().bind_node(self)
+	tween.tween_property(transition, "modulate", Color(1, 1, 1, 1), 2.0)
+	tween.tween_callback(hide_transition)
+
+func hide_transition():
+	tier_transition_midpoint.emit()
+	var tween = create_tween().bind_node(self)
+	tween.tween_property(transition, "modulate", Color(1, 1, 1, 0), 2.0)
+	tween.tween_callback(on_hide_transition_complete)
+
+func on_hide_transition_complete():
+	transition.visible = false

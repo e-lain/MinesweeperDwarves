@@ -105,6 +105,8 @@ func generate_board(difficulty: int):
 	
 	b.ability_complete.connect(on_ability_completed)
 	
+	b.tile_uncover_event_complete.connect(on_tile_uncover_event_complete)
+	
 	move_child(camera, -1)
 	camera.reset(Vector2.ZERO, board_size_global)
 
@@ -158,8 +160,6 @@ func _process(delta):
 	if (Input.is_action_just_pressed("Test_1")):
 		await RenderingServer.frame_post_draw
 		get_viewport().get_texture().get_image().save_png("res://Screenshot.png")
-
-
 
 func can_enter_build_mode() -> bool:
 	return get_current_board().tiles_uncovered != 0
@@ -263,6 +263,12 @@ func _on_responsive_ui_descend_pressed(force: bool = false):
 	get_current_board().collect_resources()
 
 func on_resource_collection_complete():
+	if (depth_by_tier[tier] == -1):
+		responsive_ui.show_transition(tier)
+	else:
+		next_level()
+
+func on_transition_to_next_tier_midpoint():
 	next_level()
 
 func _on_win_restart_button_pressed():
@@ -387,3 +393,7 @@ func reset_available_for_tier_data():
 	for i in tier + 1:
 		available_buildings.append_array(BiomeData.get_buildings(i))
 		available_resources.append_array(BiomeData.get_resources(i))
+
+func on_tile_uncover_event_complete():
+	if get_current_board().is_cleared():
+		_on_responsive_ui_enter_build_mode_pressed()

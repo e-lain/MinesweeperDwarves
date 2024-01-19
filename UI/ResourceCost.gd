@@ -7,4 +7,4 @@ class_name ResourceCostUI
 
 func set_data(type: ResourceData.Resources, amt: int):
 	icon.texture = load(ResourceData.data[type]["icon_path"])
-	label.text = str(amt)
+	label.text = str(-amt)

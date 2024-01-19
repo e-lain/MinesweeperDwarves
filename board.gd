@@ -3,6 +3,8 @@ class_name Board
 
 const TILE_SIZE = 64
 
+signal tile_uncover_event_complete
+
 signal on_minesweeper_collection_complete
 signal on_building_collection_complete
 signal mine_animation_complete
@@ -202,6 +204,8 @@ func _on_tile_uncovered(cell_pos: Vector2i):
 	
 	uncover_tile(tile)
 	update_shadows()
+	tile_uncover_event_complete.emit()
+	
 
 func enter_build_mode():
 	var has_steel_to_collect = false
@@ -835,3 +839,6 @@ func are_all_buildings_being_exploited() -> bool:
 			return false
 	
 	return true
+
+func is_cleared():
+	return tiles_uncovered + bombs_found == rows * columns

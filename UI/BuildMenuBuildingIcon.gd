@@ -29,10 +29,9 @@ func set_type(val: BuildingData.Type):
 	var costs = BuildingData.get_costs(val)
 	for cost_type in costs.keys():
 		var cost_value = costs[cost_type]
-		if cost_value > 0:
-			var cost_ui_instance = resource_cost_prefab.instantiate()
-			costs_container.add_child(cost_ui_instance)
-			cost_ui_instance.set_data(cost_type, cost_value)
+		var cost_ui_instance = resource_cost_prefab.instantiate()
+		costs_container.add_child(cost_ui_instance)
+		cost_ui_instance.set_data(cost_type, cost_value)
 
 func _process(delta):
 	var building_costs = BuildingData.get_costs(type)
