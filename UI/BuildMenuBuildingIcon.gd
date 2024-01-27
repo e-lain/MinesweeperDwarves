@@ -5,7 +5,7 @@ signal clicked
 
 @onready var resource_cost_prefab = preload("res://UI/ResourceCost.tscn")
 
-@onready var texture_rect = $TextureRect
+@onready var texture_rect = $HBoxContainer2/TextureRect
 @onready var costs_container = $HBoxContainer
 
 
@@ -22,6 +22,8 @@ var steel_req
 var stairs_placed: bool = false
 
 var clickable = true
+
+var scroll_container_swiping = false
 
 func set_type(val: BuildingData.Type):
 	type = val
@@ -55,6 +57,6 @@ func _process(delta):
 func set_stairs_placed(val):
 	stairs_placed = val
 
-func _on_gui_input(event):
-		if clickable and (event is InputEventScreenTouch or event.is_action_released("left_click")):
-			clicked.emit()
+func handle_tap() -> void:
+	if clickable:
+		clicked.emit() 

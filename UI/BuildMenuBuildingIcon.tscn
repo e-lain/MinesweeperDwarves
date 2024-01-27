@@ -3,35 +3,37 @@
 [ext_resource type="Texture2D" uid="uid://cbqgg2mc88gjm" path="res://Assets/Buildings/minecart downscaled.png" id="1_4348i"]
 [ext_resource type="Script" path="res://UI/BuildMenuBuildingIcon.gd" id="2_e08q7"]
 
-[node name="BuildMenuBuildingIcon" type="VBoxContainer"]
+[node name="BuildMenuBuildingIcon" type="VBoxContainer" groups=["scroll_container_tap_event_listener"]]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_bottom = 27.0
 grow_horizontal = 2
 grow_vertical = 2
-size_flags_horizontal = 3
+size_flags_horizontal = 6
 size_flags_vertical = 3
-mouse_filter = 0
+mouse_filter = 2
 theme_override_constants/separation = 12
-alignment = 1
 script = ExtResource("2_e08q7")
 
-[node name="TextureRect" type="TextureRect" parent="."]
-custom_minimum_size = Vector2(128, 128)
+[node name="HBoxContainer2" type="HBoxContainer" parent="."]
 layout_mode = 2
 size_flags_vertical = 3
 size_flags_stretch_ratio = 0.8
+alignment = 1
+
+[node name="TextureRect" type="TextureRect" parent="HBoxContainer2"]
+layout_mode = 2
 mouse_filter = 2
 texture = ExtResource("1_4348i")
-expand_mode = 5
+expand_mode = 3
 stretch_mode = 5
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
 layout_mode = 2
 size_flags_vertical = 3
 size_flags_stretch_ratio = 0.2
-theme_override_constants/separation = 10
+theme_override_constants/separation = 1
 alignment = 1
 
 [connection signal="gui_input" from="." to="." method="_on_gui_input"]

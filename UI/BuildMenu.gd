@@ -15,6 +15,8 @@ func _ready():
 func on_window_resized():
 	var viewport_size = get_viewport().get_visible_rect().size
 	var size = DisplayServer.window_get_size()
+	
+	
 	var vertical = size.y > size.x
 	var x_width = viewport_size.x if vertical else viewport_size.x * .8
 	var new_min_size = Vector2(x_width, viewport_size.y * .1875)

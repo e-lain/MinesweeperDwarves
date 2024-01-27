@@ -98,7 +98,7 @@ func _unhandled_input(event):
 				DragOrZoomEventManager.long_tap_started = false
 			
 		# Handle scroll zoom
-		if event is InputEventMouseButton and event.is_pressed():
+		if event is InputEventMouseButton and event.is_pressed() and !DragOrZoomEventManager.zoom_blocked:
 			var mouse_event = event as InputEventMouseButton
 			if mouse_event.button_index == MOUSE_BUTTON_WHEEL_UP:
 				zoom_camera(1.2)

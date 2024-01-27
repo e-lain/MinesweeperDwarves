@@ -1,4 +1,4 @@
-[gd_scene load_steps=22 format=3 uid="uid://dnr83m4pqs7mp"]
+[gd_scene load_steps=23 format=3 uid="uid://dnr83m4pqs7mp"]
 
 [ext_resource type="Theme" uid="uid://b6iv3a38m6uhb" path="res://UI.tres" id="1_u5axg"]
 [ext_resource type="Script" path="res://UI/ResponsiveUI.gd" id="2_bkf2v"]
@@ -9,6 +9,7 @@
 [ext_resource type="Texture2D" uid="uid://bl2ixi00xkp8y" path="res://Assets/exclamation.png" id="6_ppse3"]
 [ext_resource type="StyleBox" uid="uid://b8qlwed3vhkld" path="res://UI/OuterButtonStyle.tres" id="8_vwt44"]
 [ext_resource type="StyleBox" uid="uid://bl0eiutsew477" path="res://UI/HoveredOuterButtonStyle.tres" id="9_dawhi"]
+[ext_resource type="Script" path="res://UI/TouchCompatibleScrollContainer.gd" id="9_nlf7j"]
 [ext_resource type="Script" path="res://UI/BuildMenu.gd" id="9_o2aip"]
 [ext_resource type="PackedScene" uid="uid://bbc53njyng3ww" path="res://UI/BuildMenuBuildingIcon.tscn" id="10_0id56"]
 [ext_resource type="StyleBox" uid="uid://ddf7prbo71hl3" path="res://UI/CancelButton.tres" id="10_kuip1"]
@@ -149,6 +150,7 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_wxix3")
 follow_focus = true
 horizontal_scroll_mode = 2
 vertical_scroll_mode = 0
+script = ExtResource("9_nlf7j")
 
 [node name="HBoxContainer" type="HBoxContainer" parent="BuildMenu/ScrollContainer"]
 layout_mode = 2
@@ -450,6 +452,12 @@ text = "[center][wave amp=50.0 freq=10.0]The Mines[/wave][/center]"
 fit_content = true
 
 [connection signal="on_building_selected" from="BuildMenu" to="." method="_on_build_menu_on_building_selected"]
+[connection signal="gui_input" from="BuildMenu/ScrollContainer" to="BuildMenu/ScrollContainer" method="_on_gui_input"]
+[connection signal="hidden" from="BuildMenu/ScrollContainer" to="BuildMenu/ScrollContainer" method="_on_hidden"]
+[connection signal="mouse_entered" from="BuildMenu/ScrollContainer" to="BuildMenu/ScrollContainer" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="BuildMenu/ScrollContainer" to="BuildMenu/ScrollContainer" method="_on_mouse_exited"]
+[connection signal="scroll_ended" from="BuildMenu/ScrollContainer" to="BuildMenu/ScrollContainer" method="_on_scroll_ended"]
+[connection signal="scroll_started" from="BuildMenu/ScrollContainer" to="BuildMenu/ScrollContainer" method="_on_scroll_started"]
 [connection signal="on_ability_selected" from="AbilityMenu" to="." method="_on_ability_menu_ability_selected"]
 [connection signal="pressed" from="TopMargin/DescendButton/Button" to="." method="_on_descend_button_pressed"]
 [connection signal="pressed" from="TopMargin/ToBuildModeButton/Button" to="." method="_on_to_build_mode_button_pressed"]
@@ -457,6 +465,7 @@ fit_content = true
 [connection signal="on_building_move_pressed" from="BottomMargin/Infobox" to="." method="_on_move_selected_building_pressed"]
 [connection signal="pressed" from="BottomMargin/CancelConfirm/MarginContainer/VBoxContainer/HBoxContainer/Cancel" to="." method="_on_building_placement_cancel_pressed"]
 [connection signal="pressed" from="BottomMargin/CancelConfirm/MarginContainer/VBoxContainer/HBoxContainer/Confirm" to="." method="_on_building_placement_confirm_pressed"]
+[connection signal="mouse_entered" from="BottomMargin/CancelPlacement/MarginContainer/HBoxContainer/Cancel" to="." method="_on_cancel_mouse_entered"]
 [connection signal="pressed" from="BottomMargin/CancelPlacement/MarginContainer/HBoxContainer/Cancel" to="." method="_on_building_placement_cancel_pressed"]
 [connection signal="delayed_close_complete" from="AlertBox" to="." method="_on_alert_box_delayed_close_complete"]
 [connection signal="pressed" from="AlertBox/Buttons/ProceedButton" to="AlertBox" method="_on_proceed_button_pressed"]
