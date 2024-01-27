@@ -106,6 +106,7 @@ func generate_board(difficulty: int):
 	b.ability_complete.connect(on_ability_completed)
 	
 	b.tile_uncover_event_complete.connect(on_tile_uncover_event_complete)
+	b.tile_flagged_event_complete.connect(on_tile_uncover_event_complete)
 	
 	move_child(camera, -1)
 	camera.reset(Vector2.ZERO, board_size_global)
@@ -225,6 +226,7 @@ func next_level():
 
 func _on_responsive_ui_enter_build_mode_pressed():
 	if state != State.Build:
+		responsive_ui.hide_enter_build_mode()
 		get_current_board().enter_build_mode()
 	else:
 		push_error("ALREADY IN BUILD MODE but end level button pressed")

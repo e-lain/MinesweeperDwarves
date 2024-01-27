@@ -4,6 +4,7 @@ class_name Board
 const TILE_SIZE = 64
 
 signal tile_uncover_event_complete
+signal tile_flagged_event_complete
 
 signal on_minesweeper_collection_complete
 signal on_building_collection_complete
@@ -694,6 +695,7 @@ func _on_flag_toggled(cell_pos: Vector2i):
 		SoundManager.play_flag_sound()
 	print("bombs found: ", bombs_found)
 	tile.toggle_flag()
+	tile_flagged_event_complete.emit()
 
 func update_shadows():
 	tilemap.update_shadows(columns, rows)

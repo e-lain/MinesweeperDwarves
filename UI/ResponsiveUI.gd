@@ -315,3 +315,7 @@ func hide_transition():
 
 func on_hide_transition_complete():
 	transition.visible = false
+
+func hide_enter_build_mode():
+	to_build_mode_button_container.visible = false
+
