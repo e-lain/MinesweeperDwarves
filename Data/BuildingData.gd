@@ -85,12 +85,13 @@ static var data = {
 	Type.FORGE: {
 		"type": Type.FORGE,
 		"name": "Forge",
-		"description": "Needs to be built adjacent to a Lava Moat. Gain ___",
+		"description": "Needs to be built adjacent to a Lava Moat. Gain 1 Sledgehammer",
 		"costs": {
 			ResourceData.Resources.STONE: 5,
 			ResourceData.Resources.STEEL: 1,
+			ResourceData.Resources.SLEDGEHAMMER: -1,
 		},
-		"size": 1,
+		"size": 2,
 		"icon_path": "res://Assets/Buildings/forge.png"
 	}
 }

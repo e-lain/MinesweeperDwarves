@@ -104,7 +104,7 @@ func _process(delta):
 		var region_w = size * TILE_SIZE - bg_offset.x * 2
 		var region_h = size * TILE_SIZE - bg_offset.y * 2
 		background_sprite.region_rect = Rect2(region_x, region_y, region_w, region_h)
-	
+		
 	if requires_minecart_adjacency():
 		var next_to_minecart = next_to_minecart()
 		no_minecart_sprite.visible = !next_to_minecart
@@ -121,7 +121,7 @@ func _process(delta):
 			took_help_text_override = false
 
 func can_place(placement_position: Vector2):
-	if type == BuildingData.Type.LAVA && !next_to_lava():
+	if (type == BuildingData.Type.LAVA || type == BuildingData.Type.FORGE) && !next_to_lava():
 		return false
 	return board.can_place_at_position(placement_position, size)
 

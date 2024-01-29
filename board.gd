@@ -552,7 +552,6 @@ func collect_resources():
 		var type = building.type
 		
 		if type == BuildingData.Type.MINECART:
-
 			var cell_pos = tilemap.local_to_map(tilemap.to_local(building.global_position))
 			for direction in directions:
 				var check_cell = cell_pos + direction
@@ -561,7 +560,6 @@ func collect_resources():
 				var tile = tiles[check_cell.x][check_cell.y]
 				if tile.has_building and !tiles_to_collect_from.has(tile.building_id):
 					tiles_to_collect_from[tile.building_id] = tile
-	
 	
 	var collected_resources = false
 	for tile_id in tiles_to_collect_from.keys():
@@ -575,8 +573,6 @@ func collect_resources():
 				buildings_by_id[tile_id].play_collection_animation(collection_lifespan_seconds, "res://Assets/UI/StoneIcon.png")
 				collected_resources = true
 		
-		
-	
 	if collected_resources:
 		var timer = get_tree().create_timer(collection_lifespan_seconds)
 		timer.timeout.connect(building_collection_complete)
