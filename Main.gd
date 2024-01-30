@@ -100,6 +100,8 @@ func generate_board(difficulty: int):
 	b.placing_building_instantiated.connect(on_placing_building_instantiated)
 	b.building_placed.connect(on_building_placed)
 	
+	b.building_right_click_cancelled.connect(_on_responsive_ui_cancel_placement_pressed)
+	
 	b.building_selected.connect(on_building_selected)
 	b.building_deselected.connect(on_building_deselected)
 	

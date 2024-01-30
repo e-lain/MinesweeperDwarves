@@ -17,6 +17,7 @@ signal placing_building_instantiated(building: BaseBuilding)
 signal building_placed
 signal building_selected(building: BaseBuilding)
 signal building_deselected
+signal building_right_click_cancelled
 
 signal ability_complete
 
@@ -171,6 +172,7 @@ func enter_placing(type: BuildingData.Type):
 	building.set_type(type, get_parent().icons[type])
 	current_placing_instance = building
 	current_placing_instance.on_placed.connect(on_building_placed)
+	current_placing_instance.right_click_cancelled.connect(on_building_right_click_cancel)
 	placing_building_instantiated.emit(current_placing_instance)
 
 func queue_ability(ability_name: AbilityData.Type):
@@ -289,11 +291,8 @@ func refresh_lava_connections() -> void:
 		if tile.has_building && buildings_by_id[tile.building_id].type == BuildingData.Type.LAVA:
 			building_on_tile = buildings_by_id[tile.building_id]
 		if building_on_tile:
-			if building_on_tile.connected_lava_sources.size() < 2:
-				# TODO: REFACTOR
-				building_on_tile.no_minecart_sprite.visible = true
-			else:
-				building_on_tile.no_minecart_sprite.visible = false
+			var disconnected = building_on_tile.connected_lava_sources.size() < 2
+			building_on_tile.toggle_problem(disconnected, BaseBuilding.BuildingProblem.NO_LAVA)
 	return
 	
 # Recursive function which will register connected lava source, and then recurse to neighboring lava moats
@@ -340,7 +339,10 @@ func on_building_placed():
 		return
 	
 	building_placed.emit()
-	
+
+func on_building_right_click_cancel():
+	building_right_click_cancelled.emit()
+
 func on_cancel_building_placement():
 	state = State.Build
 	if current_placing_instance != null:
@@ -461,7 +463,7 @@ func destroy_selected_building():
 		if type == BuildingData.Type.LAVA:
 			tilemap.remove_tile(cell_pos)
 			lava_tiles.erase(tile)
-			tile.lava_uid = 0
+			tile.lava_uid = ""
 			refresh_lava_connections()
 	
 	buildings_by_id.erase(id)
@@ -736,7 +738,9 @@ func get_adjacent_positions(global_positions: Array[Vector2]) -> Array[Vector2]:
 	
 	for pos in global_positions:
 		for offset in offsets:
-			board_adjacent_coordinates.append(tilemap.local_to_map(tilemap.to_local(pos)) + offset)
+			var adjacent = Vector2(tilemap.local_to_map(tilemap.to_local(pos)) + offset)
+			if (adjacent.x >= 0 && adjacent.y >= 0 && adjacent.x < columns && adjacent.y < rows):
+				board_adjacent_coordinates.append(adjacent)
 	return board_adjacent_coordinates
 
 # Returns the board tiles of provided array of global positions 
