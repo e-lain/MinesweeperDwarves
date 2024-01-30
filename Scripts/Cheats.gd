@@ -33,6 +33,9 @@ var cheats = {
 			func solve() -> void:
 				var main: GameController = get_tree().get_first_node_in_group("main")
 				var board: Board = main.get_current_board()
+				if (!board.bombs_initialized):
+					board.set_bombs(Vector2i(0, 0))
+				
 				var bomb_tiles = board.bomb_tiles
 				for col in board.tiles:
 					for tile in col:

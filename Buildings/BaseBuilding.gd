@@ -76,7 +76,10 @@ func set_type(value, icon):
 		pointlight.visible = true
 
 func snap_position(pos: Vector2) -> Vector2:
-	return Vector2(snapped(pos.x-TILE_SIZE/2, TILE_SIZE), snapped(pos.y-TILE_SIZE/2, TILE_SIZE))
+	var snapped =  Vector2(snapped(pos.x-TILE_SIZE/2, TILE_SIZE), snapped(pos.y-TILE_SIZE/2, TILE_SIZE))
+	print("Pos: %s Snapped: %s" % [pos, snapped])
+	return snapped
+	
 
 func _process(delta):
 	if state == State.PlacedUnconfirmed:

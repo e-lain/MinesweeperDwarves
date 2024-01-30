@@ -50,6 +50,8 @@ var bomb_count = 4
 
 var flags = bomb_count
 
+var bombs_initialized: bool = false
+
 var bombs_found = 0
 var tiles_uncovered = 0
 var total_tiles = rows*columns
@@ -104,9 +106,7 @@ func init_board(rows: int, cols: int, bombs: int, tier: int):
 	lava_tiles = {}
 	
 	tiles = tilemap.fill(columns, rows, tier)
-	set_bombs()
 
-	
 func _unhandled_input(event):
 	if state == State.MobilePrePlacing and event is InputEventScreenTouch:
 		get_viewport().set_input_as_handled()
@@ -139,20 +139,34 @@ func create_grid_lines():
 		instance.material.set_shader_parameter("min_fade_pos", min_fade_pos)
 		instance.material.set_shader_parameter("max_fade_pos", max_fade_pos)
 
-func set_bombs():
+func set_bombs(first_click_pos: Vector2i):
+	var indices: Array = []
+	var tile_count = rows * columns
+	var first_click_tile = tiles[first_click_pos.x][first_click_pos.y]
+	var adjacent_to_first_click = get_adjacent_tiles(first_click_tile)
+	adjacent_to_first_click.append(tiles[first_click_pos.x][first_click_pos.y])
+	var adjacent_indices = {}
+	for tile in adjacent_to_first_click:
+		adjacent_indices[tile.cell_position.y + (tile.cell_position.x * rows)] = true
+	
+	for i in tile_count:
+		if !adjacent_indices.has(i):
+			indices.push_back(i)
+	indices.shuffle()
+	
 	var n = 0
 	while n < bomb_count:
-		var bomb_index = randi() % (rows * columns)
+		var bomb_index = indices.pop_front()
 		var tile = tiles[bomb_index / rows][bomb_index % rows]
-		if tile.is_bomb == false:
-			# Determine which type the bomb will be
-			var types = BiomeData.get_bombs(get_parent().tier)
-			var type_index = randi() % (types.size())
-			var bomb_type = types[type_index]
-			
-			tile.set_bomb(bomb_type)
-			bomb_tiles.append(tile)
-			n += 1
+		# Determine which type the bomb will be
+		var types = BiomeData.get_bombs(get_parent().tier)
+		var type_index = randi() % (types.size())
+		var bomb_type = types[type_index]
+		
+		tile.set_bomb(bomb_type)
+		bomb_tiles.append(tile)
+		n += 1
+	bombs_initialized = true
 
 func queue_building(type: BuildingData.Type):
 	if state == State.Build:
@@ -193,6 +207,10 @@ func _on_tile_destroyed(cell_pos: Vector2i):
 func _on_tile_uncovered(cell_pos: Vector2i):
 	if mine_exploded:
 		return
+	
+	if !bombs_initialized:
+		set_bombs(cell_pos)
+	
 	var tile = tiles[cell_pos.x][cell_pos.y]
 	if tile.is_flagged:
 		return
