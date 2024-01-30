@@ -43,7 +43,7 @@ static var data = {
 		"type": Type.LAVA,
 		"name": "The Volcano",
 		"tier": 2,
-		"buildings": [BuildingData.Type.LAVA, BuildingData.Type.FORGE],
+		"buildings": [BuildingData.Type.LAVA, BuildingData.Type.FORGE, BuildingData.Type.GLASSWORKS],
 		"bombs": [BombData.Type.DEFAULT, BombData.Type.LAVA],
 		"resources": [ResourceData.Resources.SLEDGEHAMMER]
 	}

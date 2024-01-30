@@ -1,0 +1,111 @@
+[1mdiff --git a/Assets/Buildings/forge.png b/Assets/Buildings/forge.png[m
+[1mindex f8737a8..c12e3d2 100644[m
+Binary files a/Assets/Buildings/forge.png and b/Assets/Buildings/forge.png differ
+[1mdiff --git a/Data/BiomeData.gd b/Data/BiomeData.gd[m
+[1mindex 9366c4b..1c28989 100644[m
+[1m--- a/Data/BiomeData.gd[m
+[1m+++ b/Data/BiomeData.gd[m
+[36m@@ -43,7 +43,7 @@[m [mstatic var data = {[m
+ 		"type": Type.LAVA,[m
+ 		"name": "The Volcano",[m
+ 		"tier": 2,[m
+[31m-		"buildings": [BuildingData.Type.LAVA, BuildingData.Type.FORGE],[m
+[32m+[m		[32m"buildings": [BuildingData.Type.LAVA, BuildingData.Type.FORGE, BuildingData.Type.GLASSWORKS],[m
+ 		"bombs": [BombData.Type.DEFAULT, BombData.Type.LAVA],[m
+ 		"resources": [ResourceData.Resources.SLEDGEHAMMER][m
+ 	}[m
+[1mdiff --git a/Data/BuildingData.gd b/Data/BuildingData.gd[m
+[1mindex 15c8894..b88b3b7 100644[m
+[1m--- a/Data/BuildingData.gd[m
+[1m+++ b/Data/BuildingData.gd[m
+[36m@@ -8,7 +8,8 @@[m [menum Type {[m
+ 	WONDER,[m
+ 	MINECART,[m
+ 	LAVA,[m
+[31m-	FORGE[m
+[32m+[m	[32mFORGE,[m
+[32m+[m	[32mGLASSWORKS[m
+ }[m
+ [m
+ static var data = {[m
+[36m@@ -43,7 +44,7 @@[m [mstatic var data = {[m
+ 	Type.WORKSHOP: {[m
+ 		"type": Type.WORKSHOP,[m
+ 		"name": "Engineer's Workshop",[m
+[31m-		"description": "Gain Active Ability Charge",[m
+[32m+[m		[32m"description": "Gain Active Ability Charge. Advance to the volcano from the depths.",[m
+ 		"costs": {[m
+ 			ResourceData.Resources.STONE: 5,[m
+ 			ResourceData.Resources.POPULATION: 1,[m
+[36m@@ -85,13 +86,25 @@[m [mstatic var data = {[m
+ 	Type.FORGE: {[m
+ 		"type": Type.FORGE,[m
+ 		"name": "Forge",[m
+[31m-		"description": "Needs to be built adjacent to a Lava Moat. Gain ___",[m
+[32m+[m		[32m"description": "Needs to be built adjacent to a Lava Moat. Gain 1 Sledgehammer",[m
+ 		"costs": {[m
+ 			ResourceData.Resources.STONE: 5,[m
+ 			ResourceData.Resources.STEEL: 1,[m
+ 		},[m
+[31m-		"size": 1,[m
+[32m+[m		[32m"size": 2,[m
+ 		"icon_path": "res://Assets/Buildings/forge.png"[m
+[32m+[m	[32m},[m
+[32m+[m	[32mType.GLASSWORKS: {[m
+[32m+[m		[32m"type": Type.GLASSWORKS,[m
+[32m+[m		[32m"name": "Glassworks",[m
+[32m+[m		[32m"description": "Needs to be built adjacent to a Workshop AND a Lava Moat. Advance to (tier 3) from the volcano",[m
+[32m+[m		[32m"costs": {[m
+[32m+[m			[32mResourceData.Resources.STONE: 20,[m
+[32m+[m			[32mResourceData.Resources.STEEL: 4,[m
+[32m+[m			[32mResourceData.Resources.SLEDGEHAMMER: 5,[m
+[32m+[m		[32m},[m
+[32m+[m		[32m"size": 2,[m
+[32m+[m		[32m"icon_path": "res://Assets/Buildings/glassworks.png"[m
+ 	}[m
+ }[m
+ [m
+[1mdiff --git a/Data/ResourceData.gd b/Data/ResourceData.gd[m
+[1mindex d7627e9..2b71b1f 100644[m
+[1m--- a/Data/ResourceData.gd[m
+[1m+++ b/Data/ResourceData.gd[m
+[36m@@ -19,7 +19,7 @@[m [mstatic var data = {[m
+ 		"icon_path": "res://Assets/UI/PopIcon.png"[m
+ 	},[m
+ 	Resources.SLEDGEHAMMER: {[m
+[31m-		"icon_path": "res://Assets/UI/PopIcon.png"[m
+[32m+[m		[32m"icon_path": "res://Assets/UI/SledgeHammerIcon.png"[m
+ 	},[m
+ 	Resources.LAVA: {[m
+ 		"icon_path": "res://Assets/UI/PopIcon.png"[m
+[1mdiff --git a/board.gd b/board.gd[m
+[1mindex ca5f2c7..76c524b 100644[m
+[1m--- a/board.gd[m
+[1m+++ b/board.gd[m
+[36m@@ -768,7 +768,7 @@[m [mfunc tile_is_next_to_building_type(tile: BoardTile, type: BuildingData.Type) ->[m
+ func building_is_next_to_minecart(building: BaseBuilding) -> bool:[m
+ 	var places_to_check = get_world_positions_in_area(building.global_position, building.size)[m
+ 	var adjacent_positions = get_adjacent_positions(places_to_check)[m
+[31m-	var adjacent_tiles = get_tiles_from_positions(adjacent_positions) #TODO: RIGHT HERE[m
+[32m+[m	[32mvar adjacent_tiles = get_tiles_from_positions(adjacent_positions)[m
+ 	[m
+ 	var offsets = [Vector2i.UP, Vector2i.DOWN, Vector2i.LEFT, Vector2i.RIGHT]	[m
+ [m
+[36m@@ -786,6 +786,7 @@[m [mfunc building_is_next_to_minecart(building: BaseBuilding) -> bool:[m
+ 				return true[m
+ 	return false[m
+ [m
+[32m+[m[32m# TODO: See if we can use tiles_is_next_to_building_type here[m
+ func building_is_next_to_lava(building: BaseBuilding) -> bool:[m
+ 	var places_to_check = get_world_positions_in_area(building.global_position, building.size)[m
+ 	var offsets = [Vector2i.UP, Vector2i.DOWN, Vector2i.LEFT, Vector2i.RIGHT]	[m
+[36m@@ -801,7 +802,8 @@[m [mfunc building_is_next_to_lava(building: BaseBuilding) -> bool:[m
+ 			if tile.has_building:[m
+ 				other_building = buildings_by_id[tile.building_id][m
+ 			# Ensure adjacent building is lava source or valid lava building[m
+[31m-			if (other_building && other_building.type == BuildingData.Type.LAVA) || (tile.is_bomb && tile.bomb_type == BombData.Type.LAVA):[m
+[32m+[m			[32m# TODO: Also check if moat is properly connected[m
+[32m+[m			[32mif (other_building && other_building.type == BuildingData.Type.LAVA && !tile.is_bomb && other_building.connected_lava_sources > 1):[m
+ 				return true[m
+ 	return false[m
+ [m

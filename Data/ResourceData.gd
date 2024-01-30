@@ -19,7 +19,7 @@ static var data = {
 		"icon_path": "res://Assets/UI/PopIcon.png"
 	},
 	Resources.SLEDGEHAMMER: {
-		"icon_path": "res://Assets/UI/PopIcon.png"
+		"icon_path": "res://Assets/UI/SledgeHammerIcon.png"
 	},
 	Resources.LAVA: {
 		"icon_path": "res://Assets/UI/PopIcon.png"

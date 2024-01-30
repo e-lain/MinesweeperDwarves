@@ -8,7 +8,8 @@ enum Type {
 	WONDER,
 	MINECART,
 	LAVA,
-	FORGE
+	FORGE,
+	GLASSWORKS
 }
 
 static var data = {
@@ -43,7 +44,7 @@ static var data = {
 	Type.WORKSHOP: {
 		"type": Type.WORKSHOP,
 		"name": "Engineer's Workshop",
-		"description": "Gain Active Ability Charge",
+		"description": "Gain Active Ability Charge. Advance to the volcano from the depths.",
 		"costs": {
 			ResourceData.Resources.STONE: 5,
 			ResourceData.Resources.POPULATION: 1,
@@ -85,13 +86,25 @@ static var data = {
 	Type.FORGE: {
 		"type": Type.FORGE,
 		"name": "Forge",
-		"description": "Needs to be built adjacent to a Lava Moat. Gain ___",
+		"description": "Needs to be built adjacent to a Lava Moat. Gain 1 Sledgehammer",
 		"costs": {
 			ResourceData.Resources.STONE: 5,
 			ResourceData.Resources.STEEL: 1,
 		},
-		"size": 1,
+		"size": 2,
 		"icon_path": "res://Assets/Buildings/forge.png"
+	},
+	Type.GLASSWORKS: {
+		"type": Type.GLASSWORKS,
+		"name": "Glassworks",
+		"description": "Needs to be built adjacent to a Workshop AND a Lava Moat. Advance to (tier 3) from the volcano",
+		"costs": {
+			ResourceData.Resources.STONE: 20,
+			ResourceData.Resources.STEEL: 4,
+			ResourceData.Resources.SLEDGEHAMMER: 5,
+		},
+		"size": 2,
+		"icon_path": "res://Assets/Buildings/glassworks.png"
 	}
 }
 

@@ -768,7 +768,7 @@ func tile_is_next_to_building_type(tile: BoardTile, type: BuildingData.Type) -> 
 func building_is_next_to_minecart(building: BaseBuilding) -> bool:
 	var places_to_check = get_world_positions_in_area(building.global_position, building.size)
 	var adjacent_positions = get_adjacent_positions(places_to_check)
-	var adjacent_tiles = get_tiles_from_positions(adjacent_positions) #TODO: RIGHT HERE
+	var adjacent_tiles = get_tiles_from_positions(adjacent_positions)
 	
 	var offsets = [Vector2i.UP, Vector2i.DOWN, Vector2i.LEFT, Vector2i.RIGHT]	
 
@@ -786,6 +786,7 @@ func building_is_next_to_minecart(building: BaseBuilding) -> bool:
 				return true
 	return false
 
+# TODO: See if we can use tiles_is_next_to_building_type here
 func building_is_next_to_lava(building: BaseBuilding) -> bool:
 	var places_to_check = get_world_positions_in_area(building.global_position, building.size)
 	var offsets = [Vector2i.UP, Vector2i.DOWN, Vector2i.LEFT, Vector2i.RIGHT]	
@@ -801,7 +802,8 @@ func building_is_next_to_lava(building: BaseBuilding) -> bool:
 			if tile.has_building:
 				other_building = buildings_by_id[tile.building_id]
 			# Ensure adjacent building is lava source or valid lava building
-			if (other_building && other_building.type == BuildingData.Type.LAVA) || (tile.is_bomb && tile.bomb_type == BombData.Type.LAVA):
+			# TODO: Also check if moat is properly connected
+			if (other_building && other_building.type == BuildingData.Type.LAVA && !tile.is_bomb && other_building.connected_lava_sources > 1):
 				return true
 	return false
 
