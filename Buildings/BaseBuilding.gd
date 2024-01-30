@@ -1,13 +1,14 @@
 extends Node2D
 class_name BaseBuilding
 
+signal right_click_cancelled
 signal on_placed
 signal on_selected(building: BaseBuilding)
 signal on_deselected
 
 @export var type: BuildingData.Type
 @onready var sprite: Sprite2D = $Sprite2D
-@onready var no_minecart_sprite: Sprite2D = $NoMinecart
+@onready var speech_bubble: SpeechBubble = $SpeechBubble
 
 @onready var background_sprite: Sprite2D = $BG
 
@@ -24,6 +25,9 @@ var building_placement_material: ShaderMaterial = preload("res://Shaders/Invalid
 const bg_offset := Vector2i(3, 3)
 
 const collection_prefab: PackedScene = preload("res://UI/collection_effect.tscn")
+
+const need_minecart_texture: Texture = preload("res://Assets/Buildings/minecart downscaled.png")
+const need_lava_texture: Texture = preload("res://Assets/walltiles/LavaPoolDownscaled.png")
 
 const TILE_SIZE = 64
 
@@ -54,10 +58,16 @@ enum State {
 	Selected
 }
 
+enum BuildingProblem {
+	NO_MINECART,
+	NO_LAVA
+}
+
 func set_type(value, icon):
 	type = value
 	size = BuildingData.data[type]["size"]
 	gui_control.size = Vector2(TILE_SIZE, TILE_SIZE) * size
+	speech_bubble.position.x = TILE_SIZE * size / 2.0 - (TILE_SIZE / 2.0)
 	
 	sprite.texture = icon
 	handle_arrows.scale.x = size
@@ -66,7 +76,10 @@ func set_type(value, icon):
 		pointlight.visible = true
 
 func snap_position(pos: Vector2) -> Vector2:
-	return Vector2(snapped(pos.x-TILE_SIZE/2, TILE_SIZE), snapped(pos.y-TILE_SIZE/2, TILE_SIZE))
+	var snapped =  Vector2(snapped(pos.x-TILE_SIZE/2, TILE_SIZE), snapped(pos.y-TILE_SIZE/2, TILE_SIZE))
+	print("Pos: %s Snapped: %s" % [pos, snapped])
+	return snapped
+	
 
 func _process(delta):
 	if state == State.PlacedUnconfirmed:
@@ -104,11 +117,10 @@ func _process(delta):
 		var region_w = size * TILE_SIZE - bg_offset.x * 2
 		var region_h = size * TILE_SIZE - bg_offset.y * 2
 		background_sprite.region_rect = Rect2(region_x, region_y, region_w, region_h)
-	
+		
 	if requires_minecart_adjacency():
 		var next_to_minecart = next_to_minecart()
-		no_minecart_sprite.visible = !next_to_minecart
-		sprite.modulate.a = 1 if next_to_minecart else 0.7 
+		toggle_problem(!next_to_minecart, BuildingProblem.NO_MINECART)
 		
 		var mouse_pos = get_local_mouse_position()
 		var mouse_in_bounds = mouse_pos.x >= 0 && mouse_pos.y >= 0 && mouse_pos.x < TILE_SIZE * size && mouse_pos.y < TILE_SIZE * size
@@ -120,8 +132,20 @@ func _process(delta):
 			main.help_text_is_overriden = false
 			took_help_text_override = false
 
+
+func toggle_problem(has_problem: bool, reason: BuildingProblem = BuildingProblem.NO_MINECART):
+	speech_bubble.visible = has_problem
+	sprite.modulate.a = 1 if !has_problem else 0.7
+	if has_problem:
+		match reason:
+			BuildingProblem.NO_MINECART:
+				speech_bubble.set_texture(need_minecart_texture)
+			BuildingProblem.NO_LAVA:
+				speech_bubble.set_texture(need_lava_texture)
+
+
 func can_place(placement_position: Vector2):
-	if type == BuildingData.Type.LAVA && !next_to_lava():
+	if (type == BuildingData.Type.LAVA || type == BuildingData.Type.FORGE) && !next_to_lava():
 		return false
 	return board.can_place_at_position(placement_position, size)
 
@@ -199,7 +223,8 @@ func _handle_mouse_input(event):
 				place(global_position)
 				
 				return
-				
+		elif event.is_action_pressed("right_click"):
+			right_click_cancelled.emit()
 	if state == State.PlacedUnconfirmed:
 		if event is InputEventMouseButton and event.is_action_pressed("left_click"):
 			enter_move_state()

@@ -17,6 +17,7 @@ signal placing_building_instantiated(building: BaseBuilding)
 signal building_placed
 signal building_selected(building: BaseBuilding)
 signal building_deselected
+signal building_right_click_cancelled
 
 signal ability_complete
 
@@ -48,6 +49,8 @@ var columns = 6
 var bomb_count = 4
 
 var flags = bomb_count
+
+var bombs_initialized: bool = false
 
 var bombs_found = 0
 var tiles_uncovered = 0
@@ -103,9 +106,7 @@ func init_board(rows: int, cols: int, bombs: int, tier: int):
 	lava_tiles = {}
 	
 	tiles = tilemap.fill(columns, rows, tier)
-	set_bombs()
 
-	
 func _unhandled_input(event):
 	if state == State.MobilePrePlacing and event is InputEventScreenTouch:
 		get_viewport().set_input_as_handled()
@@ -138,20 +139,34 @@ func create_grid_lines():
 		instance.material.set_shader_parameter("min_fade_pos", min_fade_pos)
 		instance.material.set_shader_parameter("max_fade_pos", max_fade_pos)
 
-func set_bombs():
+func set_bombs(first_click_pos: Vector2i):
+	var indices: Array = []
+	var tile_count = rows * columns
+	var first_click_tile = tiles[first_click_pos.x][first_click_pos.y]
+	var adjacent_to_first_click = get_adjacent_tiles(first_click_tile)
+	adjacent_to_first_click.append(tiles[first_click_pos.x][first_click_pos.y])
+	var adjacent_indices = {}
+	for tile in adjacent_to_first_click:
+		adjacent_indices[tile.cell_position.y + (tile.cell_position.x * rows)] = true
+	
+	for i in tile_count:
+		if !adjacent_indices.has(i):
+			indices.push_back(i)
+	indices.shuffle()
+	
 	var n = 0
 	while n < bomb_count:
-		var bomb_index = randi() % (rows * columns)
+		var bomb_index = indices.pop_front()
 		var tile = tiles[bomb_index / rows][bomb_index % rows]
-		if tile.is_bomb == false:
-			# Determine which type the bomb will be
-			var types = BiomeData.get_bombs(get_parent().tier)
-			var type_index = randi() % (types.size())
-			var bomb_type = types[type_index]
-			
-			tile.set_bomb(bomb_type)
-			bomb_tiles.append(tile)
-			n += 1
+		# Determine which type the bomb will be
+		var types = BiomeData.get_bombs(get_parent().tier)
+		var type_index = randi() % (types.size())
+		var bomb_type = types[type_index]
+		
+		tile.set_bomb(bomb_type)
+		bomb_tiles.append(tile)
+		n += 1
+	bombs_initialized = true
 
 func queue_building(type: BuildingData.Type):
 	if state == State.Build:
@@ -171,6 +186,7 @@ func enter_placing(type: BuildingData.Type):
 	building.set_type(type, get_parent().icons[type])
 	current_placing_instance = building
 	current_placing_instance.on_placed.connect(on_building_placed)
+	current_placing_instance.right_click_cancelled.connect(on_building_right_click_cancel)
 	placing_building_instantiated.emit(current_placing_instance)
 
 func queue_ability(ability_name: AbilityData.Type):
@@ -191,6 +207,10 @@ func _on_tile_destroyed(cell_pos: Vector2i):
 func _on_tile_uncovered(cell_pos: Vector2i):
 	if mine_exploded:
 		return
+	
+	if !bombs_initialized:
+		set_bombs(cell_pos)
+	
 	var tile = tiles[cell_pos.x][cell_pos.y]
 	if tile.is_flagged:
 		return
@@ -289,11 +309,8 @@ func refresh_lava_connections() -> void:
 		if tile.has_building && buildings_by_id[tile.building_id].type == BuildingData.Type.LAVA:
 			building_on_tile = buildings_by_id[tile.building_id]
 		if building_on_tile:
-			if building_on_tile.connected_lava_sources.size() < 2:
-				# TODO: REFACTOR
-				building_on_tile.no_minecart_sprite.visible = true
-			else:
-				building_on_tile.no_minecart_sprite.visible = false
+			var disconnected = building_on_tile.connected_lava_sources.size() < 2
+			building_on_tile.toggle_problem(disconnected, BaseBuilding.BuildingProblem.NO_LAVA)
 	return
 	
 # Recursive function which will register connected lava source, and then recurse to neighboring lava moats
@@ -340,7 +357,10 @@ func on_building_placed():
 		return
 	
 	building_placed.emit()
-	
+
+func on_building_right_click_cancel():
+	building_right_click_cancelled.emit()
+
 func on_cancel_building_placement():
 	state = State.Build
 	if current_placing_instance != null:
@@ -461,7 +481,7 @@ func destroy_selected_building():
 		if type == BuildingData.Type.LAVA:
 			tilemap.remove_tile(cell_pos)
 			lava_tiles.erase(tile)
-			tile.lava_uid = 0
+			tile.lava_uid = ""
 			refresh_lava_connections()
 	
 	buildings_by_id.erase(id)
@@ -552,7 +572,6 @@ func collect_resources():
 		var type = building.type
 		
 		if type == BuildingData.Type.MINECART:
-
 			var cell_pos = tilemap.local_to_map(tilemap.to_local(building.global_position))
 			for direction in directions:
 				var check_cell = cell_pos + direction
@@ -561,7 +580,6 @@ func collect_resources():
 				var tile = tiles[check_cell.x][check_cell.y]
 				if tile.has_building and !tiles_to_collect_from.has(tile.building_id):
 					tiles_to_collect_from[tile.building_id] = tile
-	
 	
 	var collected_resources = false
 	for tile_id in tiles_to_collect_from.keys():
@@ -575,8 +593,6 @@ func collect_resources():
 				buildings_by_id[tile_id].play_collection_animation(collection_lifespan_seconds, "res://Assets/UI/StoneIcon.png")
 				collected_resources = true
 		
-		
-	
 	if collected_resources:
 		var timer = get_tree().create_timer(collection_lifespan_seconds)
 		timer.timeout.connect(building_collection_complete)
@@ -740,7 +756,9 @@ func get_adjacent_positions(global_positions: Array[Vector2]) -> Array[Vector2]:
 	
 	for pos in global_positions:
 		for offset in offsets:
-			board_adjacent_coordinates.append(tilemap.local_to_map(tilemap.to_local(pos)) + offset)
+			var adjacent = Vector2(tilemap.local_to_map(tilemap.to_local(pos)) + offset)
+			if (adjacent.x >= 0 && adjacent.y >= 0 && adjacent.x < columns && adjacent.y < rows):
+				board_adjacent_coordinates.append(adjacent)
 	return board_adjacent_coordinates
 
 # Returns the board tiles of provided array of global positions 

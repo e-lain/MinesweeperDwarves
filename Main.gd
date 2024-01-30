@@ -89,6 +89,7 @@ func generate_board(difficulty: int):
 	var board_size_global = Vector2(b.columns * b.TILE_SIZE, b.rows * b.TILE_SIZE)
 	
 	b.position = -(board_size_global / 2)
+	b.position = Vector2(snapped(b.position.x-b.TILE_SIZE/2, b.TILE_SIZE), snapped(b.position.y-b.TILE_SIZE/2, b.TILE_SIZE))
 	b.create_grid_lines()
 	b.mine_animation_complete.connect(on_mine_animation_complete)
 	b.wonder_placed.connect(on_wonder_placed)
@@ -100,6 +101,8 @@ func generate_board(difficulty: int):
 	b.placing_building_instantiated.connect(on_placing_building_instantiated)
 	b.building_placed.connect(on_building_placed)
 	
+	b.building_right_click_cancelled.connect(_on_responsive_ui_cancel_placement_pressed)
+	
 	b.building_selected.connect(on_building_selected)
 	b.building_deselected.connect(on_building_deselected)
 	
@@ -108,8 +111,10 @@ func generate_board(difficulty: int):
 	b.tile_uncover_event_complete.connect(on_tile_uncover_event_complete)
 	b.tile_flagged_event_complete.connect(on_tile_uncover_event_complete)
 	
+	var cam_center = b.position + (board_size_global / 2)
+	
 	move_child(camera, -1)
-	camera.reset(Vector2.ZERO, board_size_global)
+	camera.reset(cam_center, board_size_global)
 
 # Called when the node enters the scene tree for the first time.
 func _ready():

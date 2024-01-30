@@ -6,7 +6,7 @@ signal on_destroy_pressed
 
 @onready var label = $Label
 @onready var destory_button = $Destroy
-
+@onready var move_button = $Move
 
 func _on_move_pressed():
 	on_move_pressed.emit()
@@ -19,3 +19,4 @@ func set_text(text: String):
 
 func set_type(type: BuildingData.Type):
 	destory_button.disabled = type == BuildingData.Type.STAIRCASE
+	move_button.visible = type != BuildingData.Type.LAVA

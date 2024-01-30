@@ -90,6 +90,7 @@ static var data = {
 		"costs": {
 			ResourceData.Resources.STONE: 5,
 			ResourceData.Resources.STEEL: 1,
+			ResourceData.Resources.SLEDGEHAMMER: -1,
 		},
 		"size": 2,
 		"icon_path": "res://Assets/Buildings/forge.png"
