@@ -1,0 +1,66 @@
+[gd_scene load_steps=8 format=3 uid="uid://cg28pmc3koh5n"]
+
+[ext_resource type="Texture2D" uid="uid://cp2j4aclx6fww" path="res://Assets/UI/Background512.png" id="2_2jfqw"]
+[ext_resource type="Shader" path="res://Shaders/EraserRedone.gdshader" id="3_lw8c3"]
+[ext_resource type="Texture2D" uid="uid://bowj44y12xpil" path="res://Assets/Buildings/HouseBuildingDownscaled.png" id="3_n7dsk"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_rrtif"]
+shader = ExtResource("3_lw8c3")
+shader_parameter/RotationDegrees = 75.306
+shader_parameter/sections = 6
+shader_parameter/progress = 1.1
+shader_parameter/FadeWidth = 0.045
+shader_parameter/EraserCurvature = 1.7
+
+[sub_resource type="Animation" id="Animation_f8g4q"]
+resource_name = "erase"
+length = 2.0
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:material:shader_parameter/progress")
+tracks/0/interp = 1
+tracks/0/loop_wrap = false
+tracks/0/keys = {
+"times": PackedFloat32Array(0.512574, 1.29457),
+"transitions": PackedFloat32Array(0.297302, 1.07177),
+"update": 0,
+"values": [1.1, 0.0]
+}
+
+[sub_resource type="Animation" id="Animation_7pxmp"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:material:shader_parameter/Progress")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_lbhp8"]
+_data = {
+"RESET": SubResource("Animation_7pxmp"),
+"erase": SubResource("Animation_f8g4q")
+}
+
+[node name="sprite" type="Sprite2D"]
+position = Vector2(256, 256)
+texture = ExtResource("2_2jfqw")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture_repeat = 2
+material = SubResource("ShaderMaterial_rrtif")
+texture = ExtResource("3_n7dsk")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Sprite2D"]
+autoplay = "erase"
+libraries = {
+"": SubResource("AnimationLibrary_lbhp8")
+}
