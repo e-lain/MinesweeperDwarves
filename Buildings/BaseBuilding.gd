@@ -86,7 +86,7 @@ func snap_position(pos: Vector2) -> Vector2:
 
 func _process(delta):
 	if state != State.Confirmed:
-		sprite.modulate.a = 0.7
+		sprite.modulate.a = 0.5
 	else:
 		sprite.modulate.a = 1.0
 	
