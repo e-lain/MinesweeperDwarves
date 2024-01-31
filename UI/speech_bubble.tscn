@@ -13,12 +13,19 @@ content_margin_bottom = 16.0
 texture = ExtResource("2_en8sd")
 
 [node name="SpeechBubble" type="PanelContainer"]
-visible = false
 z_index = 2
 z_as_relative = false
-offset_top = -32.0
-offset_right = 64.0
-offset_bottom = 32.0
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -32.0
+offset_top = -64.0
+offset_right = 32.0
+grow_horizontal = 2
+grow_vertical = 0
+pivot_offset = Vector2(32, 64)
 theme = ExtResource("1_ubca2")
 theme_override_styles/panel = SubResource("StyleBoxTexture_tysj8")
 script = ExtResource("3_nsn21")

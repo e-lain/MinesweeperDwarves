@@ -62,8 +62,5 @@ void fragment() {
 	float xMask = erasedMask * hiddenSectionsMask;
 	float mask = max(xMask, completedSectionsMask);
 	
-	
-	
-	COLOR = texture(TEXTURE, UV);
 	COLOR.a *= mask;
 }

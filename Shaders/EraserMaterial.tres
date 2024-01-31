@@ -1,9 +1,12 @@
 [gd_resource type="ShaderMaterial" load_steps=2 format=3 uid="uid://biyeqskpn0fhx"]
 
-[ext_resource type="Shader" uid="uid://b68p8hmo0d4iq" path="res://Shaders/Eraser.tres" id="1_0i320"]
+[ext_resource type="Shader" path="res://Shaders/EraserRedone.gdshader" id="1_r6eta"]
 
 [resource]
-shader = ExtResource("1_0i320")
-shader_parameter/Progress = 0.0
-shader_parameter/Sections = 5
-shader_parameter/EraseFadeWidth = 0.085
+resource_local_to_scene = true
+shader = ExtResource("1_r6eta")
+shader_parameter/RotationDegrees = 75.306
+shader_parameter/sections = 6
+shader_parameter/progress = 1.1
+shader_parameter/FadeWidth = 0.045
+shader_parameter/EraserCurvature = 1.7

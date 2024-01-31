@@ -21,6 +21,7 @@ signal on_deselected
 @onready var pointlight = $PointLight2D
 
 var building_placement_material: ShaderMaterial = preload("res://Shaders/InvalidBuildingPlacement.tres")
+var drawing_material: ShaderMaterial = preload("res://Shaders/EraserMaterial.tres")
 
 const bg_offset := Vector2i(3, 3)
 
@@ -44,6 +45,8 @@ var state := State.Unplaced
 var move_begin_offset = Vector2.ZERO
 
 var mouse_in = false
+
+var can_show_problem: bool = true
 
 var touch_events = {}
 
@@ -86,10 +89,7 @@ func _process(delta):
 		handle_arrows.visible = true
 	else:
 		handle_arrows.visible = false
-		
-	if state == State.Confirmed:
-		sprite.material = null
-		cant_build_label.visible = false
+
 	
 	if state == State.Unplaced || state == State.Moving:
 		var mouse = board.get_local_mouse_position()
@@ -134,14 +134,14 @@ func _process(delta):
 
 
 func toggle_problem(has_problem: bool, reason: BuildingProblem = BuildingProblem.NO_MINECART):
-	speech_bubble.visible = has_problem
-	sprite.modulate.a = 1 if !has_problem else 0.7
 	if has_problem:
 		match reason:
 			BuildingProblem.NO_MINECART:
 				speech_bubble.set_texture(need_minecart_texture)
 			BuildingProblem.NO_LAVA:
 				speech_bubble.set_texture(need_lava_texture)
+	
+	speech_bubble.set_revealed(has_problem && can_show_problem, 0.1 if !can_show_problem else 0.5)
 
 
 func can_place(placement_position: Vector2):
@@ -271,6 +271,16 @@ func deselect(event):
 
 func confirm_placement():
 	state = State.Confirmed
+	
+	can_show_problem = false
+	sprite.material = drawing_material.duplicate()
+	var tween = get_tree().create_tween().bind_node(self)
+	tween.tween_method(func(val): sprite.material.set_shader_parameter("progress", val), 1.1, 0, 0.5)
+	tween.tween_callback(func(): 
+		sprite.material = null
+		can_show_problem = true
+	)
+	cant_build_label.visible = false
 
 func cancel_placement():
 	# Handling for specific building logic on cancel
