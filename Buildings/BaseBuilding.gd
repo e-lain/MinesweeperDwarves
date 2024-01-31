@@ -85,6 +85,11 @@ func snap_position(pos: Vector2) -> Vector2:
 	
 
 func _process(delta):
+	if state != State.Confirmed:
+		sprite.modulate.a = 0.7
+	else:
+		sprite.modulate.a = 1.0
+	
 	if state == State.PlacedUnconfirmed:
 		handle_arrows.visible = true
 	else:
