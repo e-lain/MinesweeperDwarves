@@ -294,7 +294,7 @@ func cancel_placement():
 		board.refresh_lava_connections()
 	queue_free()
 
-func play_collection_animation(lifespan_seconds: float, icon_path: String):
+func play_collection_animation(icon_path: String, collection_count: int = 0):
 	var instance = collection_prefab.instantiate()
 	add_child(instance)
 	var amount = 0
@@ -314,7 +314,7 @@ func play_collection_animation(lifespan_seconds: float, icon_path: String):
 		amount = -pop
 	
 	instance.global_position = global_position + (Vector2(TILE_SIZE, TILE_SIZE) * size / 2.0) + Vector2(0, -16)
-	instance.init(amount, lifespan_seconds, icon_path)
+	instance.init(amount, icon_path, collection_count)
 
 func _on_control_mouse_entered():
 	mouse_in = true

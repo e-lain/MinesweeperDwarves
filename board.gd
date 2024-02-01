@@ -21,8 +21,6 @@ signal building_right_click_cancelled
 
 signal ability_complete
 
-@export var collection_lifespan_seconds: float = 1.5
-
 @export var grid_line_prefab: PackedScene = preload("res://Prefabs/GridLine.tscn")
 @onready var tilemap: TileMap = $TileMap
 
@@ -230,6 +228,7 @@ func _on_tile_uncovered(cell_pos: Vector2i):
 
 func enter_build_mode():
 	var has_steel_to_collect = false
+	var collected_count = 0
 	for x in columns:
 		for y in rows:
 			var tile = tiles[x][y]
@@ -239,13 +238,14 @@ func enter_build_mode():
 					var instance = collection_prefab.instantiate()
 					add_child(instance)
 					instance.position = Vector2(tile.get_position()) + (Vector2(TILE_SIZE, TILE_SIZE) / 2.0) + Vector2(-32, -32)
-					instance.init(1, collection_lifespan_seconds,  "res://Assets/UI/steeldownscaledicon.png")
+					instance.init(1, "res://Assets/UI/steeldownscaledicon.png", collected_count)
 					has_steel_to_collect = true
+					collected_count += 1
 				elif tile.bomb_type == BombData.Type.LAVA:
 					place_lava_from_bomb(tile)
 	
 	if has_steel_to_collect:
-		var timer = get_tree().create_timer(collection_lifespan_seconds)
+		var timer = get_tree().create_timer(Globals.collection_effect_lifespan)
 		timer.timeout.connect(minesweeper_collection_complete)
 	else:
 		minesweeper_collection_complete()
@@ -582,6 +582,7 @@ func collect_resources():
 					tiles_to_collect_from[tile.building_id] = tile
 	
 	var collected_resources = false
+	var collected_count = 0
 	for tile_id in tiles_to_collect_from.keys():
 		var adjacent_type = buildings_by_id[tile_id].type
 		
@@ -590,11 +591,12 @@ func collect_resources():
 		for cost_type in costs.keys():
 			if costs[cost_type] < 0:
 				Resources.amounts[cost_type] -= costs[cost_type]
-				buildings_by_id[tile_id].play_collection_animation(collection_lifespan_seconds, "res://Assets/UI/StoneIcon.png")
+				buildings_by_id[tile_id].play_collection_animation("res://Assets/UI/StoneIcon.png", collected_count)
 				collected_resources = true
+				collected_count+= 1
 		
 	if collected_resources:
-		var timer = get_tree().create_timer(collection_lifespan_seconds)
+		var timer = get_tree().create_timer(Globals.collection_effect_lifespan)
 		timer.timeout.connect(building_collection_complete)
 		SoundManager.play_collection()
 	else:
