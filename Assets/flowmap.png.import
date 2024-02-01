@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://d266iy48283pi"
-path="res://.godot/imported/eight.png-c28a1b4c6c80ae641b72b788621a97a6.ctex"
+uid="uid://d1xad035m41ls"
+path="res://.godot/imported/flowmap.png-618e5179e3861bffef4ebf0536689b3d.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/numbers/eight.png"
-dest_files=["res://.godot/imported/eight.png-c28a1b4c6c80ae641b72b788621a97a6.ctex"]
+source_file="res://Assets/flowmap.png"
+dest_files=["res://.godot/imported/flowmap.png-618e5179e3861bffef4ebf0536689b3d.ctex"]
 
 [params]
 
@@ -19,9 +19,9 @@ compress/mode=0
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/hdr_compression=1
-compress/normal_map=0
+compress/normal_map=1
 compress/channel_pack=0
-mipmaps/generate=true
+mipmaps/generate=false
 mipmaps/limit=-1
 roughness/mode=0
 roughness/src_normal=""

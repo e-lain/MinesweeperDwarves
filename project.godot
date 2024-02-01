@@ -83,3 +83,10 @@ Test_5={
 renderer/rendering_method="gl_compatibility"
 renderer/rendering_method.mobile="gl_compatibility"
 textures/vram_compression/import_etc2_astc=true
+
+[shader_globals]
+
+noiseTex={
+"type": "sampler2D",
+"value": "res://Assets/noiseTexture.png"
+}

@@ -1,0 +1,22 @@
+[gd_scene load_steps=4 format=3 uid="uid://drnf1512tudi7"]
+
+[ext_resource type="Texture2D" uid="uid://dcoqsnpxuptcq" path="res://Assets/walltiles/tileset_walltiles.png" id="1_0qdgk"]
+[ext_resource type="Script" path="res://Prefabs/MinedTile.gd" id="3_ubqe7"]
+[ext_resource type="Texture2D" uid="uid://cp2j4aclx6fww" path="res://Assets/UI/Background512.png" id="4_vvqbc"]
+
+[node name="MinedTile" type="Sprite2D"]
+z_index = 1
+z_as_relative = false
+texture = ExtResource("1_0qdgk")
+hframes = 11
+vframes = 5
+script = ExtResource("3_ubqe7")
+
+[node name="BG" type="Sprite2D" parent="."]
+show_behind_parent = true
+texture_repeat = 2
+position = Vector2(-32, -32)
+texture = ExtResource("4_vvqbc")
+centered = false
+region_enabled = true
+region_rect = Rect2(0, 0, 64, 64)

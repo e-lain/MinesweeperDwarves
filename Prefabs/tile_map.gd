@@ -4,6 +4,8 @@ signal uncovered(cell_pos: Vector2i)
 signal flag_toggled(cell_pos: Vector2i)
 signal destroyed(cell_pos: Vector2i)
 
+const mined_tile_prefab: PackedScene = preload("res://Prefabs/MinedTile.tscn")
+
 @export var default_behavior:bool = true
 
 
@@ -30,7 +32,12 @@ func fill(size_x: int, size_y: int, tier: int) -> Array:
 
 	return tiles
 
-func remove_tile(pos: Vector2i) -> void:
+func remove_tile(pos: Vector2i, origin_distance: int = 0) -> void:
+	var tile_instance = mined_tile_prefab.instantiate()
+	add_child(tile_instance)
+	
+	var atlas_coords = get_cell_atlas_coords(0, pos)
+	tile_instance.init(map_to_local(pos), atlas_coords, pos, origin_distance)
 	BetterTerrain.set_cell(self, 0, pos, -1)
 	BetterTerrain.update_terrain_area(self, 0, Rect2i(max(0, pos.x - 2), max(0, pos.y - 2), 4, 4))
 

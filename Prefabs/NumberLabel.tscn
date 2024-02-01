@@ -1,6 +1,8 @@
-[gd_scene load_steps=10 format=3 uid="uid://coqsm8q44ak3k"]
+[gd_scene load_steps=13 format=3 uid="uid://coqsm8q44ak3k"]
 
 [ext_resource type="Script" path="res://Prefabs/NumberLabel.gd" id="1_2ne7a"]
+[ext_resource type="Shader" path="res://Shaders/SimpleDistortion.gdshader" id="1_uf53i"]
+[ext_resource type="Texture2D" uid="uid://d1xad035m41ls" path="res://Assets/flowmap.png" id="2_t1awb"]
 [ext_resource type="Texture2D" uid="uid://juufrh88emjs" path="res://Assets/numbers/one.png" id="2_uoo2o"]
 [ext_resource type="Texture2D" uid="uid://df1r0h0u6a4or" path="res://Assets/numbers/two.png" id="3_2176e"]
 [ext_resource type="Texture2D" uid="uid://dh37s6s1r7sky" path="res://Assets/numbers/three.png" id="4_b68nq"]
@@ -10,6 +12,16 @@
 [ext_resource type="Texture2D" uid="uid://vfhdhdp8wsjo" path="res://Assets/numbers/seven.png" id="8_y37cf"]
 [ext_resource type="Texture2D" uid="uid://d266iy48283pi" path="res://Assets/numbers/eight.png" id="9_0v4mu"]
 
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_whr3t"]
+shader = ExtResource("1_uf53i")
+shader_parameter/strength = 0.02
+shader_parameter/speed = 0.1
+shader_parameter/flowmap = ExtResource("2_t1awb")
+
 [node name="NumberLabel" type="Sprite2D"]
+texture_filter = 6
+texture_repeat = 2
+material = SubResource("ShaderMaterial_whr3t")
+texture = ExtResource("2_uoo2o")
 script = ExtResource("1_2ne7a")
 textures = Array[Texture]([ExtResource("2_uoo2o"), ExtResource("3_2176e"), ExtResource("4_b68nq"), ExtResource("5_l3o22"), ExtResource("6_w5rpe"), ExtResource("7_srrw8"), ExtResource("8_y37cf"), ExtResource("9_0v4mu")])

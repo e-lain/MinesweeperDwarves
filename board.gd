@@ -625,10 +625,12 @@ func clear_tile(tile: BoardTile):
 	uncover_tile(tile)
 	update_shadows()
 
-func uncover_tile(tile: BoardTile):
+func uncover_tile(tile: BoardTile, distance: int = 0):
 	tile.is_cover = false
 	tiles_uncovered += 1
-	tilemap.remove_tile(tile.cell_position)
+	tilemap.remove_tile(tile.cell_position, distance)
+	
+	distance += 1
 	
 	if tile.is_bomb:
 		var bomb = tile.create_bomb(tile.bomb_type)
@@ -658,7 +660,7 @@ func uncover_tile(tile: BoardTile):
 	else:
 		for adjacent_tile in adjacent_tiles:
 			if adjacent_tile.is_cover && !tile.is_bomb:
-				uncover_tile(adjacent_tile)
+				uncover_tile(adjacent_tile, distance)
 
 func explode_mine():
 	# TODO: play an animation and emit signal when it finishes
