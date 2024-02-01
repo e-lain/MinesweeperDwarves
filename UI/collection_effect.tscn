@@ -9,8 +9,9 @@ layout_mode = 3
 anchors_preset = 0
 offset_left = -8.0
 offset_right = -8.0
+pivot_offset = Vector2(5, 0)
 script = ExtResource("1_1s7na")
-speed = 60.0
+speed = 80.0
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
 layout_mode = 0

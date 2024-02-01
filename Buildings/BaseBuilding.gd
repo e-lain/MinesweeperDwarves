@@ -313,8 +313,8 @@ func play_collection_animation(lifespan_seconds: float, icon_path: String):
 	if pop < 0:
 		amount = -pop
 	
-	instance.init(amount, lifespan_seconds, icon_path)
 	instance.global_position = global_position + (Vector2(TILE_SIZE, TILE_SIZE) * size / 2.0) + Vector2(0, -16)
+	instance.init(amount, lifespan_seconds, icon_path)
 
 func _on_control_mouse_entered():
 	mouse_in = true

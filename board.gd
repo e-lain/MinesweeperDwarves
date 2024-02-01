@@ -238,7 +238,7 @@ func enter_build_mode():
 					Resources.amounts[ResourceData.Resources.STEEL] += 1
 					var instance = collection_prefab.instantiate()
 					add_child(instance)
-					instance.position = Vector2(tile.get_position()) + (Vector2(TILE_SIZE, TILE_SIZE) / 2.0) + Vector2(-16, -16)
+					instance.position = Vector2(tile.get_position()) + (Vector2(TILE_SIZE, TILE_SIZE) / 2.0) + Vector2(-32, -32)
 					instance.init(1, collection_lifespan_seconds,  "res://Assets/UI/steeldownscaledicon.png")
 					has_steel_to_collect = true
 				elif tile.bomb_type == BombData.Type.LAVA:
