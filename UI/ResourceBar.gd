@@ -10,7 +10,7 @@ func update_available_resources(available_resources: Array[ResourceData.Resource
 	for resource in available_resources:
 		var instance = resource_prefab.instantiate()
 		add_child(instance)
-		instance.set_data(resource, 0)
+		instance.set_data(resource, Resources.amounts[resource])
 		
 func set_resource_count(type: ResourceData.Resources, val: int):
 	for child in get_children():

@@ -36,7 +36,7 @@ signal tier_transition_midpoint
 @onready var cancel_placement = $BottomMargin/CancelPlacement
 @onready var cancel_placement_message = $BottomMargin/CancelPlacement/MarginContainer/HBoxContainer/Label
 
-@onready var resource_bar: ResourceBar = $TopPanel/ResourceBar
+@onready var resource_bar: ResourceBar = $TopPanel/HBoxContainer/ResourceBar
 
 # there's two for each because which one is chosen depends on screen layout. I hate it more than you
 @onready var depth_label_portrait: Label = $TopPanel/FloorsAndFlags/FloorCount/Label

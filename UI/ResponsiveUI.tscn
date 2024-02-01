@@ -66,7 +66,6 @@ theme = ExtResource("1_u5axg")
 script = ExtResource("2_bkf2v")
 
 [node name="TopPanel" type="PanelContainer" parent="."]
-custom_minimum_size = Vector2(320, 91)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 0
@@ -74,15 +73,21 @@ mouse_filter = 2
 theme = ExtResource("1_u5axg")
 theme_override_styles/panel = ExtResource("3_8e3sj")
 
-[node name="ResourceBar" type="HBoxContainer" parent="TopPanel"]
+[node name="HBoxContainer" type="HBoxContainer" parent="TopPanel"]
+layout_mode = 2
+
+[node name="ResourceBar" type="HBoxContainer" parent="TopPanel/HBoxContainer"]
+custom_minimum_size = Vector2(500, 0)
 layout_mode = 2
 mouse_filter = 0
+theme_override_constants/separation = 10
+alignment = 1
 script = ExtResource("3_km0c7")
 
-[node name="Stone" parent="TopPanel/ResourceBar" instance=ExtResource("5_pwklv")]
+[node name="Stone" parent="TopPanel/HBoxContainer/ResourceBar" instance=ExtResource("5_pwklv")]
 layout_mode = 2
 
-[node name="Stone2" parent="TopPanel/ResourceBar" instance=ExtResource("5_pwklv")]
+[node name="Stone2" parent="TopPanel/HBoxContainer/ResourceBar" instance=ExtResource("5_pwklv")]
 layout_mode = 2
 
 [node name="FloorsAndFlags" type="HBoxContainer" parent="TopPanel"]

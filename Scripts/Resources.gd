@@ -9,3 +9,9 @@ func _ready():
 	amounts[ResourceData.Resources.STEEL] = 300 #3
 
 var amounts = {}
+
+func get_amounts_copy():
+	var ret = {}
+	for type in ResourceData.Resources.values():
+		ret[type] = amounts[type]
+	return ret

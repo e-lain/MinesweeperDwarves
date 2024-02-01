@@ -43,6 +43,8 @@ var current_board
 
 var icons = {}
 
+var last_checked_resource_amounts = {}
+
 var state = State.Play
 
 enum State {
@@ -130,6 +132,8 @@ func _ready():
 	responsive_ui.update_resources(available_resources)
 	responsive_ui.update_abilities(ability_charge_counts, ability_charge_maximums)
 	responsive_ui.enter_play_mode()
+	
+	last_checked_resource_amounts = Resources.get_amounts_copy()
 
 func test_new_tier():
 	#TESTING
@@ -149,7 +153,10 @@ func get_depth() -> int:
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
 	for type in ResourceData.Resources.values():
-		responsive_ui.set_resource_count(type, Resources.amounts[type])
+		if last_checked_resource_amounts[type] != Resources.amounts[type]:
+			responsive_ui.set_resource_count(type, Resources.amounts[type])
+
+	last_checked_resource_amounts = Resources.get_amounts_copy()
 
 	responsive_ui.set_depth(get_depth() + 1)
 	
