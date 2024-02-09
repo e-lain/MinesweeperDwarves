@@ -289,7 +289,7 @@ func refresh_lava_connections() -> void:
 	for tile in lava_tiles.values():
 		if tile.is_bomb && tile.bomb_type == BombData.Type.LAVA:
 			var source_uid = str(tile.lava_uid)
-			var adjacent_tiles = get_adjacent_tiles(tile)
+			var adjacent_tiles = get_cardinal_tiles(tile)
 			for adj_tile in adjacent_tiles:
 				var check = adj_tile.cell_position
 				if tile_out_of_bounds(adj_tile):
@@ -672,6 +672,22 @@ func explode_mine():
 
 func on_bomb_animation_complete():
 	mine_animation_complete.emit()
+	
+# TODO: merge redundant code with get_adjacent_tiles
+func get_cardinal_tiles(tile: BoardTile) -> Array[BoardTile]:
+	var cardinals: Array[BoardTile] = []
+	var offsets = [
+		Vector2i.UP,
+		Vector2i.DOWN,
+		Vector2i.LEFT,
+		Vector2i.RIGHT,
+	]
+	
+	for offset in offsets:
+		var adjacent = tile.cell_position + offset
+		if adjacent.x >= 0 && adjacent.x < columns && adjacent.y >= 0 && adjacent.y < rows:
+			cardinals.append(tiles[adjacent.x][adjacent.y])
+	return cardinals
 
 func get_adjacent_tiles(tile: BoardTile) -> Array[BoardTile]:
 	var surroundings: Array[BoardTile] = []
@@ -722,7 +738,7 @@ func _on_flag_toggled(cell_pos: Vector2i):
 func update_shadows():
 	tilemap.update_shadows(columns, rows)
 
-func can_place_at_position(world_pos: Vector2, size: int):
+func can_place_at_position(world_pos: Vector2, size: int) -> bool:
 	var places_to_check = get_world_positions_in_area(world_pos, size)
 	for pos in places_to_check:
 		var cell_pos = tilemap.local_to_map(tilemap.to_local(pos))
@@ -730,8 +746,7 @@ func can_place_at_position(world_pos: Vector2, size: int):
 			return false
 		var tile = tiles[cell_pos.x][cell_pos.y]
 		if !(tilemap.get_cell_tile_data(0, cell_pos) == null && !tile.is_bomb && !tile.has_building):
-			return false
-			
+			return false	
 	return true
 	
 func can_use_ability_at_position(world_pos: Vector2, size: int):
@@ -770,9 +785,11 @@ func get_adjacent_positions(global_positions: Array[Vector2]) -> Array[Vector2]:
 # Returns the board tiles of provided array of global positions 
 func get_tiles_from_positions(positions: Array[Vector2]) -> Array[BoardTile]:
 	var output_tiles: Array[BoardTile] = []
-	
 	for pos in positions:
-		output_tiles.append(tiles[pos.x][pos.y])
+		var cell_pos = tilemap.local_to_map(tilemap.to_local(pos))
+		var tile = tiles[cell_pos.x][cell_pos.y]
+		output_tiles.append(tile)
+	print("output tiles, ", output_tiles)
 	return output_tiles
 
 # Returns array of tiles a building is on
@@ -783,7 +800,7 @@ func get_tiles_of_building(building: BaseBuilding) -> Array[BoardTile]:
 
 # Returns if tile provided is next to a certain type of building
 func tile_is_next_to_building_type(tile: BoardTile, type: BuildingData.Type) -> bool:
-	var adjacent_tiles = get_adjacent_tiles(tile)
+	var adjacent_tiles = get_cardinal_tiles(tile)
 	for adj_tile in adjacent_tiles:
 		if adj_tile.has_building && buildings_by_id[adj_tile.building_id] == type:
 			return true
@@ -812,39 +829,31 @@ func building_is_next_to_minecart(building: BaseBuilding) -> bool:
 
 # TODO: See if we can use tiles_is_next_to_building_type here
 func building_is_next_to_lava_moat(building: BaseBuilding) -> bool:
-	var places_to_check = get_world_positions_in_area(building.global_position, building.size)
-	var offsets = [Vector2i.UP, Vector2i.DOWN, Vector2i.LEFT, Vector2i.RIGHT]	
-
-	for pos in places_to_check:
-		var cell_pos = tilemap.local_to_map(tilemap.to_local(pos))
-		for offset in offsets:
-			var check = cell_pos + offset
-			if check.x < 0 || check.x >= columns || check.y < 0 || check.y >= rows:
-				continue
-			var tile = tiles[check.x][check.y]
-			var other_building
-			if tile.has_building:
-				other_building = buildings_by_id[tile.building_id]
-			# Ensure adjacent building is lava source or valid lava building
-			# TODO: Also check if moat is properly connected
-			if (other_building && other_building.type == BuildingData.Type.LAVA && !tile.is_bomb && len(other_building.connected_lava_sources) > 0):
-				return true
+	var tiles_to_check
+	if state == State.Placing:
+		tiles_to_check = get_tiles_from_positions(get_world_positions_in_area(current_placing_instance.global_position, building.size))
+	else:
+		tiles_to_check = get_tiles_of_building(building)
+	for tile in tiles_to_check:
+		var adj_tiles = get_cardinal_tiles(tile)
+		for adj_tile in adj_tiles:
+			if adj_tile not in tiles_to_check && adj_tile.has_building:
+				var other_building = buildings_by_id[adj_tile.building_id]
+				if other_building.type == BuildingData.Type.LAVA && len(other_building.connected_lava_sources) > 0:
+					return true
 	return false
-	
+
 # TODO: Combine redundant logic with building_is_next_to_lava_moat
 func building_is_next_to_lava_source(building: BaseBuilding) -> bool:
-	var places_to_check = get_world_positions_in_area(building.global_position, building.size)
-	var offsets = [Vector2i.UP, Vector2i.DOWN, Vector2i.LEFT, Vector2i.RIGHT]	
-
-	for pos in places_to_check:
-		var cell_pos = tilemap.local_to_map(tilemap.to_local(pos))
-		for offset in offsets:
-			var check = cell_pos + offset
-			if check.x < 0 || check.x >= columns || check.y < 0 || check.y >= rows:
-				continue
-			var tile = tiles[check.x][check.y]
-			# Check if tile is a lava source
-			if tile.lava_uid:
+	var tiles_to_check
+	if state == State.Placing:
+		tiles_to_check = get_tiles_from_positions(get_world_positions_in_area(current_placing_instance.global_position, building.size))
+	else:
+		tiles_to_check = get_tiles_of_building(building)
+	for tile in tiles_to_check:
+		var adjacent_tiles = get_cardinal_tiles(tile)
+		for adj_tile in adjacent_tiles:
+			if adj_tile.lava_uid && adj_tile.lava_uid != tile.lava_uid:
 				return true
 	return false
 
@@ -872,6 +881,15 @@ func get_world_positions_in_area(origin_world_pos: Vector2, size: int) -> Array[
 			tiles.push_back(Vector2(origin_world_pos.x + x*TILE_SIZE, origin_world_pos.y + y*TILE_SIZE))
 	
 	return tiles
+	
+# Convert array of global positions to corresponding board tiles
+func world_positions_to_tiles(positions: Array[Vector2]) -> Array[BoardTile]:
+	var converted_tiles = []
+	for pos in positions:
+		var cell_pos = tilemap.local_to_map(tilemap.to_local(pos))
+		var tile = tiles[cell_pos.x][cell_pos.y]
+		converted_tiles.append(tile)
+	return converted_tiles
 
 func world_to_cell(world):
 	return tilemap.local_to_map(tilemap.to_local(world))

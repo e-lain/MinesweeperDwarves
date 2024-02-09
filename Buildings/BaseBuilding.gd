@@ -80,7 +80,7 @@ func set_type(value, icon):
 
 func snap_position(pos: Vector2) -> Vector2:
 	var snapped =  Vector2(snapped(pos.x-TILE_SIZE/2, TILE_SIZE), snapped(pos.y-TILE_SIZE/2, TILE_SIZE))
-	print("Pos: %s Snapped: %s" % [pos, snapped])
+	#print("Pos: %s Snapped: %s" % [pos, snapped])
 	return snapped
 	
 
@@ -150,17 +150,22 @@ func toggle_problem(has_problem: bool, reason: BuildingProblem = BuildingProblem
 
 
 func can_place(placement_position: Vector2):
-	if type == BuildingData.Type.FORGE && !next_to_lava_moat():
+	if !board.can_place_at_position(placement_position, size):
+		return false
+	elif type == BuildingData.Type.FORGE && !next_to_lava_moat():
 		return false
 	elif type == BuildingData.Type.LAVA && !next_to_lava():
 		return false
-	return board.can_place_at_position(placement_position, size)
+	return true
 
 func requires_minecart_adjacency():
 	return type == BuildingData.Type.HOUSE || type == BuildingData.Type.QUARRY
 
 func requires_lava_adjacency():
 	return type == BuildingData.Type.FORGE
+	
+func next_to_workshop() -> bool:
+	return board.tile_is_next_to_forge(self, BuildingData.Type.FORGE)
 
 func next_to_minecart() -> bool:
 	return board.building_is_next_to_minecart(self) || board.player_placing_minecart_next_to_building(self)
