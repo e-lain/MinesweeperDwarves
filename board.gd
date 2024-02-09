@@ -265,7 +265,9 @@ func place_lava_from_bomb(tile: BoardTile):
 	add_child(building)
 	building.set_type(lava_type, get_parent().icons[lava_type])
 	current_placing_instance = building
-	building.confirm_placement()
+	building.state = building.State.Confirmed
+	building.can_show_problem = false
+	building.cant_build_label.visible = false
 	var tile_pos = tile.get_position()
 	var snapped = Vector2(snapped(tile_pos.x-TILE_SIZE/2, TILE_SIZE), snapped(tile_pos.y-TILE_SIZE/2, TILE_SIZE))
 	building.position = snapped
@@ -809,7 +811,7 @@ func building_is_next_to_minecart(building: BaseBuilding) -> bool:
 	return false
 
 # TODO: See if we can use tiles_is_next_to_building_type here
-func building_is_next_to_lava(building: BaseBuilding) -> bool:
+func building_is_next_to_lava_moat(building: BaseBuilding) -> bool:
 	var places_to_check = get_world_positions_in_area(building.global_position, building.size)
 	var offsets = [Vector2i.UP, Vector2i.DOWN, Vector2i.LEFT, Vector2i.RIGHT]	
 
@@ -825,7 +827,24 @@ func building_is_next_to_lava(building: BaseBuilding) -> bool:
 				other_building = buildings_by_id[tile.building_id]
 			# Ensure adjacent building is lava source or valid lava building
 			# TODO: Also check if moat is properly connected
-			if (other_building && other_building.type == BuildingData.Type.LAVA && !tile.is_bomb && other_building.connected_lava_sources > 1):
+			if (other_building && other_building.type == BuildingData.Type.LAVA && !tile.is_bomb && len(other_building.connected_lava_sources) > 0):
+				return true
+	return false
+	
+# TODO: Combine redundant logic with building_is_next_to_lava_moat
+func building_is_next_to_lava_source(building: BaseBuilding) -> bool:
+	var places_to_check = get_world_positions_in_area(building.global_position, building.size)
+	var offsets = [Vector2i.UP, Vector2i.DOWN, Vector2i.LEFT, Vector2i.RIGHT]	
+
+	for pos in places_to_check:
+		var cell_pos = tilemap.local_to_map(tilemap.to_local(pos))
+		for offset in offsets:
+			var check = cell_pos + offset
+			if check.x < 0 || check.x >= columns || check.y < 0 || check.y >= rows:
+				continue
+			var tile = tiles[check.x][check.y]
+			# Check if tile is a lava source
+			if tile.lava_uid:
 				return true
 	return false
 

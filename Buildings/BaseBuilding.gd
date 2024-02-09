@@ -150,7 +150,9 @@ func toggle_problem(has_problem: bool, reason: BuildingProblem = BuildingProblem
 
 
 func can_place(placement_position: Vector2):
-	if (type == BuildingData.Type.LAVA || type == BuildingData.Type.FORGE) && !next_to_lava():
+	if type == BuildingData.Type.FORGE && !next_to_lava_moat():
+		return false
+	elif type == BuildingData.Type.LAVA && !next_to_lava():
 		return false
 	return board.can_place_at_position(placement_position, size)
 
@@ -164,7 +166,13 @@ func next_to_minecart() -> bool:
 	return board.building_is_next_to_minecart(self) || board.player_placing_minecart_next_to_building(self)
 	
 func next_to_lava() -> bool:
-	return board.building_is_next_to_lava(self) 
+	return board.building_is_next_to_lava_moat(self) || board.building_is_next_to_lava_source(self)
+	
+func next_to_lava_moat() -> bool:
+	return board.building_is_next_to_lava_moat(self)
+	
+func next_to_lava_source() -> bool:
+	return board.building_is_next_to_lava_source(self)
 
 func place(world_pos: Vector2):
 	global_position = snap_position(world_pos)
