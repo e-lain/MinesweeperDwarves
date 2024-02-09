@@ -117,8 +117,8 @@ func _process(delta):
 	else:
 		background_sprite.position = bg_offset
 		var cell_pos = board.world_to_cell(global_position)
-		var region_x = bg_offset.x if cell_pos.x % 2 == 0 else 64 + bg_offset.x
-		var region_y = bg_offset.y if cell_pos.y % 2 == 0 else 64 + bg_offset.y
+		var region_x = bg_offset.x + ((cell_pos.x % 8) * 64)
+		var region_y = bg_offset.y + ((cell_pos.y % 8) * 64)
 		var region_w = size * TILE_SIZE - bg_offset.x * 2
 		var region_h = size * TILE_SIZE - bg_offset.y * 2
 		background_sprite.region_rect = Rect2(region_x, region_y, region_w, region_h)
