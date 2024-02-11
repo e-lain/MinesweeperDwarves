@@ -1,6 +1,8 @@
 extends Node2D
 class_name GameController
 
+@onready var overworld = $OverworldMap
+
 @onready var mine_hit_popup = $CanvasLayer/MineHitPopup
 @onready var greyout = $CanvasLayer/ColorRect
 
@@ -23,9 +25,9 @@ var help_text_is_overriden: bool = false
 @onready var canvas_modulate = $CanvasModulate
 @onready var pointlight = $PointLight2D
 
-var Board = preload("res://board.tscn")
+@onready var fog = $Fog
 
-var build_mode: bool = false
+var Board = preload("res://board.tscn")
 
 var tier = 1
 var depth_by_tier = {}
@@ -47,13 +49,17 @@ var last_checked_resource_amounts = {}
 
 var state = State.Play
 
+var prev_generated_boards
+
 enum State {
 	Play,
 	Build,
 	Placing
 }
 
-func generate_board(difficulty: int):
+func generate_board(difficulty: int, room_id: int) -> Board:
+	var overworld_room = overworld.rooms[room_id]
+	
 	help_text_is_overriden = false
 	destroy_popup.visible = false
 	armor_popup.visible = false
@@ -63,35 +69,20 @@ func generate_board(difficulty: int):
 	ability_charge_counts = ability_charge_maximums.duplicate()
 	responsive_ui.update_abilities(ability_charge_counts, ability_charge_maximums)
 	var b = Board.instantiate()
-	if current_board:
-		current_board.queue_free()
-	current_board = b
 	
 	add_child(b)
 	
 	canvas_modulate.visible = tier > 1
 	pointlight.visible = tier > 1
 
-	if tier == 1:
-		b.init_board(6,6,4,tier)
-	elif tier == 2:
-		if difficulty == 0:
-			b.init_board(6,6,4,tier)
-		elif difficulty == 1:
-			b.init_board(7,7,5,tier)
-		elif difficulty == 2:
-			b.init_board(8,8,7,tier)
-		elif difficulty == 3:
-			b.init_board(9,9,9,tier)
-		else:
-			b.init_board(10,10,10,tier)
-	else:
-		b.init_board(6,6,4,tier)
+
+	var mine_count = roundi(.11111 * overworld_room.size.x * overworld_room.size.y)
+	b.init_board(overworld_room.size.x, overworld_room.size.y, mine_count, tier)
+#
 	
-	var board_size_global = Vector2(b.columns * b.TILE_SIZE, b.rows * b.TILE_SIZE)
-	
-	b.position = -(board_size_global / 2)
-	b.position = Vector2(snapped(b.position.x-b.TILE_SIZE/2, b.TILE_SIZE), snapped(b.position.y-b.TILE_SIZE/2, b.TILE_SIZE))
+	overworld.assign_board(room_id, b)
+	b.position = overworld.rooms[room_id].origin * b.TILE_SIZE
+
 	b.create_grid_lines()
 	b.mine_animation_complete.connect(on_mine_animation_complete)
 	b.wonder_placed.connect(on_wonder_placed)
@@ -113,21 +104,47 @@ func generate_board(difficulty: int):
 	b.tile_uncover_event_complete.connect(on_tile_uncover_event_complete)
 	b.tile_flagged_event_complete.connect(on_tile_uncover_event_complete)
 	
-	var cam_center = b.position + (board_size_global / 2)
+	b.lock()
 	
+
+	var board_center = b.get_center_global_position()
+	
+	fog.update_fog(board_center, overworld_room.size.x)
+	
+	return b
+
+
+func update_current_board(board: Board):
+	if get_current_board() != null:
+		get_current_board().deactivate()
+	
+	current_board = board
+	board.activate()
+	
+	
+	# TODO: lerp this
 	move_child(camera, -1)
-	camera.reset(cam_center, board_size_global)
+	camera.reset(board.get_center_global_position(), board.get_size_global_position())
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	randomize()
+	
 	depth_by_tier[tier] = 0
 	for key in BuildingData.data.keys():
 		icons[key] = load(BuildingData.data[key]["icon_path"])
 	
 	# place board in center with correct offset accounting for tile size and board size
 	test_new_tier()
-	generate_board(0)
+	
+	
+	var starting_origin =  overworld.max_size / 2 - Vector2i(overworld.start_room_size / 2, overworld.start_room_size / 2)
+	var start_room_size = overworld.start_room_size
+	var starting_room_id = overworld.generate_room(start_room_size, starting_origin)
 
+	
+	update_current_board(generate_board(0, starting_room_id))
+	
 	responsive_ui.update_buildings(available_buildings)
 	responsive_ui.update_resources(available_resources)
 	responsive_ui.update_abilities(ability_charge_counts, ability_charge_maximums)
@@ -152,9 +169,11 @@ func get_depth() -> int:
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
+	pointlight.position = camera.position
+	
 	for type in ResourceData.Resources.values():
-		if last_checked_resource_amounts[type] != Resources.amounts[type]:
-			responsive_ui.set_resource_count(type, Resources.amounts[type])
+		if last_checked_resource_amounts[type] != Resources.get_amount(type):
+			responsive_ui.set_resource_count(type, Resources.get_amount(type))
 
 	last_checked_resource_amounts = Resources.get_amounts_copy()
 
@@ -220,9 +239,9 @@ func on_building_selected(building: BaseBuilding):
 func on_building_deselected():
 	responsive_ui.on_building_deselected()
 
+func next_level(chosen_room_id: int):
 
-func next_level():
-	get_current_board().queue_free()
+	update_current_board(overworld.rooms[chosen_room_id].board)
 	
 	print("MAIN SCENE RECEIVED NEXT LEVEL CALL")
 	depth_by_tier[tier] += 1
@@ -231,23 +250,48 @@ func next_level():
 	
 	reset_available_for_tier_data()
 	
-	generate_board(get_depth())
 	responsive_ui.update_buildings(available_buildings)
 	responsive_ui.update_resources(available_resources)
 	responsive_ui.enter_play_mode()
 
 func _on_responsive_ui_enter_build_mode_pressed():
-	if state != State.Build:
-		responsive_ui.hide_enter_build_mode()
-		get_current_board().enter_build_mode()
-	else:
+	if state == State.Build:
 		push_error("ALREADY IN BUILD MODE but end level button pressed")
+		return
+	
+	
+	responsive_ui.hide_enter_build_mode()
+	get_current_board().enter_build_mode()
+	
+	var room_id = get_current_board().overworld_room_id
+	var origin_room = overworld.rooms[room_id]
+	# Interpolate our desired room size from map center to map boundaries. TODO: consider how an infinite map might affect this
+	var t = Vector2(origin_room.origin).distance_to(Vector2(overworld.rooms[0].origin)) / Vector2(overworld.max_size / 2.0).length()
+	var target_size = roundi((lerp(overworld.min_room_size, overworld.max_room_size, t)))
+
+	var new_room_ids = [] 
+	if room_id != 0:
+		new_room_ids = overworld.generate_choices(room_id, target_size)
+	else:
+		var start_room_size = overworld.start_room_size
+		var starting_origin =  overworld.max_size / 2 - Vector2i(overworld.start_room_size / 2, overworld.start_room_size / 2)
+		new_room_ids = [
+			overworld.generate_room(start_room_size, starting_origin + Vector2i(0, -start_room_size), 0),
+			overworld.generate_room(start_room_size, starting_origin + Vector2i(0, start_room_size), 0),
+			overworld.generate_room(start_room_size, starting_origin + Vector2i(start_room_size, 0), 0),
+			overworld.generate_room(start_room_size, starting_origin + Vector2i(-start_room_size, 0), 0)
+		]
+	
+	prev_generated_boards = []
+	
+	for id in new_room_ids:
+		prev_generated_boards.append(generate_board(get_depth(), id))
 
 
 func on_mine_animation_complete():
 	get_tree().paused = true
 	SoundManager.play_negative()
-	var pop = Resources.amounts[ResourceData.Resources.POPULATION]
+	var pop = Resources.get_amount(ResourceData.Resources.POPULATION)
 	
 	if pop > 0:
 		mine_hit_popup.visible = true
@@ -259,8 +303,10 @@ func on_mine_animation_complete():
 func _on_mine_hit_restart_level_pressed():
 	mine_hit_popup.visible = false
 	greyout.visible = false
-	get_current_board().queue_free()
-	generate_board(get_depth())
+	var room_id = get_current_board().overworld_room_id
+	var prev_board = get_current_board()
+	update_current_board(generate_board(get_depth(), room_id))
+	prev_board.queue_free()
 	get_tree().paused = false
 
 
@@ -280,10 +326,17 @@ func on_resource_collection_complete():
 	if (depth_by_tier[tier] == -1):
 		responsive_ui.show_transition(tier)
 	else:
-		next_level()
+		show_unlock_boxes()
 
 func on_transition_to_next_tier_midpoint():
-	next_level()
+	show_unlock_boxes()
+
+
+func show_unlock_boxes():
+	for room_id in overworld.rooms.keys():
+		var room = overworld.rooms[room_id]
+		if room.board != null && room.board.is_locked():
+			responsive_ui.spawn_board_unlock_panel(room.board)
 
 func _on_win_restart_button_pressed():
 	get_tree().paused = false
@@ -348,7 +401,6 @@ func _on_end_level_btn_mouse_entered():
 		help_text_is_overriden = true
 		help_text_bar.text = "Can't enter build mode until at least one tile is cleared!"
 
-
 func _on_end_level_btn_mouse_exited():
 	help_text_is_overriden = false
 
@@ -411,3 +463,9 @@ func reset_available_for_tier_data():
 func on_tile_uncover_event_complete():
 	if get_current_board().is_cleared():
 		_on_responsive_ui_enter_build_mode_pressed()
+
+
+func _on_responsive_ui_board_unlock_pressed(board: Board):
+	for type in board.unlock_costs.keys():
+		Resources.update_amount(type, -board.unlock_costs[type])
+	next_level(board.overworld_room_id)

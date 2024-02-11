@@ -8,6 +8,7 @@
 script = ExtResource("1_ux0p3")
 
 [node name="TextureRect" type="TextureRect" parent="."]
+visible = false
 z_index = -1
 texture_repeat = 2
 anchors_preset = 8

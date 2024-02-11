@@ -14,6 +14,8 @@ var tap_start_pos
 
 var changeset: Dictionary
 
+var active: bool = true
+
 func fill(size_x: int, size_y: int, tier: int) -> Array:
 	var tiles = []
 	
@@ -70,6 +72,9 @@ func _process(delta):
 	if  BetterTerrain.is_terrain_changeset_ready(changeset):
 		BetterTerrain.apply_terrain_changeset(changeset)
 		changeset = {}
+		
+	if !active:
+		return
 	
 	if DragOrZoomEventManager.long_tap_started && Time.get_ticks_msec() - tap_start_time > SettingsController.LONG_TAP_DELAY_MS  && !DragOrZoomEventManager.drag_or_zoom_happening():
 		DragOrZoomEventManager.long_tap_started = false
@@ -86,7 +91,7 @@ func _process(delta):
 
 
 func _unhandled_input(event):
-	if !default_behavior:
+	if !default_behavior || !active:
 		return
 	
 	if event is InputEventMouseButton:
@@ -105,6 +110,8 @@ func _unhandled_input(event):
 				DragOrZoomEventManager.long_tap_started = true
 				tap_start_time = Time.get_ticks_msec()
 				tap_start_pos = cell_pos
+			
+
 			if event.is_action_released("left_click") && !DragOrZoomEventManager.drag_or_zoom_happening():
 				DragOrZoomEventManager.long_tap_started = false
 				uncovered.emit(cell_pos)

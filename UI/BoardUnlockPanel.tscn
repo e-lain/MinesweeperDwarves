@@ -1,0 +1,71 @@
+[gd_scene load_steps=8 format=3 uid="uid://du3xsa8p3sow5"]
+
+[ext_resource type="Theme" uid="uid://b6iv3a38m6uhb" path="res://UI.tres" id="1_f2emt"]
+[ext_resource type="Texture2D" uid="uid://d0o6bpct5y38h" path="res://Assets/UI/Popup.png" id="2_nvt42"]
+[ext_resource type="StyleBox" uid="uid://cs0uiigi7qlev" path="res://UI/InnerButtonStyle.tres" id="3_0h600"]
+[ext_resource type="Script" path="res://UI/BoardUnlockPanel.gd" id="3_3upp1"]
+[ext_resource type="StyleBox" uid="uid://d1t3tpmhbhut8" path="res://UI/HoveredInnerButtonStyle.tres" id="4_tbmi1"]
+[ext_resource type="StyleBox" uid="uid://blkpixnvibn23" path="res://UI/InnerButtonDisabled.tres" id="5_kf0ho"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_jo8xq"]
+texture = ExtResource("2_nvt42")
+
+[node name="BoardUnlockPanel" type="PanelContainer"]
+z_index = -1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = -900.0
+offset_bottom = -898.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme = ExtResource("1_f2emt")
+theme_override_styles/panel = SubResource("StyleBoxTexture_jo8xq")
+script = ExtResource("3_3upp1")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 12
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_constants/separation = 18
+alignment = 1
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 1
+theme_override_font_sizes/font_size = 48
+text = "6 x 6"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ResourceBar" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_stretch_ratio = 3.66
+mouse_filter = 0
+theme_override_constants/separation = 16
+alignment = 1
+
+[node name="Button" type="Button" parent="MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(140, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+size_flags_stretch_ratio = 2.62
+theme = ExtResource("1_f2emt")
+theme_override_font_sizes/font_size = 36
+theme_override_styles/normal = ExtResource("3_0h600")
+theme_override_styles/hover = ExtResource("4_tbmi1")
+theme_override_styles/pressed = ExtResource("4_tbmi1")
+theme_override_styles/disabled = ExtResource("5_kf0ho")
+theme_override_styles/focus = ExtResource("3_0h600")
+text = "Unlock"
+
+[connection signal="pressed" from="MarginContainer/VBoxContainer/Button" to="." method="_on_button_pressed"]

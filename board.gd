@@ -54,6 +54,9 @@ var bombs_found = 0
 var tiles_uncovered = 0
 var total_tiles = rows*columns
 
+#TODO: populate this programmatically
+var unlock_costs = { ResourceData.Resources.POPULATION: 1 }
+
 var tiles = []
 var bomb_tiles = []
 var lava_tiles = {} # NOTE: Lava source tiles are placed via some building placement logic, but ARE NOT TREATED AS BULIDINGS
@@ -71,6 +74,8 @@ var selected_building
 
 var moving_building_original_world_position
 
+var overworld_room_id: int = -1
+
 enum State {
 	Play,
 	Build,
@@ -79,22 +84,21 @@ enum State {
 	Ability,
 	Complete,
 	Selected,
-	Moving
+	Moving, 
+	Locked,
+	Deactivated
 }
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	ability_controller = AbilityController.new()
 	add_child(ability_controller)
-
-	randomize()
 	
 	tilemap.destroyed.connect(_on_tile_destroyed)
 	tilemap.uncovered.connect(_on_tile_uncovered)
 	tilemap.flag_toggled.connect(_on_flag_toggled)
 	
 func init_board(rows: int, cols: int, bombs: int, tier: int):
-	get_parent().build_mode = false
 	self.tier = tier
 	
 	self.rows = rows
@@ -216,7 +220,7 @@ func _on_tile_uncovered(cell_pos: Vector2i):
 	if tile.is_bomb:
 		print("status of armor active: ", armor_active)
 		if !armor_active:
-			Resources.amounts[ResourceData.Resources.POPULATION] -= 1
+			Resources.update_amount(ResourceData.Resources.POPULATION, -Globals.MINE_HIT_POPULATION_COST)
 			explode_mine()
 	
 	SoundManager.play_uncover_tile_sound()
@@ -234,7 +238,7 @@ func enter_build_mode():
 			var tile = tiles[x][y]
 			if tile.is_bomb && tile.is_flagged:
 				if tile.bomb_type == BombData.Type.DEFAULT:
-					Resources.amounts[ResourceData.Resources.STEEL] += 1
+					Resources.update_amount(ResourceData.Resources.STEEL, 1)
 					var instance = collection_prefab.instantiate()
 					add_child(instance)
 					instance.position = Vector2(tile.get_position()) + (Vector2(TILE_SIZE, TILE_SIZE) / 2.0) + Vector2(-32, -32)
@@ -391,7 +395,7 @@ func on_confirm_building_placement():
 	
 	for cost_type in costs.keys():
 		if costs[cost_type] > 0:
-			Resources.amounts[cost_type] -= costs[cost_type]
+			Resources.update_amount(cost_type, -costs[cost_type])
 	
 
 	var tile
@@ -426,6 +430,9 @@ func on_confirm_building_placement():
 			print("ERROR: No tile at specified coordinates of placed lava building")
 
 func on_building_selected(building: BaseBuilding):
+	if state == State.Deactivated:
+		return
+	
 	if state == State.Selected && building != selected_building:
 		selected_building.deselect(null)
 	
@@ -472,7 +479,7 @@ func destroy_selected_building():
 	
 	for cost_type in costs.keys():
 		if costs[cost_type] > 0:
-			Resources.amounts[cost_type] += costs[cost_type]
+			Resources.update_amount(cost_type, costs[cost_type])
 	
 	var world_positions_to_update = get_world_positions_in_area(building_world_pos, size)
 	for world_pos in world_positions_to_update:
@@ -592,7 +599,7 @@ func collect_resources():
 	
 		for cost_type in costs.keys():
 			if costs[cost_type] < 0:
-				Resources.amounts[cost_type] -= costs[cost_type]
+				Resources.update_amount(cost_type, -costs[cost_type])
 				buildings_by_id[tile_id].play_collection_animation("res://Assets/UI/StoneIcon.png", collected_count)
 				collected_resources = true
 				collected_count+= 1
@@ -769,8 +776,7 @@ func tile_out_of_bounds(tile: BoardTile) -> bool:
 		return true
 	return false
 
-# Returns array of adjacent board coordinates from provided array of global positions
-# NOTE: INPUT POSITIONS ARE GLOBAL, RETURNED POSITIONS ARE BOARD-RELATIVE
+# Returns array of adjacent coordinates from provided array of global positions, in global space
 func get_adjacent_positions(global_positions: Array[Vector2]) -> Array[Vector2]:
 	var offsets = [Vector2i.UP, Vector2i.DOWN, Vector2i.LEFT, Vector2i.RIGHT]
 	var board_adjacent_coordinates: Array[Vector2] = []
@@ -779,7 +785,7 @@ func get_adjacent_positions(global_positions: Array[Vector2]) -> Array[Vector2]:
 		for offset in offsets:
 			var adjacent = Vector2(tilemap.local_to_map(tilemap.to_local(pos)) + offset)
 			if (adjacent.x >= 0 && adjacent.y >= 0 && adjacent.x < columns && adjacent.y < rows):
-				board_adjacent_coordinates.append(adjacent)
+				board_adjacent_coordinates.append(tilemap.to_global(tilemap.map_to_local(adjacent)))
 	return board_adjacent_coordinates
 
 # Returns the board tiles of provided array of global positions 
@@ -789,7 +795,7 @@ func get_tiles_from_positions(positions: Array[Vector2]) -> Array[BoardTile]:
 		var cell_pos = tilemap.local_to_map(tilemap.to_local(pos))
 		var tile = tiles[cell_pos.x][cell_pos.y]
 		output_tiles.append(tile)
-	print("output tiles, ", output_tiles)
+	#print("output tiles, ", output_tiles)
 	return output_tiles
 
 # Returns array of tiles a building is on
@@ -905,3 +911,25 @@ func are_all_buildings_being_exploited() -> bool:
 
 func is_cleared():
 	return tiles_uncovered + bombs_found == rows * columns
+
+func lock():
+	state = State.Locked
+	tilemap.active = false
+
+func deactivate():
+	deselect_building()
+	state = State.Deactivated
+	tilemap.active = false
+
+func activate():
+	state = State.Play
+	tilemap.active = true
+
+func is_locked():
+	return state == State.Locked
+
+func get_center_global_position() -> Vector2:
+	return position + (get_size_global_position() / 2) 
+
+func get_size_global_position() -> Vector2:
+	return Vector2(columns * TILE_SIZE, rows * TILE_SIZE)

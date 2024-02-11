@@ -92,7 +92,7 @@ func _unhandled_input(event):
 		if event is InputEventMouseMotion and dragging and !DragOrZoomEventManager.drag_began_in_unconfirmed_building:
 			absolute_drag_amount += Vector2(abs(event.relative.x), abs(event.relative.y))
 			if absolute_drag_amount.length_squared() > absolute_drag_min_threshold:
-				print("Dragging!")
+#				print("Dragging!")
 				drag_camera(event.relative)
 				DragOrZoomEventManager.dragging = true
 				DragOrZoomEventManager.long_tap_started = false
@@ -111,3 +111,4 @@ func drag_camera(relative: Vector2):
 func zoom_camera(delta):
 	var new_zoom = clamp(zoom.x * delta, min_zoom, max_zoom)
 	zoom = Vector2.ONE * new_zoom
+	DragOrZoomEventManager.zoom_level = new_zoom

@@ -5,19 +5,22 @@ extends Node2D
 
 @export var max_size: Vector2i = Vector2i(300, 300)
 @export var start_room_size: int = 6
+@export var min_room_size = 6
+@export var max_room_size = 18
+@export var tile_size = 6
+@export var test_mode: bool = false
 
 @onready var room_tile_prefab = preload("res://Prefabs/OverworldTestTilePrefab.tscn")
 @onready var cam = $Camera2D
 
-const tile_size = 6
+
 
 var rooms_visited = 1
 
 var grid = []
 var last_generated_room_id = -1
 var rooms = {}
-var min_room_size = 6
-var max_room_size = 18
+
 
 class Room:
 	var id: int
@@ -30,7 +33,8 @@ class Room:
 	
 	func visit():
 		visited = true
-		sprite.modulate.a = 1.0
+		if sprite != null:
+			sprite.modulate.a = 1.0
 	
 
 func _ready():
@@ -39,27 +43,33 @@ func _ready():
 		for j in max_size.y:
 			col.append(-1)
 		grid.append(col)
-	
-	var starting_origin =  max_size / 2 - Vector2i(start_room_size / 2, start_room_size / 2)
-	generate_room(start_room_size,starting_origin, -1)
-	generate_room(start_room_size,starting_origin + Vector2i(0, -start_room_size), 0)
-	generate_room(start_room_size,starting_origin + Vector2i(0, start_room_size), 0)
-	generate_room(start_room_size,starting_origin + Vector2i(start_room_size, 0), 0)
-	generate_room(start_room_size,starting_origin + Vector2i(-start_room_size, 0), 0)
-	rooms[0].visit()
-	
-	cam.position = starting_origin * tile_size
+		
+		
+	if test_mode:
+		var starting_origin =  max_size / 2 - Vector2i(start_room_size / 2, start_room_size / 2)
+		generate_room(start_room_size,starting_origin, -1)
+		generate_room(start_room_size,starting_origin + Vector2i(0, -start_room_size), 0)
+		generate_room(start_room_size,starting_origin + Vector2i(0, start_room_size), 0)
+		generate_room(start_room_size,starting_origin + Vector2i(start_room_size, 0), 0)
+		generate_room(start_room_size,starting_origin + Vector2i(-start_room_size, 0), 0)
+		rooms[0].visit()
+		
+		cam.position = starting_origin * tile_size
+	else:
+		cam.queue_free()
 
 
-func generate_room(size: int, origin: Vector2i, origin_room_id: int):
+func generate_room(size: int, origin: Vector2i, origin_room_id: int = -1) -> int:
 	last_generated_room_id += 1 
-	var sprite = room_tile_prefab.instantiate()
-	add_child(sprite)
-	sprite.position = origin * tile_size
-	sprite.scale *= size
-	sprite.modulate = Color.from_hsv(randf(), 1, 1)
-	sprite.modulate.a = 0.5
-	sprite.get_child(0).input_event.connect(_on_room_choice_made.bind(last_generated_room_id))
+	var sprite
+	if test_mode:
+		sprite = room_tile_prefab.instantiate()
+		add_child(sprite)
+		sprite.position = origin * tile_size
+		sprite.scale *= size
+		sprite.modulate = Color.from_hsv(randf(), 1, 1)
+		sprite.modulate.a = 0.5
+		sprite.get_child(0).input_event.connect(_on_room_choice_made.bind(last_generated_room_id))
 	
 	for x in size:
 		for y in size:
@@ -72,8 +82,10 @@ func generate_room(size: int, origin: Vector2i, origin_room_id: int):
 	room.sprite = sprite
 	room.origin_room_id = origin_room_id
 	rooms[room.id] = room
+	
+	return room.id
 
-func generate_choices(origin_room_id: int, target_size: int):
+func generate_choices(origin_room_id: int, target_size: int) -> Array[int]:
 	# This function takes an origin room and tries to fill in rooms adjacent to the origin room. 
 	# It does this very naively:
 	#   1. Iteratively check in a square area on each adjacent side. Each loop bumps the check origin over a bit or shrinks the search area. This generates the set of all possible placement options on each side
@@ -174,7 +186,7 @@ func generate_choices(origin_room_id: int, target_size: int):
 	
 	# no sides have any possible placements, give up!
 	if !non_empty_found:
-		return
+		return []
 	
 	var possible_combinations = {}
 	var clockwise = null
@@ -285,13 +297,16 @@ func generate_choices(origin_room_id: int, target_size: int):
 		
 		var index = randi_range(0, possible_combinations[i].size() -1)
 		var combination = possible_combinations[i][index]
+	
+		var result: Array[int] = []
 		
 		for size in combination.keys():
 			for origin in combination[size]:
-				generate_room(size, origin, origin_room_id)
+				result.append(generate_room(size, origin, origin_room_id))
 		
-		return
-		
+		return result
+	
+	return []
 
 
 func would_rooms_collide(r1_origin: Vector2i, r1_dimension: Vector2i, r2_origin: Vector2i, r2_dimension: Vector2i):
@@ -314,8 +329,9 @@ func would_fit(room_origin: Vector2i, room_dimensions: Vector2i):
 
 
 func _process(delta):
-	var input = Vector2(Input.get_axis("ui_left", "ui_right"), Input.get_axis("ui_up", "ui_down"))
-	cam.position += input * 300 * delta
+	if test_mode: 
+		var input = Vector2(Input.get_axis("ui_left", "ui_right"), Input.get_axis("ui_up", "ui_down"))
+		cam.position += input * 300 * delta
 
 func _on_room_choice_made(viewport, event: InputEvent, shape_id, room_id: int):
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed and !rooms[room_id].visited:
@@ -327,4 +343,10 @@ func _on_room_choice_made(viewport, event: InputEvent, shape_id, room_id: int):
 		var target_size = roundi((lerp(min_room_size, max_room_size, t)))
 			
 		generate_choices(room_id, target_size)
+	
+
+func assign_board(room_id: int, board: Board):
+	rooms[room_id].board = board
+	rooms[room_id].visit()
+	board.overworld_room_id = room_id
 	

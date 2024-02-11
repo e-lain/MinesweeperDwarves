@@ -12,6 +12,7 @@ signal move_selected_building_pressed
 signal move_selected_building_cancelled
 signal move_selected_building_confirmed
 signal destroy_selected_building_pressed
+signal board_unlock_pressed(board: Board)
 
 signal tier_transition_midpoint 
 
@@ -54,6 +55,8 @@ signal tier_transition_midpoint
 @onready var transition_text = $Transition/TransitionText
 
 
+var board_unlock_panel_prefab = preload("res://UI/BoardUnlockPanel.tscn")
+
 # If we want to have margins around the UI, this would be where to assign them 
 # as they will be overwritten by notch code
 var top= 0
@@ -77,9 +80,22 @@ var selected_building
 
 var alert_proceed_callback
 
+var board_unlock_panels = []
+
 func _process(delta):
 	if state == State.PLACEMENT_MOVE_BUILDING || state == State.MOVE_BUILDING:
 		cancel_confirm_confirm_button.disabled = !selected_building.can_place(selected_building.global_position)
+	
+	if board_unlock_panels != null:
+		for panel in board_unlock_panels:
+			var board = panel.board
+			var t = board.get_global_transform_with_canvas()
+			var board_pos = t.translated(board.get_size_global_position() / 2.0 * DragOrZoomEventManager.zoom_level).origin
+			
+			var size_factor = min(1.0, max((0.5 / DragOrZoomEventManager.get_zoom_level()), .1))
+			panel.size = Vector2(240, 240) * size_factor
+			panel.position = board_pos - (panel.size / 2)
+
 
 func set_stairs_placed(placed: bool):
 	build_menu.set_stairs_placed(placed)
@@ -171,6 +187,7 @@ func enter_build_mode():
 	cancel_confirm.visible = false
 
 func enter_play_mode():
+	clear_board_unlock_panels()
 	state = State.PLAY
 	ability_menu.show_if_abilities_available()
 	# TODO: animate this!
@@ -319,3 +336,20 @@ func on_hide_transition_complete():
 func hide_enter_build_mode():
 	to_build_mode_button_container.visible = false
 
+func clear_board_unlock_panels():
+	if board_unlock_panels == null:
+		return
+		
+	for panel in board_unlock_panels:
+		panel.queue_free()
+	board_unlock_panels = []
+
+func spawn_board_unlock_panel(board: Board):
+	var instance = board_unlock_panel_prefab.instantiate()
+	add_child(instance)
+	instance.initialize(board)
+	instance.unlock_pressed.connect(on_unlock_board_button_pressed.bind(board))
+	board_unlock_panels.append(instance)
+
+func on_unlock_board_button_pressed(board: Board):
+	board_unlock_pressed.emit(board)

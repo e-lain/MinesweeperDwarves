@@ -40,7 +40,7 @@ func _process(delta):
 	var cant_afford = false
 	
 	for cost_type in building_costs.keys():
-		if Resources.amounts[cost_type] < building_costs[cost_type]:
+		if Resources.get_amount(cost_type) < building_costs[cost_type]:
 			cant_afford = true
 			break
 
