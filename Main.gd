@@ -26,8 +26,11 @@ var help_text_is_overriden: bool = false
 @onready var pointlight = $PointLight2D
 
 @onready var fog = $Fog
+@onready var shared_tilemap: SharedTileMap = $TileMap
 
-var Board = preload("res://board.tscn")
+var board_prefab = preload("res://board.tscn")
+
+var grid_line_prefab: PackedScene = preload("res://Prefabs/GridLine.tscn")
 
 var tier = 1
 var depth_by_tier = {}
@@ -68,22 +71,20 @@ func generate_board(difficulty: int, room_id: int) -> Board:
 	# Reset all ability counts
 	ability_charge_counts = ability_charge_maximums.duplicate()
 	responsive_ui.update_abilities(ability_charge_counts, ability_charge_maximums)
-	var b = Board.instantiate()
+	var b: Board = board_prefab.instantiate()
 	
 	add_child(b)
 	
 	canvas_modulate.visible = tier > 1
 	pointlight.visible = tier > 1
 
-
+	var room_origin = overworld.rooms[room_id].origin
 	var mine_count = roundi(.11111 * overworld_room.size.x * overworld_room.size.y)
-	b.init_board(overworld_room.size.x, overworld_room.size.y, mine_count, tier)
-#
+	b.init_board(overworld_room.size.x, overworld_room.size.y, mine_count, tier, shared_tilemap, room_origin)
 	
 	overworld.assign_board(room_id, b)
-	b.position = overworld.rooms[room_id].origin * b.TILE_SIZE
+	b.position = room_origin * b.TILE_SIZE
 
-	b.create_grid_lines()
 	b.mine_animation_complete.connect(on_mine_animation_complete)
 	b.wonder_placed.connect(on_wonder_placed)
 	b.workshop_placed.connect(on_workshop_placed)
@@ -144,6 +145,7 @@ func _ready():
 
 	
 	update_current_board(generate_board(0, starting_room_id))
+	shared_tilemap.update_shadows()
 	
 	responsive_ui.update_buildings(available_buildings)
 	responsive_ui.update_resources(available_resources)
@@ -151,6 +153,8 @@ func _ready():
 	responsive_ui.enter_play_mode()
 	
 	last_checked_resource_amounts = Resources.get_amounts_copy()
+	
+	create_grid_lines()
 
 func test_new_tier():
 	#TESTING
@@ -286,6 +290,8 @@ func _on_responsive_ui_enter_build_mode_pressed():
 	
 	for id in new_room_ids:
 		prev_generated_boards.append(generate_board(get_depth(), id))
+	
+	shared_tilemap.update_shadows()
 
 
 func on_mine_animation_complete():
@@ -306,6 +312,7 @@ func _on_mine_hit_restart_level_pressed():
 	var room_id = get_current_board().overworld_room_id
 	var prev_board = get_current_board()
 	update_current_board(generate_board(get_depth(), room_id))
+	shared_tilemap.update_shadows()
 	prev_board.queue_free()
 	get_tree().paused = false
 
@@ -408,6 +415,7 @@ func on_building_collection_complete():
 	on_resource_collection_complete()
 
 func on_minesweeper_collection_complete():
+	print("collect_complete")
 	state = State.Build
 	responsive_ui.enter_build_mode()
 
@@ -469,3 +477,30 @@ func _on_responsive_ui_board_unlock_pressed(board: Board):
 	for type in board.unlock_costs.keys():
 		Resources.update_amount(type, -board.unlock_costs[type])
 	next_level(board.overworld_room_id)
+
+
+func create_grid_lines():
+	var offset = Globals.TILE_SIZE_VECTOR
+	shared_tilemap
+#	var min_fade_pos = to_global(shared_tilemap.map_to_local(tilemap_origin_cell_pos)) - offset
+#	var max_fade_pos = min_fade_pos + Vector2(TILE_SIZE * columns, TILE_SIZE * rows) + offset
+#
+	for i in range(1, overworld.max_size.y):
+		var instance = grid_line_prefab.instantiate()
+		add_child(instance)
+		instance.position.x = 0
+		instance.position.y = 64 * i
+		instance.material.set_shader_parameter("speed", randf_range(0.01, 0.025) * (-1.0 if i % 2 == 0 else 1.0))
+#		instance.material.set_shader_parameter("min_fade_pos", min_fade_pos)
+#		instance.material.set_shader_parameter("max_fade_pos", max_fade_pos)
+		
+	for i in range(1, overworld.max_size.x):
+		var instance = grid_line_prefab.instantiate()
+		add_child(instance)
+		instance.global_rotation_degrees = 90
+		instance.position.x = 64 * i
+		instance.position.y = 360
+		
+		instance.material.set_shader_parameter("speed", randf_range(0.01, 0.025) * (-1.0 if i % 2 == 0 else 1.0))
+#		instance.material.set_shader_parameter("min_fade_pos", min_fade_pos)
+#		instance.material.set_shader_parameter("max_fade_pos", max_fade_pos)

@@ -96,7 +96,6 @@ func _process(delta):
 			panel.size = Vector2(240, 240) * size_factor
 			panel.position = board_pos - (panel.size / 2)
 
-
 func set_stairs_placed(placed: bool):
 	build_menu.set_stairs_placed(placed)
 

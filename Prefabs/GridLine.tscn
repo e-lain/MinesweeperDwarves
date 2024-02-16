@@ -17,3 +17,5 @@ texture_repeat = 2
 material = SubResource("ShaderMaterial_e1tdt")
 position = Vector2(640, 63)
 texture = ExtResource("2_fhb02")
+region_enabled = true
+region_rect = Rect2(0, 0, 80000, 8)

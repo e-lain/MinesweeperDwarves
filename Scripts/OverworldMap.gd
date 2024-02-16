@@ -1,4 +1,4 @@
-extends Node2D
+extends Node
 
 # This will do for now, in the future, consider Wave Function Collapse: https://robertheaton.com/2018/12/17/wavefunction-collapse-algorithm/
 # OR let players place the location + size of minesweep area themselves
@@ -8,11 +8,8 @@ extends Node2D
 @export var min_room_size = 6
 @export var max_room_size = 18
 @export var tile_size = 6
-@export var test_mode: bool = false
 
 @onready var room_tile_prefab = preload("res://Prefabs/OverworldTestTilePrefab.tscn")
-@onready var cam = $Camera2D
-
 
 
 var rooms_visited = 1
@@ -43,33 +40,11 @@ func _ready():
 		for j in max_size.y:
 			col.append(-1)
 		grid.append(col)
-		
-		
-	if test_mode:
-		var starting_origin =  max_size / 2 - Vector2i(start_room_size / 2, start_room_size / 2)
-		generate_room(start_room_size,starting_origin, -1)
-		generate_room(start_room_size,starting_origin + Vector2i(0, -start_room_size), 0)
-		generate_room(start_room_size,starting_origin + Vector2i(0, start_room_size), 0)
-		generate_room(start_room_size,starting_origin + Vector2i(start_room_size, 0), 0)
-		generate_room(start_room_size,starting_origin + Vector2i(-start_room_size, 0), 0)
-		rooms[0].visit()
-		
-		cam.position = starting_origin * tile_size
-	else:
-		cam.queue_free()
 
 
 func generate_room(size: int, origin: Vector2i, origin_room_id: int = -1) -> int:
 	last_generated_room_id += 1 
 	var sprite
-	if test_mode:
-		sprite = room_tile_prefab.instantiate()
-		add_child(sprite)
-		sprite.position = origin * tile_size
-		sprite.scale *= size
-		sprite.modulate = Color.from_hsv(randf(), 1, 1)
-		sprite.modulate.a = 0.5
-		sprite.get_child(0).input_event.connect(_on_room_choice_made.bind(last_generated_room_id))
 	
 	for x in size:
 		for y in size:
@@ -326,12 +301,6 @@ func would_fit(room_origin: Vector2i, room_dimensions: Vector2i):
 				return false
 	
 	return true
-
-
-func _process(delta):
-	if test_mode: 
-		var input = Vector2(Input.get_axis("ui_left", "ui_right"), Input.get_axis("ui_up", "ui_down"))
-		cam.position += input * 300 * delta
 
 func _on_room_choice_made(viewport, event: InputEvent, shape_id, room_id: int):
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed and !rooms[room_id].visited:

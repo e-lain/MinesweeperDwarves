@@ -1,4 +1,5 @@
 extends TileMap
+class_name SharedTileMap
 
 signal uncovered(cell_pos: Vector2i)
 signal flag_toggled(cell_pos: Vector2i)
@@ -12,11 +13,9 @@ const mined_tile_prefab: PackedScene = preload("res://Prefabs/MinedTile.tscn")
 var tap_start_time
 var tap_start_pos
 
-var changeset: Dictionary
+var changeset: Array[Dictionary] = []
 
-var active: bool = true
-
-func fill(size_x: int, size_y: int, tier: int) -> Array:
+func fill(origin_cell_pos: Vector2i, size_x: int, size_y: int, tier: int) -> Array:
 	var tiles = []
 	
 	var update = {}
@@ -25,12 +24,12 @@ func fill(size_x: int, size_y: int, tier: int) -> Array:
 		for r in size_y:
 			var t = BoardTile.new()
 			t.label_parent = self
-			var cell_pos = Vector2i(c, r)
+			var cell_pos = origin_cell_pos + Vector2i(c, r)
 			t.cell_position = cell_pos
 			tiles[c].append(t)
 			update[cell_pos] = 0
 	
-	changeset = BetterTerrain.create_terrain_changeset(self, 0, update)
+	changeset.append(BetterTerrain.create_terrain_changeset(self, 0, update))
 
 	return tiles
 
@@ -40,41 +39,46 @@ func remove_tile(pos: Vector2i, origin_distance: int = 0) -> void:
 	
 	var atlas_coords = get_cell_atlas_coords(0, pos)
 	tile_instance.init(map_to_local(pos), atlas_coords, pos, origin_distance)
-	BetterTerrain.set_cell(self, 0, pos, -1)
-	BetterTerrain.update_terrain_area(self, 0, Rect2i(max(0, pos.x - 2), max(0, pos.y - 2), 4, 4))
+	var update = {pos: -1}
+	changeset.append(BetterTerrain.create_terrain_changeset(self, 0, update))
 
 func set_lava_source(pos: Vector2i) -> void:
-	BetterTerrain.set_cell(self, 0, pos, 2)
-	BetterTerrain.update_terrain_area(self, 0, Rect2i(max(0, pos.x - 2), max(0, pos.y - 2), 4, 4))
+	var update = {pos: 2}
+	changeset.append(BetterTerrain.create_terrain_changeset(self, 0, update))
 
 func set_lava_moat(pos: Vector2i) -> void:
-	BetterTerrain.set_cell(self, 0, pos, 3)
-	BetterTerrain.update_terrain_area(self, 0, Rect2i(max(0, pos.x - 2), max(0, pos.y - 2), 4, 4))
+	var update = {pos: 3}
+	changeset.append(BetterTerrain.create_terrain_changeset(self, 0, update))
 
-func update_shadows(size_x: int, size_y: int) -> void:
+func update_shadows() -> void:
 	var used_cells = get_used_cells_by_id(0, 0)
 	var occupied_tiles = {}
 	var update = {}
 	
+	var used_rect = get_used_rect()
+	used_rect.position -= Vector2i(10, 10)
+	used_rect.size += Vector2i(20, 20)
+	
 	for pos in used_cells:
 		occupied_tiles[pos] = null
 	var unused_cells = []
-	for y in size_y:
-		for x in size_x:
-			var cell = Vector2i(x,y)
+	for y in used_rect.size.y:
+		for x in used_rect.size.x:
+			var cell = used_rect.position + Vector2i(x,y)
 			if !occupied_tiles.has(cell):
 				unused_cells.append(cell)
+				update[cell] = 1
+			else:
+				update[cell] = -1
 	
-	clear_layer(1)
-	set_cells_terrain_connect(1, unused_cells, 0, 1)
+	changeset.append(BetterTerrain.create_terrain_changeset(self, 1, update))
 
 func _process(delta):
-	if  BetterTerrain.is_terrain_changeset_ready(changeset):
-		BetterTerrain.apply_terrain_changeset(changeset)
-		changeset = {}
-		
-	if !active:
-		return
+	while(!changeset.is_empty() && BetterTerrain.is_terrain_changeset_ready(changeset[0])):
+		var first_change_set = changeset.pop_front()
+		BetterTerrain.apply_terrain_changeset(first_change_set)
+		if changeset.is_empty() && first_change_set["layer"] != 1:
+			update_shadows()
 	
 	if DragOrZoomEventManager.long_tap_started && Time.get_ticks_msec() - tap_start_time > SettingsController.LONG_TAP_DELAY_MS  && !DragOrZoomEventManager.drag_or_zoom_happening():
 		DragOrZoomEventManager.long_tap_started = false
@@ -83,24 +87,18 @@ func _process(delta):
 		if PlatformUtil.isMobile():
 			Input.vibrate_handheld(100)
 		flag_toggled.emit(tap_start_pos)
-	
-
-#	var used_cells = get_used_cells(0)
-#	if used_cells.size() > 0:
-#		get_cell_tile_data(0, used_cells[0]).material.set_shader_parameter("global_transform", get_global_transform())
-
 
 func _unhandled_input(event):
-	if !default_behavior || !active:
+	if !default_behavior:
 		return
 	
 	if event is InputEventMouseButton:
-		if event.is_action_pressed("left_click") && get_parent().clearing_tile:
+		if event.is_action_pressed("left_click") && get_parent().get_current_board().clearing_tile:
 			event = make_input_local(event)
 			var mouse_pos = event.position
 			var cell_pos = local_to_map(mouse_pos)
 			destroyed.emit(cell_pos)
-		if get_parent().state == Board.State.Play:
+		if get_parent().get_current_board().state == Board.State.Play:
 			event = make_input_local(event)
 			var mouse_pos = event.position
 			var cell_pos = local_to_map(mouse_pos)

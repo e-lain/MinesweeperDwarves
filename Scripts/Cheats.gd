@@ -45,7 +45,6 @@ var cheats = {
 						elif tile.is_bomb && !tile.is_flagged:
 							board._on_flag_toggled(tile.cell_position)
 				
-				board.update_shadows()
 				main.on_tile_uncover_event_complete(),
 		"param_count": 0
 	},
