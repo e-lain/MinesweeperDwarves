@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://btajej43cp77b"
-path="res://.godot/imported/Crystal1.png-7c60a403667e1f8ea6732180df209488.ctex"
+uid="uid://cfn88x8dv058h"
+path="res://.godot/imported/StairsUp.png-60a4d0a97fb589bc163dee3740a1d355.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/Buildings/Crystal1.png"
-dest_files=["res://.godot/imported/Crystal1.png-7c60a403667e1f8ea6732180df209488.ctex"]
+source_file="res://Assets/UI/StairsUp.png"
+dest_files=["res://.godot/imported/StairsUp.png-60a4d0a97fb589bc163dee3740a1d355.ctex"]
 
 [params]
 

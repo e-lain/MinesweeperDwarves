@@ -7,8 +7,6 @@ extends Node
 @export var start_room_size: int = 6
 @export var min_room_size = 6
 @export var max_room_size = 18
-@export var tile_size = 6
-
 @onready var room_tile_prefab = preload("res://Prefabs/OverworldTestTilePrefab.tscn")
 
 
@@ -44,7 +42,6 @@ func _ready():
 
 func generate_room(size: int, origin: Vector2i, origin_room_id: int = -1) -> int:
 	last_generated_room_id += 1 
-	var sprite
 	
 	for x in size:
 		for y in size:
@@ -54,7 +51,6 @@ func generate_room(size: int, origin: Vector2i, origin_room_id: int = -1) -> int
 	room.id = last_generated_room_id
 	room.size = Vector2i(size, size)
 	room.origin = origin
-	room.sprite = sprite
 	room.origin_room_id = origin_room_id
 	rooms[room.id] = room
 	
@@ -77,13 +73,10 @@ func generate_choices(origin_room_id: int, target_size: int) -> Array[int]:
 	for i in range(lower_bound, min(max_room_size, lower_bound + 3)):
 		sizes.append(i)
 	
-	var smallest_size = sizes[0]
 	var largest_size = sizes[sizes.size() - 1]
 	
 	sizes.reverse()
 	
-	var origins = []
-	var available_sizes = []
 	
 	# Uncomment for more variety, but also a longer algorithm runtime
 	var max_offset = 2 #smallest_size / 2
@@ -302,7 +295,7 @@ func would_fit(room_origin: Vector2i, room_dimensions: Vector2i):
 	
 	return true
 
-func _on_room_choice_made(viewport, event: InputEvent, shape_id, room_id: int):
+func _on_room_choice_made(_viewport, event: InputEvent, _shape_id, room_id: int):
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed and !rooms[room_id].visited:
 		rooms[room_id].visit()
 	

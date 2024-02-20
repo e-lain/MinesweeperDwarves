@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://y0u63ty82mt5"
-path="res://.godot/imported/crystal2.png-fd402b73da1c15c22c303092733eb8b2.ctex"
+uid="uid://dgwg34udoytxd"
+path="res://.godot/imported/StairsDown128.png-6e4651ff8ded9bdb058b6f6c4c86fd0c.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/Buildings/crystal2.png"
-dest_files=["res://.godot/imported/crystal2.png-fd402b73da1c15c22c303092733eb8b2.ctex"]
+source_file="res://Assets/BuildingsLarge/StairsDown128.png"
+dest_files=["res://.godot/imported/StairsDown128.png-6e4651ff8ded9bdb058b6f6c4c86fd0c.ctex"]
 
 [params]
 
@@ -21,7 +21,7 @@ compress/lossy_quality=0.7
 compress/hdr_compression=1
 compress/normal_map=0
 compress/channel_pack=0
-mipmaps/generate=false
+mipmaps/generate=true
 mipmaps/limit=-1
 roughness/mode=0
 roughness/src_normal=""

@@ -22,7 +22,7 @@ static var data = {
 			ResourceData.Resources.POPULATION: -2,
 		},
 		"size": 2,
-		"icon_path": "res://Assets/Buildings/HouseBuildingDownscaled.png"
+		"icon_path": "res://Assets/BuildingsLarge/House128.png"
 	},
 	Type.QUARRY: {
 		"type": Type.QUARRY,
@@ -32,14 +32,14 @@ static var data = {
 			ResourceData.Resources.STONE: -4,
 		},
 		"size": 2,
-		"icon_path": "res://Assets/Buildings/MiningBuildingDownscale.png"
+		"icon_path": "res://Assets/BuildingsLarge/MiningBuilding128.png"
 	},
 	Type.STAIRCASE: {
 		"type": Type.STAIRCASE,
 		"name": "Staircase",
 		"description": "Opens next floor and allows placing other buildings",
 		"size": 1,
-		"icon_path": "res://Assets/Buildings/StairsDown.png"
+		"icon_path": "res://Assets/BuildingsLarge/StairsDown128.png"
 	},
 	Type.WORKSHOP: {
 		"type": Type.WORKSHOP,
@@ -50,7 +50,7 @@ static var data = {
 			ResourceData.Resources.POPULATION: 1,
 		},
 		"size": 3,
-		"icon_path": "res://Assets/Buildings/EngineerWorkshopBuildingDownscale.png"
+		"icon_path": "res://Assets/BuildingsLarge/Workshop128.png"
 	},
 	Type.WONDER: {
 		"type": Type.WONDER,
@@ -71,7 +71,7 @@ static var data = {
 			ResourceData.Resources.STEEL: 1,
 		},
 		"size": 1,
-		"icon_path": "res://Assets/Buildings/minecart downscaled.png"
+		"icon_path": "res://Assets/BuildingsLarge/Minecart128.png"
 	},
 	Type.LAVA: {
 		"type": Type.LAVA,

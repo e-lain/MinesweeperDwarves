@@ -1,8 +1,6 @@
 extends Node2D
 class_name Board
 
-const TILE_SIZE = 64
-
 signal tile_uncover_event_complete
 signal tile_flagged_event_complete
 
@@ -108,9 +106,17 @@ func init_board(rows: int, cols: int, bombs: int, tier: int, tilemap: SharedTile
 	self.tilemap_origin_cell_pos = tilemap_origin_cell_pos
 	lava_tiles = {}
 
+	tiles = []
+	for c in columns:
+		tiles.append([])
+		for r in rows:
+			var t = BoardTile.new()
+			t.label_parent = tilemap
+			var cell_pos = tilemap_origin_cell_pos + Vector2i(c, r)
+			t.cell_position = cell_pos
+			tiles[c].append(t)
 	
-	tiles = tilemap.fill(tilemap_origin_cell_pos, columns, rows, tier)
-
+	
 func _unhandled_input(event):
 	if state == State.MobilePrePlacing and event is InputEventScreenTouch:
 		get_viewport().set_input_as_handled()
@@ -238,7 +244,7 @@ func place_lava_from_bomb(tile: BoardTile):
 		tile.toggle_flag()
 	tile.is_cover = false
 	tiles_uncovered += 1
-	tilemap.remove_tile(tile.cell_position)
+	tilemap.remove_tile(tile.cell_position, get_boundaries_rect())
 	tilemap.set_lava_source(tile.cell_position)
 	
 	# Create lava source buliding on tile. THIS IS NOT TREATED AS A BUILDING BY THE LOGIC
@@ -251,7 +257,7 @@ func place_lava_from_bomb(tile: BoardTile):
 	building.can_show_problem = false
 	building.cant_build_label.visible = false
 	var tile_pos = tile.get_position()
-	var snapped = Vector2(snapped(tile_pos.x-TILE_SIZE/2, TILE_SIZE), snapped(tile_pos.y-TILE_SIZE/2, TILE_SIZE))
+	var snapped = Vector2(snapped(tile_pos.x-Globals.TILE_SIZE/2, Globals.TILE_SIZE), snapped(tile_pos.y-Globals.TILE_SIZE/2, Globals.TILE_SIZE))
 	building.position = snapped
 	building.sprite.material = null
 	
@@ -466,7 +472,7 @@ func destroy_selected_building():
 		tile.has_building = false
 		tile.building_id = 0
 		if type == BuildingData.Type.LAVA:
-			tilemap.remove_tile(cell_pos)
+			tilemap.remove_tile(cell_pos, get_boundaries_rect())
 			lava_tiles.erase(tile)
 			tile.lava_uid = ""
 			refresh_lava_connections()
@@ -616,7 +622,7 @@ func clear_tile(tile: BoardTile):
 func uncover_tile(tile: BoardTile, distance: int = 0):
 	tile.is_cover = false
 	tiles_uncovered += 1
-	tilemap.remove_tile(tile.cell_position, distance)
+	tilemap.remove_tile(tile.cell_position, get_boundaries_rect(), distance)
 	
 	distance += 1
 	
@@ -860,7 +866,7 @@ func get_world_positions_in_area(origin_world_pos: Vector2, size: int) -> Array[
 	var tiles: Array[Vector2] = []
 	for x in range(size):
 		for y in range (size):
-			tiles.push_back(Vector2(origin_world_pos.x + x*TILE_SIZE, origin_world_pos.y + y*TILE_SIZE))
+			tiles.push_back(Vector2(origin_world_pos.x + x*Globals.TILE_SIZE, origin_world_pos.y + y*Globals.TILE_SIZE))
 	
 	return tiles
 	
@@ -911,11 +917,14 @@ func get_center_global_position() -> Vector2:
 	return position + (get_size_global_position() / 2) 
 
 func get_size_global_position() -> Vector2:
-	return Vector2(columns * TILE_SIZE, rows * TILE_SIZE)
+	return Vector2(columns * Globals.TILE_SIZE, rows * Globals.TILE_SIZE)
 
 func contains_cell_position(pos: Vector2i) -> bool:
-	return Rect2i(tilemap_origin_cell_pos, Vector2i(columns, rows)).has_point(pos)
+	return get_boundaries_rect().has_point(pos)
 
 func get_tile_at_cell_position(pos: Vector2i):
 	var check = pos - tilemap_origin_cell_pos
 	return tiles[check.x][check.y]
+
+func get_boundaries_rect() -> Rect2i:
+	return Rect2i(tilemap_origin_cell_pos, Vector2i(columns, rows))

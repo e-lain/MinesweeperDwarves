@@ -83,7 +83,7 @@ func generate_board(difficulty: int, room_id: int) -> Board:
 	b.init_board(overworld_room.size.x, overworld_room.size.y, mine_count, tier, shared_tilemap, room_origin)
 	
 	overworld.assign_board(room_id, b)
-	b.position = room_origin * b.TILE_SIZE
+	b.position = room_origin * Globals.TILE_SIZE
 
 	b.mine_animation_complete.connect(on_mine_animation_complete)
 	b.wonder_placed.connect(on_wonder_placed)
@@ -139,14 +139,17 @@ func _ready():
 	test_new_tier()
 	
 	
+
 	var starting_origin =  overworld.max_size / 2 - Vector2i(overworld.start_room_size / 2, overworld.start_room_size / 2)
 	var start_room_size = overworld.start_room_size
 	var starting_room_id = overworld.generate_room(start_room_size, starting_origin)
 
 	
 	update_current_board(generate_board(0, starting_room_id))
-	shared_tilemap.update_shadows()
 	
+	shared_tilemap.fill(Rect2i(starting_origin - Vector2i(20, 20), Vector2i(40, 40)))
+
+
 	responsive_ui.update_buildings(available_buildings)
 	responsive_ui.update_resources(available_resources)
 	responsive_ui.update_abilities(ability_charge_counts, ability_charge_maximums)
@@ -289,9 +292,8 @@ func _on_responsive_ui_enter_build_mode_pressed():
 	prev_generated_boards = []
 	
 	for id in new_room_ids:
-		prev_generated_boards.append(generate_board(get_depth(), id))
-	
-	shared_tilemap.update_shadows()
+		var board = generate_board(get_depth(), id)
+		prev_generated_boards.append(board)
 
 
 func on_mine_animation_complete():
@@ -312,7 +314,6 @@ func _on_mine_hit_restart_level_pressed():
 	var room_id = get_current_board().overworld_room_id
 	var prev_board = get_current_board()
 	update_current_board(generate_board(get_depth(), room_id))
-	shared_tilemap.update_shadows()
 	prev_board.queue_free()
 	get_tree().paused = false
 
@@ -483,13 +484,13 @@ func create_grid_lines():
 	var offset = Globals.TILE_SIZE_VECTOR
 	shared_tilemap
 #	var min_fade_pos = to_global(shared_tilemap.map_to_local(tilemap_origin_cell_pos)) - offset
-#	var max_fade_pos = min_fade_pos + Vector2(TILE_SIZE * columns, TILE_SIZE * rows) + offset
+#	var max_fade_pos = min_fade_pos + Vector2(Globals.TILE_SIZE * columns, Globals.TILE_SIZE * rows) + offset
 #
 	for i in range(1, overworld.max_size.y):
 		var instance = grid_line_prefab.instantiate()
 		add_child(instance)
 		instance.position.x = 0
-		instance.position.y = 64 * i
+		instance.position.y = Globals.TILE_SIZE * i
 		instance.material.set_shader_parameter("speed", randf_range(0.01, 0.025) * (-1.0 if i % 2 == 0 else 1.0))
 #		instance.material.set_shader_parameter("min_fade_pos", min_fade_pos)
 #		instance.material.set_shader_parameter("max_fade_pos", max_fade_pos)
@@ -498,7 +499,7 @@ func create_grid_lines():
 		var instance = grid_line_prefab.instantiate()
 		add_child(instance)
 		instance.global_rotation_degrees = 90
-		instance.position.x = 64 * i
+		instance.position.x = Globals.TILE_SIZE * i
 		instance.position.y = 360
 		
 		instance.material.set_shader_parameter("speed", randf_range(0.01, 0.025) * (-1.0 if i % 2 == 0 else 1.0))

@@ -51,15 +51,16 @@ metadata/_snap_enabled = true
 script = ExtResource("1_t2km6")
 
 [node name="Fog" parent="." instance=ExtResource("2_8oqyu")]
+visible = false
 position = Vector2(-11520, -11520)
-scale = Vector2(4, 4)
+scale = Vector2(2, 2)
 fog_width = 11520
 fog_height = 11520
 light_width = 128
 light_height = 128
 fill_color = Color(0.231373, 0.231373, 0.231373, 1)
 
-[node name="TextureRect2" type="TextureRect" parent="."]
+[node name="Background" type="TextureRect" parent="."]
 z_index = -1
 texture_repeat = 2
 anchors_preset = 8
@@ -67,8 +68,8 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_right = 23040.0
-offset_bottom = 23040.0
+offset_right = 46080.0
+offset_bottom = 46080.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
@@ -77,7 +78,6 @@ expand_mode = 1
 stretch_mode = 1
 
 [node name="OverworldMap" parent="." instance=ExtResource("2_gg5wl")]
-tile_size = 64
 
 [node name="TileMap" parent="." instance=ExtResource("5_3patw")]
 
@@ -739,8 +739,8 @@ Build mode will begin"
 [node name="ColorRect2" type="ColorRect" parent="CanvasLayer"]
 offset_left = -1496.0
 offset_top = -960.0
-offset_right = 26078.0
-offset_bottom = 24489.0
+offset_right = 53652.0
+offset_bottom = 49938.0
 mouse_filter = 2
 color = Color(0.639216, 0.380392, 0.109804, 0.0627451)
 

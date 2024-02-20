@@ -4,8 +4,6 @@ var number_label_prefab: PackedScene = preload("res://Prefabs/NumberLabel.tscn")
 var flag_prefab: PackedScene = preload("res://Prefabs/Flag.tscn")
 var bomb_prefab: PackedScene = preload("res://Prefabs/Bomb.tscn")
 
-const TILE_SIZE = 64
-
 var cell_position: Vector2i #Grid coordinates for tile, NOT planar coordinates
 
 var is_cover: bool = true
@@ -67,7 +65,7 @@ func create_bomb(bomb_type: BombData.Type) -> Node2D:
 	return bomb
 
 func get_position():
-	return cell_position * TILE_SIZE + Vector2i(TILE_SIZE / 2, TILE_SIZE / 2)
+	return cell_position * Globals.TILE_SIZE + Vector2i(Globals.TILE_SIZE / 2, Globals.TILE_SIZE / 2)
 
 func destroy_bomb():
 	if bomb != null:

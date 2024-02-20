@@ -10,13 +10,11 @@ func init(_position: Vector2, tilesheet_sprite_coords:Vector2i, cell_position: V
 	position = _position
 	
 	
-	
 	frame_coords = tilesheet_sprite_coords
-	
-	var region_x = 0 if cell_position.x % 2 == 0 else 64
-	var region_y = 0 if cell_position.y % 2 == 0 else 64
-	var region_w = 64
-	var region_h = 64
+	var region_x = 0 if cell_position.x % 2 == 0 else Globals.TILE_SIZE
+	var region_y = 0 if cell_position.y % 2 == 0 else Globals.TILE_SIZE
+	var region_w = Globals.TILE_SIZE
+	var region_h = Globals.TILE_SIZE
 	background_sprite.region_rect = Rect2(region_x, region_y, region_w, region_h)
 	
 	var timer = get_tree().create_timer(origin_distance * 0.015)

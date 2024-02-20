@@ -4,8 +4,8 @@
 [ext_resource type="Script" path="res://UI/ResponsiveUI.gd" id="2_bkf2v"]
 [ext_resource type="StyleBox" uid="uid://dt1oma3or8xpd" path="res://UI/PanelContainerStyle.tres" id="3_8e3sj"]
 [ext_resource type="Script" path="res://UI/ResourceBar.gd" id="3_km0c7"]
-[ext_resource type="Texture2D" uid="uid://cfn88x8dv058h" path="res://Assets/Buildings/StairsUp.png" id="5_3xw3f"]
 [ext_resource type="PackedScene" uid="uid://db1xxa8k04j5p" path="res://UI/ResourceBarResource.tscn" id="5_pwklv"]
+[ext_resource type="Texture2D" uid="uid://cfn88x8dv058h" path="res://Assets/UI/StairsUp.png" id="6_nw10h"]
 [ext_resource type="Texture2D" uid="uid://bl2ixi00xkp8y" path="res://Assets/exclamation.png" id="6_ppse3"]
 [ext_resource type="StyleBox" uid="uid://b8qlwed3vhkld" path="res://UI/OuterButtonStyle.tres" id="8_vwt44"]
 [ext_resource type="StyleBox" uid="uid://bl0eiutsew477" path="res://UI/HoveredOuterButtonStyle.tres" id="9_dawhi"]
@@ -100,7 +100,7 @@ layout_mode = 2
 [node name="TextureRect" type="TextureRect" parent="TopPanel/FloorsAndFlags/FloorCount"]
 layout_mode = 2
 size_flags_horizontal = 3
-texture = ExtResource("5_3xw3f")
+texture = ExtResource("6_nw10h")
 expand_mode = 2
 stretch_mode = 5
 
@@ -248,7 +248,7 @@ layout_mode = 2
 [node name="TextureRect" type="TextureRect" parent="FloorsAndFlagsLandscape/VBoxContainer/FloorCount"]
 layout_mode = 2
 size_flags_horizontal = 3
-texture = ExtResource("5_3xw3f")
+texture = ExtResource("6_nw10h")
 expand_mode = 2
 stretch_mode = 5
 
