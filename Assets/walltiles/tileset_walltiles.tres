@@ -384,11 +384,11 @@ texture_region_size = Vector2i(128, 128)
 5:4/0/terrains_peering_bit/top_side = 0
 5:4/0/metadata/_better_terrain = {
 0: [0],
-3: [0],
 4: [0],
+7: [0],
 8: [0],
+11: [0],
 12: [0],
-15: [0],
 "type": 0
 }
 8:4/0 = 0

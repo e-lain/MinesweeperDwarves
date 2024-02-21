@@ -49,7 +49,7 @@ signal tier_transition_midpoint
 @onready var to_build_mode_button_container = $TopMargin/ToBuildModeButton
 @onready var to_build_mode_button = $TopMargin/ToBuildModeButton/Button
 
-@onready var alert_box = $AlertBox
+@onready var alert_box: AlertBox = $AlertBox
 
 @onready var transition = $Transition
 @onready var transition_text = $Transition/TransitionText
@@ -75,7 +75,8 @@ enum State {
 	ALERT
 }
 
-var state
+var state: State
+var prev_state: State
 var selected_building
 
 var alert_proceed_callback
@@ -194,6 +195,7 @@ func enter_play_mode():
 	to_build_mode_button_container.visible = true
 	descend_button_container.visible = false
 	infobox.visible = false
+	alert_box.visible = false
 	
 func enter_place_mode(type: BuildingData.Type):
 	var data = BuildingData.data[type]
@@ -257,9 +259,21 @@ func _on_descend_button_pressed():
 	descend_pressed.emit()
 	
 func show_floor_descend_warning(proceed_callback: Callable):
+	prev_state = state
 	state = State.ALERT
 	alert_proceed_callback = proceed_callback
 	alert_box.show_content("[center]Watch Out![/center]", "[center]There are buildings which will not generate resources. Proceed?[/center]", Vector2(480, 360), AlertBox.ButtonStyle.Proceed, _on_alert_box_proceed_pressed, _on_alert_box_cancel_pressed)
+	cancel_confirm.visible = false
+	infobox.visible = false
+	build_menu.visible = false
+	selected_building = null
+	descend_button_container.visible = false
+
+func show_mine_hit_popup(restart_callback: Callable) -> void:
+	prev_state = state
+	state = State.ALERT
+	alert_proceed_callback = restart_callback
+	alert_box.show_content("[center]Mine Hit![/center]", "[center]You hit a mine. One Population has been lost.[/center]", Vector2(480, 360), AlertBox.ButtonStyle.Restart, _on_alert_box_proceed_pressed)
 	cancel_confirm.visible = false
 	infobox.visible = false
 	build_menu.visible = false
@@ -271,7 +285,10 @@ func _on_alert_box_cancel_pressed():
 	on_building_deselected()
 
 func _on_alert_box_proceed_pressed():
-	on_building_deselected()
+	if prev_state == State.PLAY:
+		enter_play_mode()
+	else:
+		on_building_deselected()
 	if alert_proceed_callback != null and alert_proceed_callback is Callable:
 		alert_proceed_callback.call()
 	alert_proceed_callback = null

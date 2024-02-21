@@ -1,6 +1,6 @@
 [gd_scene load_steps=23 format=3 uid="uid://dnr83m4pqs7mp"]
 
-[ext_resource type="Theme" uid="uid://b6iv3a38m6uhb" path="res://UI.tres" id="1_u5axg"]
+[ext_resource type="Theme" uid="uid://b6iv3a38m6uhb" path="res://UI/UI.tres" id="1_7nh57"]
 [ext_resource type="Script" path="res://UI/ResponsiveUI.gd" id="2_bkf2v"]
 [ext_resource type="StyleBox" uid="uid://dt1oma3or8xpd" path="res://UI/PanelContainerStyle.tres" id="3_8e3sj"]
 [ext_resource type="Script" path="res://UI/ResourceBar.gd" id="3_km0c7"]
@@ -62,7 +62,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-theme = ExtResource("1_u5axg")
+theme = ExtResource("1_7nh57")
 script = ExtResource("2_bkf2v")
 
 [node name="TopPanel" type="PanelContainer" parent="."]
@@ -70,7 +70,7 @@ layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 0
 mouse_filter = 2
-theme = ExtResource("1_u5axg")
+theme = ExtResource("1_7nh57")
 theme_override_styles/panel = ExtResource("3_8e3sj")
 
 [node name="HBoxContainer" type="HBoxContainer" parent="TopPanel"]
@@ -137,7 +137,7 @@ custom_minimum_size = Vector2(720, 180)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 8
-theme = ExtResource("1_u5axg")
+theme = ExtResource("1_7nh57")
 script = ExtResource("9_o2aip")
 
 [node name="ScrollContainer" type="ScrollContainer" parent="BuildMenu"]
@@ -170,7 +170,7 @@ custom_minimum_size = Vector2(720, 180)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 8
-theme = ExtResource("1_u5axg")
+theme = ExtResource("1_7nh57")
 theme_override_styles/panel = SubResource("StyleBoxFlat_wo6rf")
 script = ExtResource("11_dj7ul")
 
@@ -386,12 +386,11 @@ theme_override_styles/focus = ExtResource("10_kuip1")
 text = "Cancel"
 
 [node name="AlertBox" type="PanelContainer" parent="."]
-visible = false
 custom_minimum_size = Vector2(480, 480)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
-theme = ExtResource("1_u5axg")
+theme = ExtResource("1_7nh57")
 theme_override_styles/panel = ExtResource("3_8e3sj")
 script = ExtResource("16_8kpmh")
 
@@ -439,7 +438,7 @@ text = "Cancel"
 visible = false
 modulate = Color(1, 1, 1, 0)
 layout_mode = 2
-theme = ExtResource("1_u5axg")
+theme = ExtResource("1_7nh57")
 color = Color(0, 0, 0, 1)
 
 [node name="TransitionText" type="RichTextLabel" parent="Transition"]

@@ -111,7 +111,7 @@ func init_board(rows: int, cols: int, bombs: int, tier: int, tilemap: SharedTile
 		tiles.append([])
 		for r in rows:
 			var t = BoardTile.new()
-			t.label_parent = tilemap
+			t.label_parent = self
 			var cell_pos = tilemap_origin_cell_pos + Vector2i(c, r)
 			t.cell_position = cell_pos
 			tiles[c].append(t)
@@ -245,7 +245,7 @@ func place_lava_from_bomb(tile: BoardTile):
 	tile.is_cover = false
 	tiles_uncovered += 1
 	tilemap.remove_tile(tile.cell_position, get_boundaries_rect())
-	tilemap.set_lava_source(tile.cell_position)
+	tilemap.set_lava_source(tile.cell_position, get_boundaries_rect())
 	
 	# Create lava source buliding on tile. THIS IS NOT TREATED AS A BUILDING BY THE LOGIC
 	var building = building_prefab.instantiate()
@@ -364,7 +364,6 @@ func on_confirm_building_placement():
 	building.confirm_placement()
 	building.on_selected.connect(on_building_selected)
 	
-	get_parent().help_text_is_overriden = false
 	building.id = total_building_count
 	var type = building.type
 	var id = building.id
@@ -407,7 +406,7 @@ func on_confirm_building_placement():
 		if tile:
 			lava_tiles[tile.building_id] = (tile)
 			building.set_building_visibility(false)
-			tilemap.set_lava_moat(tile.cell_position)
+			tilemap.set_lava_moat(tile.cell_position, get_boundaries_rect())
 			refresh_lava_connections()
 			print("CONNECTIONS: ", building.connected_lava_sources)
 		else:
@@ -708,10 +707,6 @@ func _on_flag_toggled(cell_pos: Vector2i):
 	elif flags > 0:
 		flags -= 1
 	else:
-		get_parent().help_text_is_overriden = true
-		get_parent().help_text_bar.text = "All flags already placed, cannot place additional flags"
-		await get_tree().create_timer(1).timeout
-		get_parent().help_text_is_overriden = false
 		return
 		
 	if !tile.is_cover:

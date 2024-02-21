@@ -36,8 +36,6 @@ var size: int
 # Only used if building is a LAVA moat, keeps track of which (if any) lava source tiles it is pathed to
 var connected_lava_sources = []
 
-var took_help_text_override = false
-
 var state := State.Unplaced
 
 var move_begin_offset = Vector2.ZERO
@@ -124,16 +122,6 @@ func _process(delta):
 	if requires_minecart_adjacency():
 		var next_to_minecart = next_to_minecart()
 		toggle_problem(!next_to_minecart, BuildingProblem.NO_MINECART)
-		
-		var mouse_pos = get_local_mouse_position()
-		var mouse_in_bounds = mouse_pos.x >= 0 && mouse_pos.y >= 0 && mouse_pos.x < Globals.TILE_SIZE * size && mouse_pos.y < Globals.TILE_SIZE * size
-		if !next_to_minecart && !main.help_text_is_overriden && mouse_in_bounds:
-			main.help_text_bar.text = "Building will not earn resources when you descend to next floor. Build a minecart next to this building."
-			main.help_text_is_overriden = true
-			took_help_text_override = true
-		elif took_help_text_override && !mouse_in_bounds:
-			main.help_text_is_overriden = false
-			took_help_text_override = false
 
 
 func toggle_problem(has_problem: bool, reason: BuildingProblem = BuildingProblem.NO_MINECART):
@@ -233,7 +221,6 @@ func _handle_mouse_input(event):
 				SoundManager.play_negative()
 
 			if type == BuildingData.Type.STAIRCASE and board.stairs_placed:
-				main.help_text_bar.text = "Stairs already placed! Can't have more than one staircase per floor"
 				print("Stairs already placed!")
 			if can_place(global_position):
 				place(global_position)

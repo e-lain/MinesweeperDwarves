@@ -1,7 +1,10 @@
 extends Camera2D
+class_name CameraController
 
 signal tap_complete(event: InputEventScreenTouch)
 signal drag_complete
+
+const FORCED_MOVE_SPEED: float = 1000.0
 
 @export var min_zoom = 0.75
 @export var max_zoom = 2
@@ -19,17 +22,46 @@ var dragging := false
 var absolute_drag_amount = Vector2.ZERO
 var absolute_drag_min_threshold = 5
 
+
+var forced_move_target_pos: Vector2
+var forced_move_target_zoom: Vector2
+var forced_move_tween: Tween
+
+var state: State = State.DEFAULT
+
+enum State {
+	DEFAULT,
+	FORCED_MOVE
+}
+
+
+func smooth_reset(target: Vector2):
+	forced_move_target_pos = target
+	forced_move_target_zoom = Vector2.ONE # TODO: Calculate this forreal
+	state = State.FORCED_MOVE
+	var duration = .4
+	
+	forced_move_tween = create_tween()
+	forced_move_tween.tween_property(self, "position", forced_move_target_pos, duration).set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_EXPO)
+	forced_move_tween.parallel()
+	forced_move_tween.tween_property(self, "zoom", forced_move_target_zoom, duration)
+	forced_move_tween.tween_callback(func(): state = State.DEFAULT)
+
 func reset(center: Vector2, board_size: Vector2):
-	var viewport_dimensions: Vector2 = get_viewport_rect().size
+	forced_move_tween.kill()
 	position = center
+	state = State.DEFAULT
 	
-	
-	limit_left = center.x - board_size.x - viewport_dimensions.x / 2.0
-	limit_top = center.y - board_size.y - viewport_dimensions.y / 2.0
-	limit_right = center.x + board_size.x + viewport_dimensions.x / 2.0
-	limit_bottom = center.y + board_size.y + viewport_dimensions.y / 2.0
-	
+#	var viewport_dimensions: Vector2 = get_viewport_rect().size
+#	limit_left = center.x - board_size.x - viewport_dimensions.x / 2.0
+#	limit_top = center.y - board_size.y - viewport_dimensions.y / 2.0
+#	limit_right = center.x + board_size.x + viewport_dimensions.x / 2.0
+#	limit_bottom = center.y + board_size.y + viewport_dimensions.y / 2.0
+#
 func _input(event):
+	if state == State.FORCED_MOVE:
+		return
+	
 	if event.is_action_released("left_click") && DragOrZoomEventManager.long_tap_occurred:
 		DragOrZoomEventManager.long_tap_occurred = false
 		dragging = false

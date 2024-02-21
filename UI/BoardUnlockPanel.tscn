@@ -1,6 +1,6 @@
 [gd_scene load_steps=8 format=3 uid="uid://du3xsa8p3sow5"]
 
-[ext_resource type="Theme" uid="uid://b6iv3a38m6uhb" path="res://UI.tres" id="1_f2emt"]
+[ext_resource type="Theme" uid="uid://b6iv3a38m6uhb" path="res://UI/UI.tres" id="1_f2emt"]
 [ext_resource type="Texture2D" uid="uid://d0o6bpct5y38h" path="res://Assets/UI/Popup.png" id="2_nvt42"]
 [ext_resource type="StyleBox" uid="uid://cs0uiigi7qlev" path="res://UI/InnerButtonStyle.tres" id="3_0h600"]
 [ext_resource type="Script" path="res://UI/BoardUnlockPanel.gd" id="3_3upp1"]

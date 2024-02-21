@@ -3,24 +3,9 @@ class_name GameController
 
 @onready var overworld = $OverworldMap
 
-@onready var mine_hit_popup = $CanvasLayer/MineHitPopup
-@onready var greyout = $CanvasLayer/ColorRect
-
 @onready var responsive_ui: ResponsiveUI = $ResponsiveUICanvas/ResponsiveUI
 
-@onready var destroy_popup = $CanvasLayer/AbilityMenu/DestroyPopup
-@onready var armor_popup = $CanvasLayer/AbilityMenu/ArmorPopup
-@onready var dowse_popup = $CanvasLayer/AbilityMenu/DowsePopup
-
-@onready var help_overlay_play = $CanvasLayer/HelpOverlayPlay
-@onready var help_overlay_build = $CanvasLayer/HelpOverlayBuild
-@onready var help_text_bar = $CanvasLayer/UI/ContextLabel
-var help_text_is_overriden: bool = false
-
-@onready var game_over = $CanvasLayer/GameOver
-@onready var you_win = $CanvasLayer/YouWin
-
-@onready var camera = $Camera2D
+@onready var camera: CameraController = $Camera2D
 
 @onready var canvas_modulate = $CanvasModulate
 @onready var pointlight = $PointLight2D
@@ -28,7 +13,7 @@ var help_text_is_overriden: bool = false
 @onready var fog = $Fog
 @onready var shared_tilemap: SharedTileMap = $TileMap
 
-var board_prefab = preload("res://board.tscn")
+var board_prefab = preload("res://Prefabs/board.tscn")
 
 var grid_line_prefab: PackedScene = preload("res://Prefabs/GridLine.tscn")
 
@@ -62,11 +47,6 @@ enum State {
 
 func generate_board(difficulty: int, room_id: int) -> Board:
 	var overworld_room = overworld.rooms[room_id]
-	
-	help_text_is_overriden = false
-	destroy_popup.visible = false
-	armor_popup.visible = false
-	dowse_popup.visible = false
 	
 	# Reset all ability counts
 	ability_charge_counts = ability_charge_maximums.duplicate()
@@ -122,14 +102,18 @@ func update_current_board(board: Board):
 	current_board = board
 	board.activate()
 	
-	
 	# TODO: lerp this
 	move_child(camera, -1)
-	camera.reset(board.get_center_global_position(), board.get_size_global_position())
+	camera.smooth_reset(board.get_center_global_position())
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	randomize()
+#	randomize()
+#	var random_seed = randi()
+#	seed(random_seed)
+#	print("Seed: %d" % random_seed)
+	seed(975027303)
+	
 	
 	depth_by_tier[tier] = 0
 	for key in BuildingData.data.keys():
@@ -146,6 +130,7 @@ func _ready():
 
 	
 	update_current_board(generate_board(0, starting_room_id))
+	camera.reset(get_current_board().get_center_global_position(), get_current_board().get_size_global_position())
 	
 	shared_tilemap.fill(Rect2i(starting_origin - Vector2i(20, 20), Vector2i(40, 40)))
 
@@ -192,9 +177,6 @@ func _process(delta):
 		
 		responsive_ui.set_descend_disabled(!stairs_placed())
 		responsive_ui.set_stairs_placed(stairs_placed())
-	
-	if !help_text_is_overriden:
-		help_text_bar.text = "Press \'H\' for help overlay"
 	
 	if (Input.is_action_just_pressed("Test_1")):
 		await RenderingServer.frame_post_draw
@@ -297,26 +279,20 @@ func _on_responsive_ui_enter_build_mode_pressed():
 
 
 func on_mine_animation_complete():
-	get_tree().paused = true
 	SoundManager.play_negative()
 	var pop = Resources.get_amount(ResourceData.Resources.POPULATION)
 	
 	if pop > 0:
-		mine_hit_popup.visible = true
-		greyout.visible = true
+		responsive_ui.show_mine_hit_popup(_on_mine_hit_restart_level_pressed)
 	elif pop == 0:
-		game_over.show()
-		greyout.show()
+		print_debug("GAME OVER - LOSS")
 
 func _on_mine_hit_restart_level_pressed():
-	mine_hit_popup.visible = false
-	greyout.visible = false
 	var room_id = get_current_board().overworld_room_id
 	var prev_board = get_current_board()
 	update_current_board(generate_board(get_depth(), room_id))
 	prev_board.queue_free()
-	get_tree().paused = false
-
+	shared_tilemap.fill(get_current_board().get_boundaries_rect())
 
 func stairs_placed():
 	return get_current_board().stairs_placed
@@ -356,9 +332,7 @@ func _on_loss_restart_button_pressed():
 
 func on_wonder_placed():
 	SoundManager.play_positive()
-	you_win.show()
-	greyout.show()
-	get_tree().paused = true
+	print_debug("GAME OVER - WIN!")
 
 func on_workshop_placed():
 	total_workshop_count += 1
@@ -391,11 +365,6 @@ func _input(event):
 	if event is InputEventKey and Input.is_key_label_pressed(KEY_H):	
 		overlay_toggled = !overlay_toggled
 			
-		if get_current_board().build_mode == false:
-			help_overlay_play.visible = !help_overlay_play.visible
-		elif get_current_board().build_mode == true:
-			help_overlay_build.visible = !help_overlay_build.visible
-			
 		if overlay_toggled:
 			var new_color = Color.WHITE
 			new_color.a = 0.1
@@ -404,13 +373,7 @@ func _input(event):
 			modulate = Color.WHITE
 
 func _on_end_level_btn_mouse_entered():
-	if !can_enter_build_mode() && !help_text_is_overriden:
 		SoundManager.play_negative()
-		help_text_is_overriden = true
-		help_text_bar.text = "Can't enter build mode until at least one tile is cleared!"
-
-func _on_end_level_btn_mouse_exited():
-	help_text_is_overriden = false
 
 func on_building_collection_complete():
 	on_resource_collection_complete()
@@ -422,7 +385,6 @@ func on_minesweeper_collection_complete():
 
 func _on_responsive_ui_build_menu_item_pressed(type):
 	start_placement(type)
-
 
 func _on_responsive_ui_cancel_placement_pressed():
 	get_current_board().on_cancel_building_placement()

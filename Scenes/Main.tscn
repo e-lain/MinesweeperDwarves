@@ -1,0 +1,93 @@
+[gd_scene load_steps=10 format=3 uid="uid://iqvlmmwy7d46"]
+
+[ext_resource type="Script" path="res://Scripts/Main.gd" id="1_3dh30"]
+[ext_resource type="PackedScene" uid="uid://b6wmhfmc3fthp" path="res://Scenes/fog.tscn" id="2_f5qlx"]
+[ext_resource type="Texture2D" uid="uid://cp2j4aclx6fww" path="res://Assets/UI/Background512.png" id="3_bi5a7"]
+[ext_resource type="PackedScene" uid="uid://bdsa3o7l5tq10" path="res://Scenes/overworld_map.tscn" id="4_6fs5e"]
+[ext_resource type="PackedScene" uid="uid://c7renurwmj3uy" path="res://Prefabs/tile_map.tscn" id="5_p3rcr"]
+[ext_resource type="PackedScene" uid="uid://dnr83m4pqs7mp" path="res://UI/ResponsiveUI.tscn" id="6_qxp0c"]
+[ext_resource type="Script" path="res://Controllers/CameraController.gd" id="7_6xk5s"]
+
+[sub_resource type="Gradient" id="Gradient_c7dog"]
+offsets = PackedFloat32Array(0, 0.36612, 1)
+colors = PackedColorArray(1, 1, 1, 1, 0.803279, 0.803279, 0.803279, 0.803279, 0, 0, 0, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_wnw1g"]
+gradient = SubResource("Gradient_c7dog")
+width = 1024
+height = 1024
+fill = 2
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(1, 0.5)
+metadata/_snap_enabled = true
+
+[node name="Main" type="Node2D" groups=["main"]]
+script = ExtResource("1_3dh30")
+
+[node name="Fog" parent="." instance=ExtResource("2_f5qlx")]
+visible = false
+position = Vector2(-11520, -11520)
+scale = Vector2(2, 2)
+fog_width = 11520
+fog_height = 11520
+light_width = 128
+light_height = 128
+fill_color = Color(0.231373, 0.231373, 0.231373, 1)
+
+[node name="Background" type="TextureRect" parent="."]
+z_index = -1
+texture_repeat = 2
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_right = 46080.0
+offset_bottom = 46080.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("3_bi5a7")
+expand_mode = 1
+stretch_mode = 1
+
+[node name="OverworldMap" parent="." instance=ExtResource("4_6fs5e")]
+
+[node name="TileMap" parent="." instance=ExtResource("5_p3rcr")]
+
+[node name="ResponsiveUICanvas" type="CanvasLayer" parent="."]
+
+[node name="ResponsiveUI" parent="ResponsiveUICanvas" instance=ExtResource("6_qxp0c")]
+
+[node name="Camera2D" type="Camera2D" parent="."]
+script = ExtResource("7_6xk5s")
+
+[node name="CanvasModulate" type="CanvasModulate" parent="."]
+visible = false
+light_mask = 2
+visibility_layer = 0
+z_as_relative = false
+color = Color(0, 0, 0, 1)
+
+[node name="PointLight2D" type="PointLight2D" parent="."]
+visible = false
+light_mask = 2
+visibility_layer = 0
+color = Color(1, 0.941176, 0.780392, 1)
+texture = SubResource("GradientTexture2D_wnw1g")
+texture_scale = 1.21
+
+[connection signal="ability_menu_item_pressed" from="ResponsiveUICanvas/ResponsiveUI" to="." method="_on_responsive_ui_ability_menu_item_pressed"]
+[connection signal="board_unlock_pressed" from="ResponsiveUICanvas/ResponsiveUI" to="." method="_on_responsive_ui_board_unlock_pressed"]
+[connection signal="build_menu_item_pressed" from="ResponsiveUICanvas/ResponsiveUI" to="." method="_on_responsive_ui_build_menu_item_pressed"]
+[connection signal="cancel_placement_pressed" from="ResponsiveUICanvas/ResponsiveUI" to="." method="_on_responsive_ui_cancel_placement_pressed"]
+[connection signal="confirm_placement_pressed" from="ResponsiveUICanvas/ResponsiveUI" to="." method="_on_responsive_ui_confirm_placement_pressed"]
+[connection signal="descend_pressed" from="ResponsiveUICanvas/ResponsiveUI" to="." method="_on_responsive_ui_descend_pressed"]
+[connection signal="destroy_selected_building_pressed" from="ResponsiveUICanvas/ResponsiveUI" to="." method="_on_responsive_ui_destroy_selected_building_pressed"]
+[connection signal="enter_build_mode_pressed" from="ResponsiveUICanvas/ResponsiveUI" to="." method="_on_responsive_ui_enter_build_mode_pressed"]
+[connection signal="move_selected_building_cancelled" from="ResponsiveUICanvas/ResponsiveUI" to="." method="_on_responsive_ui_move_selected_building_cancelled"]
+[connection signal="move_selected_building_confirmed" from="ResponsiveUICanvas/ResponsiveUI" to="." method="_on_responsive_ui_move_selected_building_confirmed"]
+[connection signal="move_selected_building_pressed" from="ResponsiveUICanvas/ResponsiveUI" to="." method="_on_responsive_ui_move_selected_building_pressed"]
+[connection signal="tier_transition_midpoint" from="ResponsiveUICanvas/ResponsiveUI" to="." method="on_transition_to_next_tier_midpoint"]
+[connection signal="drag_complete" from="Camera2D" to="." method="_on_camera_2d_drag_complete"]
+[connection signal="tap_complete" from="Camera2D" to="." method="_on_camera_2d_tap_complete"]

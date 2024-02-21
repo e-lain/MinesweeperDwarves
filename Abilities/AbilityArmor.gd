@@ -23,10 +23,6 @@ func _process(delta):
 	else:
 		modulate = Color.WHITE
 
-	if main.get_current_board().armor_active && entered:
-		main.help_text_is_overriden = true
-		main.help_text_bar.text = "Cannot activate again, active armor is already being used!"
-
 func _on_gui_input(event):
 	if event is InputEventMouseButton:
 		if event.is_action_pressed("left_click") && use_count > 0:
@@ -38,12 +34,8 @@ func _on_mouse_entered():
 	entered = true
 	info_popup.visible = true
 	info_popup.set_description("Active Armor", "Take no damage when uncovering this next tile")
-	if use_count > 0 && main.get_current_board().armor_active:
-		main.help_text_is_overriden = true
-		main.help_text_bar.text = "Cannot activate again, active armor is already being used!"
 
 func _on_mouse_exited():
 	entered = false
 	info_popup.visible = false
-	if main.get_current_board().armor_active:
-		main.help_text_is_overriden = false
+

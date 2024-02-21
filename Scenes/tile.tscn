@@ -1,25 +1,25 @@
-[gd_scene load_steps=7 format=3 uid="uid://dngpegm30apw2"]
+[gd_scene load_steps=7 format=3 uid="uid://ci66bx1mp5wl7"]
 
-[ext_resource type="Script" path="res://BoardTile.gd" id="1_pmyao"]
-[ext_resource type="Texture2D" uid="uid://uwmkyp2x0wvv" path="res://Assets/PlaceholderTileBack.png" id="1_prraa"]
-[ext_resource type="Texture2D" uid="uid://bgox7du0lfu4w" path="res://Assets/PlaceholderTileBomb.png" id="2_kcgpn"]
-[ext_resource type="Texture2D" uid="uid://c0ufgfr33kmla" path="res://Assets/PlaceholderTileCover.png" id="3_kgern"]
-[ext_resource type="Texture2D" uid="uid://02qotaatsghn" path="res://Assets/PlaceholderTileFlag.png" id="4_7yfym"]
+[ext_resource type="Script" path="res://Scripts/BoardTile.gd" id="1_ttxc6"]
+[ext_resource type="Texture2D" uid="uid://uwmkyp2x0wvv" path="res://Assets/PlaceholderTileBack.png" id="2_he5hn"]
+[ext_resource type="Texture2D" uid="uid://bgox7du0lfu4w" path="res://Assets/PlaceholderTileBomb.png" id="3_l00fm"]
+[ext_resource type="Texture2D" uid="uid://c0ufgfr33kmla" path="res://Assets/PlaceholderTileCover.png" id="4_al076"]
+[ext_resource type="Texture2D" uid="uid://02qotaatsghn" path="res://Assets/PlaceholderTileFlag.png" id="5_3ur6b"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_vqsce"]
 size = Vector2(64, 64)
 
 [node name="Tile" type="Node2D"]
-script = ExtResource("1_pmyao")
+script = ExtResource("1_ttxc6")
 
 [node name="Back" type="Sprite2D" parent="."]
 position = Vector2(32, 32)
-texture = ExtResource("1_prraa")
+texture = ExtResource("2_he5hn")
 
 [node name="Bomb" type="Sprite2D" parent="."]
 visible = false
 position = Vector2(32, 32)
-texture = ExtResource("2_kcgpn")
+texture = ExtResource("3_l00fm")
 
 [node name="Label" type="Label" parent="."]
 offset_right = 64.0
@@ -31,12 +31,12 @@ vertical_alignment = 1
 
 [node name="Cover" type="Sprite2D" parent="."]
 position = Vector2(32, 32)
-texture = ExtResource("3_kgern")
+texture = ExtResource("4_al076")
 
 [node name="Flag" type="Sprite2D" parent="."]
 visible = false
 position = Vector2(32, 32)
-texture = ExtResource("4_7yfym")
+texture = ExtResource("5_3ur6b")
 
 [node name="Area2D" type="Area2D" parent="."]
 

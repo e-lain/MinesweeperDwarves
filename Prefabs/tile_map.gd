@@ -37,21 +37,30 @@ func remove_tile(pos: Vector2i, bounds_rect: Rect2i, origin_distance: int = 0) -
 	tile_instance.init(map_to_local(pos), atlas_coords, pos, origin_distance)
 	var update = {pos: -1}
 	BetterTerrain.set_cell(self, 0, pos, -1)
-	BetterTerrain.update_terrain_area(self, 0, Rect2i(max(0, pos.x - 2), max(0, pos.y - 2), 4, 4))
+	update_terrain(bounds_rect)
 
-func set_lava_source(pos: Vector2i) -> void:
+func set_lava_source(pos: Vector2i, bounds_rect: Rect2i) -> void:
 	BetterTerrain.set_cell(self, 0, pos, 2)
-	BetterTerrain.update_terrain_area(self, 0, Rect2i(max(0, pos.x - 2), max(0, pos.y - 2), 4, 4))
+	update_terrain(bounds_rect)
 
-func set_lava_moat(pos: Vector2i) -> void:
+func set_lava_moat(pos: Vector2i, bounds_rect: Rect2i) -> void:
 	BetterTerrain.set_cell(self, 0, pos, 3)
-	BetterTerrain.update_terrain_area(self, 0, Rect2i(max(0, pos.x - 2), max(0, pos.y - 2), 4, 4))
+	update_terrain(bounds_rect)
 
+func update_terrain(bounds: Rect2i) -> void:
+	bounds.size += Vector2i(2, 2)
+	bounds.position -= Vector2i.ONE
+	BetterTerrain.update_terrain_area(self, 0, bounds, true)
 
 func _process(delta):
+	if Input.is_action_just_pressed("Test_1"):
+		update_terrain(get_used_rect())
+	
 	while(!changeset.is_empty() && BetterTerrain.is_terrain_changeset_ready(changeset[0])):
 		var first_change_set = changeset.pop_front()
 		BetterTerrain.apply_terrain_changeset(first_change_set)
+		if first_change_set.has(bounds_rect_changeset_key):
+			update_terrain(first_change_set[bounds_rect_changeset_key])
 	
 	if DragOrZoomEventManager.long_tap_started && Time.get_ticks_msec() - tap_start_time > SettingsController.LONG_TAP_DELAY_MS  && !DragOrZoomEventManager.drag_or_zoom_happening():
 		DragOrZoomEventManager.long_tap_started = false

@@ -28,7 +28,6 @@ func ability_dowse():
 		var picked = false
 		while !picked:
 			print("bomb tiles: ", board.bomb_tiles)
-			randomize()
 			var rand_index:int = randi() % board.bomb_tiles.size()
 			if !board.bomb_tiles[rand_index].is_flagged:
 				board.bomb_tiles[rand_index].toggle_flag()
