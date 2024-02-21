@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://iqvlmmwy7d46"]
+[gd_scene load_steps=15 format=3 uid="uid://iqvlmmwy7d46"]
 
 [ext_resource type="Script" path="res://Scripts/Main.gd" id="1_3dh30"]
 [ext_resource type="PackedScene" uid="uid://b6wmhfmc3fthp" path="res://Scenes/fog.tscn" id="2_f5qlx"]
@@ -7,6 +7,10 @@
 [ext_resource type="PackedScene" uid="uid://c7renurwmj3uy" path="res://Prefabs/tile_map.tscn" id="5_p3rcr"]
 [ext_resource type="PackedScene" uid="uid://dnr83m4pqs7mp" path="res://UI/ResponsiveUI.tscn" id="6_qxp0c"]
 [ext_resource type="Script" path="res://Controllers/CameraController.gd" id="7_6xk5s"]
+[ext_resource type="Shader" uid="uid://5pndcd17a2kc" path="res://Shaders/PlayArea.tres" id="8_5o8x8"]
+[ext_resource type="Texture2D" uid="uid://bxn8kvm570f80" path="res://Assets/Test/White.png" id="8_axbda"]
+[ext_resource type="Texture2D" uid="uid://b51f27hlw5ylr" path="res://Assets/Noise_001.png" id="9_c2xcq"]
+[ext_resource type="Script" path="res://Scripts/PlayAreaBorder.gd" id="10_73jqo"]
 
 [sub_resource type="Gradient" id="Gradient_c7dog"]
 offsets = PackedFloat32Array(0, 0.36612, 1)
@@ -20,6 +24,17 @@ fill = 2
 fill_from = Vector2(0.5, 0.5)
 fill_to = Vector2(1, 0.5)
 metadata/_snap_enabled = true
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_6lnl2"]
+shader = ExtResource("8_5o8x8")
+shader_parameter/NoiseScale = 2000.0
+shader_parameter/DistortionSpeed = 0.01
+shader_parameter/DistortionStrength = 15.0
+shader_parameter/PlayAreaOrigin = Vector2(20000, 20000)
+shader_parameter/PlayAreaSize = Vector2(768, 768)
+shader_parameter/BorderRadius = 30.0
+shader_parameter/BorderBlurLength = 1.0
+shader_parameter/NoiseTex = ExtResource("9_c2xcq")
 
 [node name="Main" type="Node2D" groups=["main"]]
 script = ExtResource("1_3dh30")
@@ -76,6 +91,26 @@ visibility_layer = 0
 color = Color(1, 0.941176, 0.780392, 1)
 texture = SubResource("GradientTexture2D_wnw1g")
 texture_scale = 1.21
+
+[node name="PlayAreaBorder" type="Sprite2D" parent="."]
+modulate = Color(0, 0, 0, 0.254902)
+z_index = 80
+z_as_relative = false
+material = SubResource("ShaderMaterial_6lnl2")
+position = Vector2(23131, 23291)
+scale = Vector2(830.573, 800)
+texture = ExtResource("8_axbda")
+script = ExtResource("10_73jqo")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+z_index = 100
+z_as_relative = false
+offset_left = -1664.0
+offset_top = -1536.0
+offset_right = 47760.0
+offset_bottom = 47719.0
+mouse_filter = 2
+color = Color(0.639216, 0.380392, 0.109804, 0.0627451)
 
 [connection signal="ability_menu_item_pressed" from="ResponsiveUICanvas/ResponsiveUI" to="." method="_on_responsive_ui_ability_menu_item_pressed"]
 [connection signal="board_unlock_pressed" from="ResponsiveUICanvas/ResponsiveUI" to="." method="_on_responsive_ui_board_unlock_pressed"]

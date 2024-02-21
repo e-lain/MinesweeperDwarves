@@ -3,13 +3,13 @@
 [ext_resource type="Theme" uid="uid://b6iv3a38m6uhb" path="res://UI/UI.tres" id="1_ubca2"]
 [ext_resource type="Texture2D" uid="uid://diq8qpe3adn11" path="res://Assets/UI/SpeechBubble.png" id="2_en8sd"]
 [ext_resource type="Script" path="res://UI/speech_bubble.gd" id="3_nsn21"]
-[ext_resource type="Texture2D" uid="uid://cbqgg2mc88gjm" path="res://Assets/Buildings/minecart downscaled.png" id="3_wscx8"]
+[ext_resource type="Texture2D" uid="uid://e6xq74k42sye" path="res://Assets/BuildingsLarge/Minecart128.png" id="4_nksw3"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_tysj8"]
-content_margin_left = 12.0
-content_margin_top = 8.0
-content_margin_right = 12.0
-content_margin_bottom = 16.0
+content_margin_left = 24.0
+content_margin_top = 16.0
+content_margin_right = 24.0
+content_margin_bottom = 32.0
 texture = ExtResource("2_en8sd")
 
 [node name="SpeechBubble" type="PanelContainer"]
@@ -22,16 +22,17 @@ anchor_right = 0.5
 anchor_bottom = 1.0
 offset_left = -32.0
 offset_top = -64.0
-offset_right = 32.0
+offset_right = 96.0
+offset_bottom = 64.0
 grow_horizontal = 2
 grow_vertical = 0
-pivot_offset = Vector2(32, 64)
+pivot_offset = Vector2(64, 128)
 theme = ExtResource("1_ubca2")
 theme_override_styles/panel = SubResource("StyleBoxTexture_tysj8")
 script = ExtResource("3_nsn21")
 
 [node name="TextureRect" type="TextureRect" parent="."]
 layout_mode = 2
-texture = ExtResource("3_wscx8")
+texture = ExtResource("4_nksw3")
 expand_mode = 3
 stretch_mode = 5

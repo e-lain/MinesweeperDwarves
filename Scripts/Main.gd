@@ -12,6 +12,9 @@ class_name GameController
 
 @onready var fog = $Fog
 @onready var shared_tilemap: SharedTileMap = $TileMap
+@onready var play_area_border = $PlayAreaBorder
+
+
 
 var board_prefab = preload("res://Prefabs/board.tscn")
 
@@ -102,9 +105,10 @@ func update_current_board(board: Board):
 	current_board = board
 	board.activate()
 	
-	# TODO: lerp this
 	move_child(camera, -1)
 	camera.smooth_reset(board.get_center_global_position())
+	
+	play_area_border.set_area(board.global_position, board.get_size_global_position())
 
 # Called when the node enters the scene tree for the first time.
 func _ready():

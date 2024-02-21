@@ -37,7 +37,6 @@ func remove_tile(pos: Vector2i, bounds_rect: Rect2i, origin_distance: int = 0) -
 	tile_instance.init(map_to_local(pos), atlas_coords, pos, origin_distance)
 	var update = {pos: -1}
 	BetterTerrain.set_cell(self, 0, pos, -1)
-	update_terrain(bounds_rect)
 
 func set_lava_source(pos: Vector2i, bounds_rect: Rect2i) -> void:
 	BetterTerrain.set_cell(self, 0, pos, 2)

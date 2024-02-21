@@ -7,6 +7,8 @@ var revealed: bool = false
 var current_tween: Tween
 
 func _ready():
+	size = Globals.TILE_SIZE_VECTOR
+	pivot_offset = Vector2(Globals.TILE_SIZE / 2, Globals.TILE_SIZE)
 	scale = Vector2(0,0)
 	visible = false
 

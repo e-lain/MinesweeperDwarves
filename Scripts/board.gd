@@ -211,6 +211,7 @@ func _on_tile_uncovered(cell_pos: Vector2i):
 	SoundManager.play_uncover_tile_sound()
 	
 	uncover_tile(tile)
+	tilemap.update_terrain(get_boundaries_rect())
 	tile_uncover_event_complete.emit()
 
 	
@@ -617,6 +618,7 @@ func clear_tile(tile: BoardTile):
 		print("bombs found: ", bombs_found)
 		tile.toggle_flag()
 	uncover_tile(tile)
+	tilemap.update_terrain(get_boundaries_rect())
 
 func uncover_tile(tile: BoardTile, distance: int = 0):
 	tile.is_cover = false

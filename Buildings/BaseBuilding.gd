@@ -67,6 +67,8 @@ func set_type(value, icon):
 	size = BuildingData.data[type]["size"]
 	gui_control.size = Vector2(Globals.TILE_SIZE, Globals.TILE_SIZE) * size
 	speech_bubble.position.x = Globals.TILE_SIZE * size / 2.0 - (Globals.TILE_SIZE / 2.0)
+	cant_build_label.position.x = Globals.TILE_SIZE * size / 2.0 - (cant_build_label.size.x / 2.0)
+	cant_build_label.position.y = Globals.TILE_SIZE * size
 	
 	sprite.texture = icon
 	handle_arrows.scale.x = size
