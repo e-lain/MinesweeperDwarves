@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://brd3qve61cw4k"]
 
-[ext_resource type="Theme" uid="uid://b6iv3a38m6uhb" path="res://UI.tres" id="1_4dpxw"]
+[ext_resource type="Theme" uid="uid://b6iv3a38m6uhb" path="res://UI/UI.tres" id="1_4dpxw"]
 [ext_resource type="Texture2D" uid="uid://du5p0tvlhojks" path="res://Assets/UI/PopIcon.png" id="1_y16mx"]
 [ext_resource type="Script" path="res://UI/ResourceCost.gd" id="2_i4hbv"]
 

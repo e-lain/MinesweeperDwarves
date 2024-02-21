@@ -49,7 +49,6 @@ func on_close_delay_complete():
 	if current_proceed_callback != null:
 		current_proceed_callback.call()
 
-
 func _on_proceed_button_pressed():
 	if current_proceed_callback != null:
 		current_proceed_callback.call()

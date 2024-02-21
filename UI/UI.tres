@@ -1,0 +1,19 @@
+[gd_resource type="Theme" load_steps=2 format=3 uid="uid://b6iv3a38m6uhb"]
+
+[ext_resource type="FontFile" uid="uid://1xgfwqxyu633" path="res://alphabetized cassette tapes.ttf" id="1_r4crr"]
+
+[resource]
+Button/colors/font_color = Color(0, 0, 0, 1)
+Button/colors/font_disabled_color = Color(0, 0, 0, 0.501961)
+Button/colors/font_focus_color = Color(0.129412, 0.129412, 0.129412, 1)
+Button/colors/font_hover_color = Color(0.129412, 0.129412, 0.129412, 1)
+Button/colors/font_hover_pressed_color = Color(0.129412, 0.129412, 0.129412, 1)
+Button/colors/font_pressed_color = Color(0.141176, 0.141176, 0.141176, 1)
+Button/font_sizes/font_size = 32
+Button/fonts/font = ExtResource("1_r4crr")
+Label/colors/font_color = Color(0, 0, 0, 1)
+Label/font_sizes/font_size = 32
+Label/fonts/font = ExtResource("1_r4crr")
+RichTextLabel/colors/default_color = Color(0, 0, 0, 1)
+RichTextLabel/font_sizes/normal_font_size = 32
+RichTextLabel/fonts/normal_font = ExtResource("1_r4crr")

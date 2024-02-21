@@ -1,5 +1,7 @@
 extends Node
 
+signal amounts_changed
+
 func _ready():
 	for type in ResourceData.Resources.values():
 		amounts[type] = 0
@@ -15,3 +17,11 @@ func get_amounts_copy():
 	for type in ResourceData.Resources.values():
 		ret[type] = amounts[type]
 	return ret
+
+func get_amount(type: ResourceData.Resources):
+	return amounts[type]
+
+
+func update_amount(type: ResourceData.Resources, delta: int):
+	amounts[type] += delta
+	amounts_changed.emit()

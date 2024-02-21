@@ -1,0 +1,391 @@
+[gd_resource type="VisualShader" load_steps=34 format=3 uid="uid://5pndcd17a2kc"]
+
+[sub_resource type="VisualShaderNodeInput" id="VisualShaderNodeInput_raqbk"]
+expanded_output_ports = [0]
+input_name = "color"
+
+[sub_resource type="VisualShaderNodeFloatOp" id="VisualShaderNodeFloatOp_sqanj"]
+operator = 2
+
+[sub_resource type="VisualShaderNodeFloatParameter" id="VisualShaderNodeFloatParameter_bp2ir"]
+parameter_name = "BorderBlurLength"
+max = 1000.0
+
+[sub_resource type="VisualShaderNodeVaryingGetter" id="VisualShaderNodeVaryingGetter_gbawe"]
+varying_name = "WORLD_VERTEX"
+varying_type = 3
+
+[sub_resource type="VisualShaderNodeTexture2DParameter" id="VisualShaderNodeTexture2DParameter_prqe6"]
+parameter_name = "NoiseTex"
+texture_type = 1
+texture_repeat = 1
+
+[sub_resource type="VisualShaderNodeTexture" id="VisualShaderNodeTexture_qlh8o"]
+expanded_output_ports = [0]
+source = 5
+
+[sub_resource type="VisualShaderNodeVec2Parameter" id="VisualShaderNodeVec2Parameter_2ign4"]
+parameter_name = "PlayAreaOrigin"
+
+[sub_resource type="VisualShaderNodeFloatParameter" id="VisualShaderNodeFloatParameter_bc0nr"]
+parameter_name = "NoiseScale"
+
+[sub_resource type="VisualShaderNodeFloatParameter" id="VisualShaderNodeFloatParameter_swwbh"]
+parameter_name = "DistortionStrength"
+max = 1000.0
+default_value_enabled = true
+default_value = 100.0
+
+[sub_resource type="VisualShaderNodeVaryingGetter" id="VisualShaderNodeVaryingGetter_ecicp"]
+varying_name = "WORLD_VERTEX"
+varying_type = 3
+
+[sub_resource type="VisualShaderNodeVectorOp" id="VisualShaderNodeVectorOp_iwwmb"]
+default_input_values = [0, Vector2(0, 0), 1, Vector2(0, 0)]
+op_type = 0
+
+[sub_resource type="VisualShaderNodeInput" id="VisualShaderNodeInput_18hn5"]
+input_name = "time"
+
+[sub_resource type="VisualShaderNodeVec2Parameter" id="VisualShaderNodeVec2Parameter_nt0ht"]
+parameter_name = "PlayAreaSize"
+
+[sub_resource type="VisualShaderNodeFloatParameter" id="VisualShaderNodeFloatParameter_bm3px"]
+parameter_name = "DistortionSpeed"
+default_value_enabled = true
+default_value = 1.0
+
+[sub_resource type="VisualShaderNodeFloatOp" id="VisualShaderNodeFloatOp_eke8y"]
+operator = 2
+
+[sub_resource type="VisualShaderNodeVectorOp" id="VisualShaderNodeVectorOp_ne2fw"]
+default_input_values = [0, Vector2(0, 0), 1, Vector2(0, 0)]
+op_type = 0
+
+[sub_resource type="VisualShaderNodeVectorOp" id="VisualShaderNodeVectorOp_30rnk"]
+default_input_values = [0, Vector2(0, 0), 1, Vector2(0, 0)]
+op_type = 0
+operator = 2
+
+[sub_resource type="VisualShaderNodeVectorOp" id="VisualShaderNodeVectorOp_rl6us"]
+default_input_values = [0, Vector2(0, 0), 1, Vector2(0, 0)]
+op_type = 0
+operator = 3
+
+[sub_resource type="VisualShaderNodeVectorOp" id="VisualShaderNodeVectorOp_xgi4p"]
+default_input_values = [0, Vector2(0, 0), 1, Vector2(0.5, 0.5)]
+op_type = 0
+operator = 1
+
+[sub_resource type="VisualShaderNodeGlobalExpression" id="VisualShaderNodeGlobalExpression_wt2wb"]
+size = Vector2(625.868, 394.959)
+expression = "// from https://iquilezles.org/articles/distfunctions
+float roundedBoxSDF(vec2 CenterPosition, vec2 Size, float Radius) {
+    return length(max(abs(CenterPosition)-Size+Radius,0.0))-Radius;
+}"
+
+[sub_resource type="VisualShaderNodeExpression" id="VisualShaderNodeExpression_vr2s4"]
+size = Vector2(544.6, 370.034)
+expression = "Distance = roundedBoxSDF(CenterPosition, Size, Radius);
+SmoothedAlpha = 1.0f-smoothstep(0.0f, EdgeSoftness * 2.0f,Distance);"
+
+[sub_resource type="VisualShaderNodeFloatParameter" id="VisualShaderNodeFloatParameter_njoyn"]
+parameter_name = "BorderRadius"
+default_value_enabled = true
+default_value = 30.0
+
+[sub_resource type="VisualShaderNodeVectorOp" id="VisualShaderNodeVectorOp_anmb3"]
+default_input_values = [0, Vector2(0, 0), 1, Vector2(0, 0)]
+op_type = 0
+operator = 1
+
+[sub_resource type="VisualShaderNodeVectorOp" id="VisualShaderNodeVectorOp_2va3q"]
+default_input_values = [0, Vector2(0, 0), 1, Vector2(0, 0)]
+op_type = 0
+operator = 1
+
+[sub_resource type="VisualShaderNodeVectorOp" id="VisualShaderNodeVectorOp_jvc21"]
+default_input_values = [0, Vector2(0, 0), 1, Vector2(2, 2)]
+op_type = 0
+operator = 3
+
+[sub_resource type="VisualShaderNodeFloatFunc" id="VisualShaderNodeFloatFunc_mamul"]
+function = 31
+
+[sub_resource type="VisualShaderNodeComment" id="VisualShaderNodeComment_3adx1"]
+size = Vector2(2346.17, 1124.53)
+title = "Distortion"
+
+[sub_resource type="VisualShaderNodeComment" id="VisualShaderNodeComment_nkwy8"]
+size = Vector2(1805.98, 1210.38)
+title = "Rounded Corner Rectangle"
+
+[sub_resource type="VisualShaderNodeInput" id="VisualShaderNodeInput_5rkr2"]
+output_port_for_preview = 0
+expanded_output_ports = [0]
+input_name = "vertex"
+
+[sub_resource type="VisualShaderNodeInput" id="VisualShaderNodeInput_u5upg"]
+input_name = "model_matrix"
+
+[sub_resource type="VisualShaderNodeVectorCompose" id="VisualShaderNodeVectorCompose_cd15q"]
+default_input_values = [0, 0.0, 1, 0.0, 2, 0.0, 3, 0.0]
+op_type = 2
+
+[sub_resource type="VisualShaderNodeTransformVecMult" id="VisualShaderNodeTransformVecMult_k8r1c"]
+
+[sub_resource type="VisualShaderNodeVaryingSetter" id="VisualShaderNodeVaryingSetter_4lb0v"]
+varying_name = "WORLD_VERTEX"
+varying_type = 3
+
+[resource]
+code = "shader_type canvas_item;
+render_mode blend_mix;
+
+
+// Varyings
+varying vec2 WORLD_VERTEX;
+
+uniform float NoiseScale;
+uniform float DistortionSpeed = 1;
+uniform sampler2D NoiseTex : source_color, repeat_enable;
+uniform float DistortionStrength = 100;
+uniform vec2 PlayAreaOrigin;
+uniform vec2 PlayAreaSize;
+uniform float BorderRadius = 30;
+uniform float BorderBlurLength;
+
+
+// GlobalExpression:0
+	// from https://iquilezles.org/articles/distfunctions
+	float roundedBoxSDF(vec2 CenterPosition, vec2 Size, float Radius) {
+	    return length(max(abs(CenterPosition)-Size+Radius,0.0))-Radius;
+	}
+
+void vertex() {
+// Input:3
+	mat4 n_out3p0 = MODEL_MATRIX;
+
+
+// Input:2
+	vec2 n_out2p0 = VERTEX;
+	float n_out2p1 = n_out2p0.r;
+	float n_out2p2 = n_out2p0.g;
+
+
+// VectorCompose:5
+	float n_in5p2 = 0.00000;
+	float n_in5p3 = 0.00000;
+	vec4 n_out5p0 = vec4(n_out2p1, n_out2p2, n_in5p2, n_in5p3);
+
+
+// TransformVectorMult:6
+	vec3 n_out6p0 = (n_out3p0 * vec4(vec3(n_out5p0.xyz), 1.0)).xyz;
+
+
+// VaryingSetter:7
+	WORLD_VERTEX = vec2(n_out6p0.xy);
+
+
+}
+
+void fragment() {
+// Input:18
+	vec4 n_out18p0 = COLOR;
+	float n_out18p4 = n_out18p0.a;
+
+
+// VaryingGetter:3
+	vec2 n_out3p0 = WORLD_VERTEX;
+
+
+// VaryingGetter:44
+	vec2 n_out44p0 = WORLD_VERTEX;
+
+
+// FloatParameter:40
+	float n_out40p0 = NoiseScale;
+
+
+// VectorOp:57
+	vec2 n_out57p0 = n_out44p0 / vec2(n_out40p0);
+
+
+// FloatParameter:50
+	float n_out50p0 = DistortionSpeed;
+
+
+// Input:49
+	float n_out49p0 = TIME;
+
+
+// FloatOp:51
+	float n_out51p0 = n_out50p0 * n_out49p0;
+
+
+// VectorOp:48
+	vec2 n_out48p0 = n_out57p0 + vec2(n_out51p0);
+
+
+	vec4 n_out32p0;
+// Texture2D:32
+	n_out32p0 = texture(NoiseTex, n_out48p0);
+	float n_out32p1 = n_out32p0.r;
+
+
+// VectorOp:58
+	vec2 n_in58p1 = vec2(0.50000, 0.50000);
+	vec2 n_out58p0 = vec2(n_out32p0.xy) - n_in58p1;
+
+
+// FloatParameter:43
+	float n_out43p0 = DistortionStrength;
+
+
+// VectorOp:55
+	vec2 n_out55p0 = n_out58p0 * vec2(n_out43p0);
+
+
+// VectorOp:54
+	vec2 n_out54p0 = n_out3p0 + n_out55p0;
+
+
+// Vector2Parameter:4
+	vec2 n_out4p0 = PlayAreaOrigin;
+
+
+// VectorOp:62
+	vec2 n_out62p0 = n_out54p0 - n_out4p0;
+
+
+// Vector2Parameter:5
+	vec2 n_out5p0 = PlayAreaSize;
+
+
+// VectorOp:65
+	vec2 n_in65p1 = vec2(2.00000, 2.00000);
+	vec2 n_out65p0 = n_out5p0 / n_in65p1;
+
+
+// VectorOp:64
+	vec2 n_out64p0 = n_out62p0 - n_out65p0;
+
+
+// FloatParameter:61
+	float n_out61p0 = BorderRadius;
+
+
+// FloatParameter:20
+	float n_out20p0 = BorderBlurLength;
+
+
+	float n_out60p0;
+	float n_out60p1;
+// Expression:60
+	n_out60p0 = 0.0;
+	n_out60p1 = 0.0;
+	{
+		n_out60p0 = roundedBoxSDF(n_out64p0, n_out65p0, n_out61p0);
+		n_out60p1 = 1.0f-smoothstep(0.0f, n_out20p0 * 2.0f,n_out60p0);
+	}
+
+
+// FloatFunc:66
+	float n_out66p0 = 1.0 - n_out60p1;
+
+
+// FloatOp:19
+	float n_out19p0 = n_out18p4 * n_out66p0;
+
+
+// Output:0
+	COLOR.a = n_out19p0;
+
+
+}
+"
+graph_offset = Vector2(-2193.21, -382.744)
+mode = 1
+flags/light_only = false
+varyings/WORLD_VERTEX = "0,3"
+nodes/vertex/2/node = SubResource("VisualShaderNodeInput_5rkr2")
+nodes/vertex/2/position = Vector2(-340, 640)
+nodes/vertex/3/node = SubResource("VisualShaderNodeInput_u5upg")
+nodes/vertex/3/position = Vector2(-120, 420)
+nodes/vertex/5/node = SubResource("VisualShaderNodeVectorCompose_cd15q")
+nodes/vertex/5/position = Vector2(7.40913, 750.27)
+nodes/vertex/6/node = SubResource("VisualShaderNodeTransformVecMult_k8r1c")
+nodes/vertex/6/position = Vector2(220, 580)
+nodes/vertex/7/node = SubResource("VisualShaderNodeVaryingSetter_4lb0v")
+nodes/vertex/7/position = Vector2(560, 600)
+nodes/vertex/connections = PackedInt32Array(5, 0, 6, 1, 3, 0, 6, 0, 2, 1, 5, 0, 2, 2, 5, 1, 6, 0, 7, 0)
+nodes/fragment/0/position = Vector2(140, 120)
+nodes/fragment/3/node = SubResource("VisualShaderNodeVaryingGetter_gbawe")
+nodes/fragment/3/position = Vector2(-3400, -80)
+nodes/fragment/4/node = SubResource("VisualShaderNodeVec2Parameter_2ign4")
+nodes/fragment/4/position = Vector2(-2420, -60)
+nodes/fragment/5/node = SubResource("VisualShaderNodeVec2Parameter_nt0ht")
+nodes/fragment/5/position = Vector2(-2300, 240)
+nodes/fragment/18/node = SubResource("VisualShaderNodeInput_raqbk")
+nodes/fragment/18/position = Vector2(-605.67, -153.476)
+nodes/fragment/19/node = SubResource("VisualShaderNodeFloatOp_sqanj")
+nodes/fragment/19/position = Vector2(-140, 120)
+nodes/fragment/20/node = SubResource("VisualShaderNodeFloatParameter_bp2ir")
+nodes/fragment/20/position = Vector2(-1780, 620)
+nodes/fragment/31/node = SubResource("VisualShaderNodeTexture2DParameter_prqe6")
+nodes/fragment/31/position = Vector2(-4200, -360)
+nodes/fragment/32/node = SubResource("VisualShaderNodeTexture_qlh8o")
+nodes/fragment/32/position = Vector2(-3800, -620)
+nodes/fragment/40/node = SubResource("VisualShaderNodeFloatParameter_bc0nr")
+nodes/fragment/40/position = Vector2(-4760, -800)
+nodes/fragment/43/node = SubResource("VisualShaderNodeFloatParameter_swwbh")
+nodes/fragment/43/position = Vector2(-3540, -340)
+nodes/fragment/44/node = SubResource("VisualShaderNodeVaryingGetter_ecicp")
+nodes/fragment/44/position = Vector2(-4720, -900)
+nodes/fragment/48/node = SubResource("VisualShaderNodeVectorOp_iwwmb")
+nodes/fragment/48/position = Vector2(-4140, -620)
+nodes/fragment/49/node = SubResource("VisualShaderNodeInput_18hn5")
+nodes/fragment/49/position = Vector2(-4820, -320)
+nodes/fragment/50/node = SubResource("VisualShaderNodeFloatParameter_bm3px")
+nodes/fragment/50/position = Vector2(-4800, -560)
+nodes/fragment/51/node = SubResource("VisualShaderNodeFloatOp_eke8y")
+nodes/fragment/51/position = Vector2(-4420, -480)
+nodes/fragment/54/node = SubResource("VisualShaderNodeVectorOp_ne2fw")
+nodes/fragment/54/position = Vector2(-2760, -280)
+nodes/fragment/55/node = SubResource("VisualShaderNodeVectorOp_30rnk")
+nodes/fragment/55/position = Vector2(-3160, -420)
+nodes/fragment/57/node = SubResource("VisualShaderNodeVectorOp_rl6us")
+nodes/fragment/57/position = Vector2(-4340, -800)
+nodes/fragment/58/node = SubResource("VisualShaderNodeVectorOp_xgi4p")
+nodes/fragment/58/position = Vector2(-3500, -580)
+nodes/fragment/59/node = SubResource("VisualShaderNodeGlobalExpression_wt2wb")
+nodes/fragment/59/position = Vector2(-3440, 460)
+nodes/fragment/59/size = Vector2(625.868, 394.959)
+nodes/fragment/59/input_ports = ""
+nodes/fragment/59/output_ports = ""
+nodes/fragment/59/expression = "// from https://iquilezles.org/articles/distfunctions
+float roundedBoxSDF(vec2 CenterPosition, vec2 Size, float Radius) {
+    return length(max(abs(CenterPosition)-Size+Radius,0.0))-Radius;
+}"
+nodes/fragment/60/node = SubResource("VisualShaderNodeExpression_vr2s4")
+nodes/fragment/60/position = Vector2(-1340, 260)
+nodes/fragment/60/size = Vector2(544.6, 370.034)
+nodes/fragment/60/input_ports = "0,3,CenterPosition;1,3,Size;2,0,Radius;3,0,EdgeSoftness;"
+nodes/fragment/60/output_ports = "0,0,Distance;1,0,SmoothedAlpha;"
+nodes/fragment/60/expression = "Distance = roundedBoxSDF(CenterPosition, Size, Radius);
+SmoothedAlpha = 1.0f-smoothstep(0.0f, EdgeSoftness * 2.0f,Distance);"
+nodes/fragment/61/node = SubResource("VisualShaderNodeFloatParameter_njoyn")
+nodes/fragment/61/position = Vector2(-1840, 360)
+nodes/fragment/62/node = SubResource("VisualShaderNodeVectorOp_anmb3")
+nodes/fragment/62/position = Vector2(-2020, -220)
+nodes/fragment/64/node = SubResource("VisualShaderNodeVectorOp_2va3q")
+nodes/fragment/64/position = Vector2(-1700, 0)
+nodes/fragment/65/node = SubResource("VisualShaderNodeVectorOp_jvc21")
+nodes/fragment/65/position = Vector2(-1980, 100)
+nodes/fragment/66/node = SubResource("VisualShaderNodeFloatFunc_mamul")
+nodes/fragment/66/position = Vector2(-505.67, 326.524)
+nodes/fragment/67/node = SubResource("VisualShaderNodeComment_3adx1")
+nodes/fragment/67/position = Vector2(-4880, -1020)
+nodes/fragment/68/node = SubResource("VisualShaderNodeComment_nkwy8")
+nodes/fragment/68/position = Vector2(-2460, -320)
+nodes/fragment/connections = PackedInt32Array(18, 4, 19, 0, 19, 0, 0, 1, 31, 0, 32, 2, 50, 0, 51, 0, 49, 0, 51, 1, 51, 0, 48, 1, 3, 0, 54, 0, 43, 0, 55, 1, 55, 0, 54, 1, 48, 0, 32, 0, 44, 0, 57, 0, 40, 0, 57, 1, 57, 0, 48, 0, 32, 0, 58, 0, 58, 0, 55, 0, 61, 0, 60, 2, 4, 0, 62, 1, 62, 0, 64, 0, 5, 0, 65, 0, 65, 0, 64, 1, 64, 0, 60, 0, 60, 1, 66, 0, 66, 0, 19, 1, 20, 0, 60, 3, 54, 0, 62, 0, 65, 0, 60, 1)

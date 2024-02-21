@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3 uid="uid://bdsa3o7l5tq10"]
+
+[ext_resource type="Script" path="res://Scripts/OverworldMap.gd" id="1_hbu8g"]
+
+[node name="OverworldMap" type="Node"]
+script = ExtResource("1_hbu8g")
+max_size = Vector2i(480, 480)

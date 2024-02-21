@@ -8,7 +8,7 @@ resource_local_to_scene = true
 shader = ExtResource("1_8obgj")
 shader_parameter/min_fade_pos = null
 shader_parameter/max_fade_pos = null
-shader_parameter/speed = 0.02
+shader_parameter/speed = 0.01
 shader_parameter/smooth_distance = 32.0
 
 [node name="Gridlinedownscale1" type="Sprite2D"]
@@ -17,3 +17,5 @@ texture_repeat = 2
 material = SubResource("ShaderMaterial_e1tdt")
 position = Vector2(640, 63)
 texture = ExtResource("2_fhb02")
+region_enabled = true
+region_rect = Rect2(0, 0, 80000, 8)

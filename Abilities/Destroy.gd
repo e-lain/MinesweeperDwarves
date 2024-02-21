@@ -5,27 +5,20 @@ extends Node2D
 @onready var main = board.get_parent()
 var building_placement_material: ShaderMaterial = preload("res://Shaders/InvalidBuildingPlacement.tres")
 
-const TILE_SIZE = 64
-
 var placed: bool = false
 var in_bounds: bool = false
 var size: int = 1
 
-# Called when the node enters the scene tree for the first time.
-func _ready():
-	main.help_text_is_overriden = true
-
-func _process(delta):
-	main.help_text_bar.text = "Left-click on valid tile to clear it. If it has a bomb, you will not be harmed. Right-click to cancel"
+func _process(_delta):
 	if main.get_ability_charge_count(AbilityData.Type.DESTROY) < 1 && visible:
 		board.complete_ability()
-		main.help_text_is_overriden = false
 		queue_free()
 	if !placed:
 		var mouse = board.get_local_mouse_position()
-		var snapped = Vector2(snapped(mouse.x-TILE_SIZE/2, TILE_SIZE), snapped(mouse.y-TILE_SIZE/2, TILE_SIZE))
-		position = snapped
-		if position.x <= 0 - TILE_SIZE || position.x >= TILE_SIZE * board.rows || position.y <= 0-TILE_SIZE || position.y >= TILE_SIZE * board.columns:
+		
+		var snapped_pos = Vector2(snapped(mouse.x-Globals.TILE_SIZE/2, Globals.TILE_SIZE), snapped(mouse.y-Globals.TILE_SIZE/2, Globals.TILE_SIZE))
+		position = snapped_pos
+		if position.x <= 0 - Globals.TILE_SIZE || position.x >= Globals.TILE_SIZE * board.rows || position.y <= 0-Globals.TILE_SIZE || position.y >= Globals.TILE_SIZE * board.columns:
 			self.hide()
 			in_bounds = false
 		else:
@@ -50,6 +43,5 @@ func _input(event):
 				print("USED DESTROY ABILITY")
 		if event.is_action_pressed("right_click"):
 			board.clearing_tile = false
-			main.help_text_is_overriden = false
 			board.complete_ability()
 			queue_free()

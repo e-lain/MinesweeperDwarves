@@ -1,0 +1,18 @@
+[gd_scene load_steps=3 format=3 uid="uid://b6wmhfmc3fthp"]
+
+[ext_resource type="Script" path="res://Scripts/fog.gd" id="1_y8xkj"]
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_bn8u5"]
+blend_mode = 3
+
+[node name="Fog" type="Node2D"]
+script = ExtResource("1_y8xkj")
+fog_width = 10000
+fog_height = 10000
+light_width = 600
+light_height = 600
+
+[node name="Fog" type="Sprite2D" parent="."]
+modulate = Color(1, 1, 1, 0.462745)
+material = SubResource("CanvasItemMaterial_bn8u5")
+centered = false

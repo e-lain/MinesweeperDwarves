@@ -1,5 +1,6 @@
 extends HBoxContainer
 
+
 @onready var texture_rect = $TextureRect
 @onready var label = $Label
 

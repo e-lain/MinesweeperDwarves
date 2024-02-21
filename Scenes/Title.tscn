@@ -1,0 +1,101 @@
+[gd_scene load_steps=8 format=3 uid="uid://bn3fb1r6c0upa"]
+
+[ext_resource type="Script" path="res://Scripts/Title.gd" id="1_tmbqp"]
+[ext_resource type="Theme" uid="uid://b6iv3a38m6uhb" path="res://UI/UI.tres" id="2_qg6i8"]
+[ext_resource type="Texture2D" uid="uid://dtcx71mlo5m38" path="res://Assets/UI/TitleScreen.png" id="3_1fhth"]
+[ext_resource type="FontFile" uid="uid://1xgfwqxyu633" path="res://alphabetized cassette tapes.ttf" id="4_w14yb"]
+[ext_resource type="StyleBox" uid="uid://cs0uiigi7qlev" path="res://UI/InnerButtonStyle.tres" id="5_yj584"]
+[ext_resource type="StyleBox" uid="uid://d1t3tpmhbhut8" path="res://UI/HoveredInnerButtonStyle.tres" id="6_sv6p8"]
+[ext_resource type="Texture2D" uid="uid://bf0kqdtsnmfol" path="res://Assets/UI/Banner.png" id="7_fi8lv"]
+
+[node name="Title" type="Node2D"]
+script = ExtResource("1_tmbqp")
+
+[node name="Control" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+theme = ExtResource("2_qg6i8")
+
+[node name="TextureRect" type="TextureRect" parent="Control"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+texture = ExtResource("3_1fhth")
+
+[node name="Title" type="Label" parent="Control"]
+layout_mode = 0
+offset_left = 452.0
+offset_top = -122.0
+offset_right = 1284.0
+offset_bottom = 326.0
+theme_override_fonts/font = ExtResource("4_w14yb")
+theme_override_font_sizes/font_size = 141
+text = "Demo Dwarves"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Title2" type="Label" parent="Control/Title"]
+layout_mode = 0
+offset_top = 88.0
+offset_right = 832.0
+offset_bottom = 536.0
+theme_override_fonts/font = ExtResource("4_w14yb")
+theme_override_font_sizes/font_size = 91
+text = "City Sweeper"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Button" type="Button" parent="Control"]
+layout_mode = 0
+offset_left = 800.0
+offset_top = 368.0
+offset_right = 928.0
+offset_bottom = 435.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_pressed_color = Color(0, 0, 0, 0.560784)
+theme_override_colors/font_hover_color = Color(0, 0, 0, 0.513726)
+theme_override_colors/font_hover_pressed_color = Color(0, 0, 0, 0.572549)
+theme_override_styles/normal = ExtResource("5_yj584")
+theme_override_styles/hover = ExtResource("6_sv6p8")
+theme_override_styles/focus = ExtResource("5_yj584")
+text = "START"
+
+[node name="Help" type="Label" parent="Control"]
+layout_mode = 0
+offset_left = 624.0
+offset_top = 320.0
+offset_right = 1112.0
+offset_bottom = 355.0
+text = "Press 'H' key at any time in-game to display the help overlay!"
+horizontal_alignment = 1
+
+[node name="Help2" type="Label" parent="Control"]
+layout_mode = 0
+offset_left = 576.0
+offset_top = 456.0
+offset_right = 1179.0
+offset_bottom = 666.0
+text = "If you do not know how to play minesweeper, check the game page description
+for some helpful links. Don't worry, it's easy!
+
+Clear space for your buildings by exploring each minesweeper board. Build structures
+to collect resources, and gain special abilities. Win the game by collecting enough resources to build the legendary dwarven BEER HALL"
+autowrap_mode = 2
+
+[node name="Banner" type="TextureRect" parent="Control"]
+layout_mode = 0
+offset_left = 442.0
+offset_top = 17.0
+offset_right = 1253.0
+offset_bottom = 347.0
+texture = ExtResource("7_fi8lv")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+offset_right = 2705.0
+offset_bottom = 1681.0
+mouse_filter = 2
+color = Color(0.639216, 0.380392, 0.109804, 0.0627451)
+
+[connection signal="pressed" from="Control/Button" to="." method="_on_button_pressed"]

@@ -30,15 +30,11 @@ const collection_prefab: PackedScene = preload("res://UI/collection_effect.tscn"
 const need_minecart_texture: Texture = preload("res://Assets/Buildings/minecart downscaled.png")
 const need_lava_texture: Texture = preload("res://Assets/walltiles/LavaPoolDownscaled.png")
 
-const TILE_SIZE = 64
-
 var id: int
 var size: int
 
 # Only used if building is a LAVA moat, keeps track of which (if any) lava source tiles it is pathed to
 var connected_lava_sources = []
-
-var took_help_text_override = false
 
 var state := State.Unplaced
 
@@ -69,8 +65,10 @@ enum BuildingProblem {
 func set_type(value, icon):
 	type = value
 	size = BuildingData.data[type]["size"]
-	gui_control.size = Vector2(TILE_SIZE, TILE_SIZE) * size
-	speech_bubble.position.x = TILE_SIZE * size / 2.0 - (TILE_SIZE / 2.0)
+	gui_control.size = Vector2(Globals.TILE_SIZE, Globals.TILE_SIZE) * size
+	speech_bubble.position.x = Globals.TILE_SIZE * size / 2.0 - (Globals.TILE_SIZE / 2.0)
+	cant_build_label.position.x = Globals.TILE_SIZE * size / 2.0 - (cant_build_label.size.x / 2.0)
+	cant_build_label.position.y = Globals.TILE_SIZE * size
 	
 	sprite.texture = icon
 	handle_arrows.scale.x = size
@@ -79,7 +77,7 @@ func set_type(value, icon):
 		pointlight.visible = true
 
 func snap_position(pos: Vector2) -> Vector2:
-	var snapped =  Vector2(snapped(pos.x-TILE_SIZE/2, TILE_SIZE), snapped(pos.y-TILE_SIZE/2, TILE_SIZE))
+	var snapped =  Vector2(snapped(pos.x-Globals.TILE_SIZE/2, Globals.TILE_SIZE), snapped(pos.y-Globals.TILE_SIZE/2, Globals.TILE_SIZE))
 	#print("Pos: %s Snapped: %s" % [pos, snapped])
 	return snapped
 	
@@ -117,25 +115,15 @@ func _process(delta):
 	else:
 		background_sprite.position = bg_offset
 		var cell_pos = board.world_to_cell(global_position)
-		var region_x = bg_offset.x + ((cell_pos.x % 8) * 64)
-		var region_y = bg_offset.y + ((cell_pos.y % 8) * 64)
-		var region_w = size * TILE_SIZE - bg_offset.x * 2
-		var region_h = size * TILE_SIZE - bg_offset.y * 2
+		var region_x = bg_offset.x + ((cell_pos.x % 8) * Globals.TILE_SIZE)
+		var region_y = bg_offset.y + ((cell_pos.y % 8) * Globals.TILE_SIZE)
+		var region_w = size * Globals.TILE_SIZE - bg_offset.x * 2
+		var region_h = size * Globals.TILE_SIZE - bg_offset.y * 2
 		background_sprite.region_rect = Rect2(region_x, region_y, region_w, region_h)
 		
 	if requires_minecart_adjacency():
 		var next_to_minecart = next_to_minecart()
 		toggle_problem(!next_to_minecart, BuildingProblem.NO_MINECART)
-		
-		var mouse_pos = get_local_mouse_position()
-		var mouse_in_bounds = mouse_pos.x >= 0 && mouse_pos.y >= 0 && mouse_pos.x < TILE_SIZE * size && mouse_pos.y < TILE_SIZE * size
-		if !next_to_minecart && !main.help_text_is_overriden && mouse_in_bounds:
-			main.help_text_bar.text = "Building will not earn resources when you descend to next floor. Build a minecart next to this building."
-			main.help_text_is_overriden = true
-			took_help_text_override = true
-		elif took_help_text_override && !mouse_in_bounds:
-			main.help_text_is_overriden = false
-			took_help_text_override = false
 
 
 func toggle_problem(has_problem: bool, reason: BuildingProblem = BuildingProblem.NO_MINECART):
@@ -201,7 +189,7 @@ func _handle_touch_input(event):
 	
 	var event_world_position = get_global_mouse_position()
 	
-	var bounds = Rect2(global_position, Vector2(TILE_SIZE, TILE_SIZE) * size)
+	var bounds = Rect2(global_position, Vector2(Globals.TILE_SIZE, Globals.TILE_SIZE) * size)
 	var in_bounds = bounds.has_point(event_world_position)
 
 	
@@ -235,7 +223,6 @@ func _handle_mouse_input(event):
 				SoundManager.play_negative()
 
 			if type == BuildingData.Type.STAIRCASE and board.stairs_placed:
-				main.help_text_bar.text = "Stairs already placed! Can't have more than one staircase per floor"
 				print("Stairs already placed!")
 			if can_place(global_position):
 				place(global_position)
@@ -261,11 +248,11 @@ func enter_move_state():
 	DragOrZoomEventManager.drag_began_in_unconfirmed_building = true
 	state = State.Moving
 	move_begin_offset = Vector2.ZERO
-	var reference_pos = position + Vector2(TILE_SIZE, TILE_SIZE)
+	var reference_pos = position + Vector2(Globals.TILE_SIZE, Globals.TILE_SIZE)
 	while (board.get_local_mouse_position().x - move_begin_offset.x > reference_pos.x):
-		move_begin_offset.x += TILE_SIZE
+		move_begin_offset.x += Globals.TILE_SIZE
 	while (board.get_local_mouse_position().y - move_begin_offset.y > reference_pos.y):
-		move_begin_offset.y += TILE_SIZE
+		move_begin_offset.y += Globals.TILE_SIZE
 
 func exit_move_state():
 	state = State.PlacedUnconfirmed
@@ -326,7 +313,7 @@ func play_collection_animation(icon_path: String, collection_count: int = 0):
 	if pop < 0:
 		amount = -pop
 	
-	instance.global_position = global_position + (Vector2(TILE_SIZE, TILE_SIZE) * size / 2.0) + Vector2(0, -16)
+	instance.global_position = global_position + (Vector2(Globals.TILE_SIZE, Globals.TILE_SIZE) * size / 2.0) + Vector2(0, -16)
 	instance.init(amount, icon_path, collection_count)
 
 func _on_control_mouse_entered():

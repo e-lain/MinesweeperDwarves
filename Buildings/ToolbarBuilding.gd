@@ -48,24 +48,9 @@ func _process(delta):
 func _on_mouse_entered():
 	info_popup.visible = true
 	info_popup.set_data(type)
-	if !stairs_placed && type != BuildingData.Type.STAIRCASE:
-		resources_source.help_text_is_overriden = true
-		resources_source.help_text_bar.text = "Need to build staircase first!"
-	elif  type == BuildingData.Type.STAIRCASE && stairs_placed && !resources_source.help_text_is_overriden:
-		resources_source.help_text_is_overriden = true
-		resources_source.help_text_bar.text = "Staircase is already built. Only one staircase can be built per floor"
-	elif current_stone < stone_req || current_pop < pop_req || current_steel < steel_req:
-		resources_source.help_text_is_overriden = true
-		resources_source.help_text_bar.text = "Not enough resources to build"
 
 func _on_mouse_exited():
 	info_popup.visible = false
-	if type == BuildingData.Type.STAIRCASE && stairs_placed:
-		resources_source.help_text_is_overriden = false
-	elif !stairs_placed && type != BuildingData.Type.STAIRCASE:
-		resources_source.help_text_is_overriden = false
-	elif current_stone < stone_req || current_pop < pop_req || current_steel < steel_req:
-		resources_source.help_text_is_overriden = false
 
 func _on_gui_input(event):
 	if event is InputEventMouseButton:

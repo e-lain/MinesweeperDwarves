@@ -31,11 +31,6 @@ func _on_gui_input(event):
 func _on_mouse_entered():
 	info_popup.visible = true
 	info_popup.set_description("Dowse Tile", "Flag a random bomb")
-	if use_count > 0 && main.get_current_board().flags < 1:
-		main.help_text_is_overriden = true
-		main.help_text_bar.text = "Can't use dowse when there are no remaining flags to place."
 
 func _on_mouse_exited():
 	info_popup.visible = false
-	if main.help_text_is_overriden:
-		main.help_text_is_overriden = false

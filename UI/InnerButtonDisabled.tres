@@ -1,0 +1,14 @@
+[gd_resource type="StyleBoxTexture" load_steps=2 format=3 uid="uid://blkpixnvibn23"]
+
+[ext_resource type="Texture2D" uid="uid://j7h3rx30o7hw" path="res://Assets/UI/DottedLine9Patch.png" id="1_2q7qg"]
+
+[resource]
+texture = ExtResource("1_2q7qg")
+texture_margin_left = 15.0
+texture_margin_top = 18.0
+texture_margin_right = 18.0
+texture_margin_bottom = 17.0
+axis_stretch_horizontal = 1
+axis_stretch_vertical = 1
+region_rect = Rect2(0, 0, 89, 89)
+modulate_color = Color(1, 1, 1, 0.494118)
