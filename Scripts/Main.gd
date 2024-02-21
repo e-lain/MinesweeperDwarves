@@ -58,8 +58,8 @@ func generate_board(difficulty: int, room_id: int) -> Board:
 	
 	add_child(b)
 	
-	canvas_modulate.visible = tier > 1
-	pointlight.visible = tier > 1
+#	canvas_modulate.visible = tier > 1
+#	pointlight.visible = tier > 1
 
 	var room_origin = overworld.rooms[room_id].origin
 	var mine_count = roundi(.11111 * overworld_room.size.x * overworld_room.size.y)
@@ -319,8 +319,8 @@ func on_resource_collection_complete():
 func on_transition_to_next_tier_midpoint():
 	show_unlock_boxes()
 
-
 func show_unlock_boxes():
+	responsive_ui.enter_area_choice_mode()
 	for room_id in overworld.rooms.keys():
 		var room = overworld.rooms[room_id]
 		if room.board != null && room.board.is_locked():

@@ -33,7 +33,7 @@ func init(_position: Vector2, tilesheet_sprite_coords:Vector2i, cell_position: V
 
 func play_destroy():
 	var tween = create_tween()
-	tween.tween_method(on_tween, 0.0, 1.0, .45)
+	tween.tween_method(on_tween, 0.0, 1.0, .35).set_ease(Tween.EASE_IN_OUT)
 	tween.tween_callback(queue_free)
 
 func on_tween(val):

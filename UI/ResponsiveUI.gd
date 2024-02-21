@@ -67,6 +67,7 @@ var right = 0
 enum State {
 	PLAY,
 	BUILD,
+	AREA_CHOICE,
 	PLACEMENT_NO_BUILDING,
 	PLACEMENT_MOVE_BUILDING,
 	SELECTED,
@@ -207,6 +208,13 @@ func enter_place_mode(type: BuildingData.Type):
 	to_build_mode_button_container.visible = false
 	descend_button_container.visible = false
 
+func enter_area_choice_mode():
+	state = State.AREA_CHOICE
+	build_menu.visible = false
+	descend_button_container.visible = false
+	infobox.visible = false
+	alert_box.visible = false
+
 func on_building_placement_instantiated(building: BaseBuilding):
 	if state == State.PLACEMENT_NO_BUILDING:
 		selected_building = building
@@ -332,7 +340,7 @@ func _on_destroy_selected_building_pressed():
 	cancel_confirm_message.text = "Destroy Building?"
 
 
-func show_transition(to_tier: int):
+func show_transition(to_tier: int) -> void:
 	transition.modulate = Color(1, 1, 1, 0)
 	transition.visible = true
 	transition_text.text = "[center][wave amp=50.0 freq=10.0]%s[/wave][/center]" % BiomeData.data[to_tier]["name"]
