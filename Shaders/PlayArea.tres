@@ -230,7 +230,6 @@ void fragment() {
 	vec4 n_out32p0;
 // Texture2D:32
 	n_out32p0 = texture(NoiseTex, n_out48p0);
-	float n_out32p1 = n_out32p0.r;
 
 
 // VectorOp:58
@@ -304,7 +303,6 @@ void fragment() {
 
 }
 "
-graph_offset = Vector2(-2193.21, -382.744)
 mode = 1
 flags/light_only = false
 varyings/WORLD_VERTEX = "0,3"

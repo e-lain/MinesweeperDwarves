@@ -1,0 +1,35 @@
+[gd_resource type="Resource" script_class="BuildingDataResource" load_steps=10 format=3 uid="uid://bigcjpuaau4q3"]
+
+[ext_resource type="Script" path="res://Data/Costs/Definitions/CostResource.gd" id="1_0eeln"]
+[ext_resource type="Script" path="res://Scripts/Entities/Model/BaseBuildingEntityModel.gd" id="2_34qv4"]
+[ext_resource type="Texture2D" uid="uid://bbl4x18qils4f" path="res://Assets/Buildings/forge.png" id="2_86him"]
+[ext_resource type="Resource" uid="uid://bu1n2yaysnqi1" path="res://Data/TileRequirements/Resources/FullyConnectedLavaOrLavaSourceRequirement.tres" id="3_sgqcw"]
+[ext_resource type="Resource" uid="uid://bb0cwy4lhxasa" path="res://Data/TileRequirements/Resources/MinecartTileRequirement.tres" id="4_7ypwq"]
+[ext_resource type="Script" path="res://Data/Buildings/Definitions/BuildingDataResource.gd" id="4_mueew"]
+
+[sub_resource type="Resource" id="Resource_8fl7s"]
+script = ExtResource("1_0eeln")
+type = 0
+amount = 5
+
+[sub_resource type="Resource" id="Resource_suhoe"]
+script = ExtResource("1_0eeln")
+type = 2
+amount = 1
+
+[sub_resource type="Resource" id="Resource_7fneg"]
+script = ExtResource("1_0eeln")
+type = 3
+amount = -1
+
+[resource]
+script = ExtResource("4_mueew")
+type = 7
+name = "Forge"
+description = "Needs to be built adjacent to a Lava Moat. Gain 1 Sledgehammer"
+building_entity_model_script = ExtResource("2_34qv4")
+_costs = Array[ExtResource("1_0eeln")]([SubResource("Resource_8fl7s"), SubResource("Resource_suhoe"), SubResource("Resource_7fneg")])
+bounding_rect_dimensions = Vector2i(2, 2)
+icon = ExtResource("2_86him")
+orthogonal_tile_placement_requirements = Array[Resource("res://Data/TileRequirements/Definitions/TileRequirement.gd")]([ExtResource("3_sgqcw")])
+orthogonal_tile_collection_requirements = Array[Resource("res://Data/TileRequirements/Definitions/TileRequirement.gd")]([ExtResource("4_7ypwq")])

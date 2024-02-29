@@ -1,0 +1,39 @@
+[gd_resource type="Resource" script_class="BuildingDataResource" load_steps=11 format=3 uid="uid://bmxvdf0mjqb11"]
+
+[ext_resource type="Script" path="res://Data/Costs/Definitions/CostResource.gd" id="1_05514"]
+[ext_resource type="Texture2D" uid="uid://bk8d7jbc80g06" path="res://Assets/Buildings/glassworks.png" id="2_43vnl"]
+[ext_resource type="Script" path="res://Scripts/Entities/Model/BaseBuildingEntityModel.gd" id="2_qxhu8"]
+[ext_resource type="Script" path="res://Data/Buildings/Definitions/BuildingDataResource.gd" id="3_kg4bh"]
+[ext_resource type="Script" path="res://Data/TileRequirements/Definitions/WorkshopTileRequirement.gd" id="3_tw8av"]
+[ext_resource type="Resource" uid="uid://bu1n2yaysnqi1" path="res://Data/TileRequirements/Resources/FullyConnectedLavaOrLavaSourceRequirement.tres" id="4_hmtb6"]
+
+[sub_resource type="Resource" id="Resource_c5t7f"]
+script = ExtResource("1_05514")
+type = 0
+amount = 20
+
+[sub_resource type="Resource" id="Resource_a6ggd"]
+script = ExtResource("1_05514")
+type = 2
+amount = 4
+
+[sub_resource type="Resource" id="Resource_gly48"]
+script = ExtResource("1_05514")
+type = 3
+amount = -1
+
+[sub_resource type="Resource" id="Resource_wsnxo"]
+script = ExtResource("3_tw8av")
+_problem = 0
+
+[resource]
+script = ExtResource("3_kg4bh")
+type = 8
+name = "Glassworks"
+description = "Needs to be built adjacent to a Workshop AND a Lava Moat. Advance to (tier 3) from the volcano"
+building_entity_model_script = ExtResource("2_qxhu8")
+_costs = Array[ExtResource("1_05514")]([SubResource("Resource_c5t7f"), SubResource("Resource_a6ggd"), SubResource("Resource_gly48")])
+bounding_rect_dimensions = Vector2i(2, 2)
+icon = ExtResource("2_43vnl")
+orthogonal_tile_placement_requirements = Array[Resource("res://Data/TileRequirements/Definitions/TileRequirement.gd")]([SubResource("Resource_wsnxo"), ExtResource("4_hmtb6")])
+orthogonal_tile_collection_requirements = Array[Resource("res://Data/TileRequirements/Definitions/TileRequirement.gd")]([])

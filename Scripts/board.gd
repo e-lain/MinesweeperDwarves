@@ -1,5 +1,4 @@
-extends Node2D
-class_name Board
+class_name Board extends Node2D
 
 signal tile_uncover_event_complete
 signal tile_flagged_event_complete
@@ -32,6 +31,7 @@ var Destroy = preload("res://Abilities/Destroy.tscn")
 var ability_controller
 
 var placing_type: BuildingData.Type
+
 var current_placing_instance: BaseBuilding
 
 # Ability usage toggles
@@ -92,9 +92,8 @@ enum State {
 func _ready():
 	ability_controller = AbilityController.new()
 	add_child(ability_controller)
-	
 
-	
+
 func init_board(rows: int, cols: int, bombs: int, tier: int, tilemap: SharedTileMap, tilemap_origin_cell_pos: Vector2i):
 	self.tier = tier
 	
@@ -110,10 +109,8 @@ func init_board(rows: int, cols: int, bombs: int, tier: int, tilemap: SharedTile
 	for c in columns:
 		tiles.append([])
 		for r in rows:
-			var t = BoardTile.new()
-			t.label_parent = self
 			var cell_pos = tilemap_origin_cell_pos + Vector2i(c, r)
-			t.cell_position = cell_pos
+			var t = BoardTile.new(cell_pos, self)
 			tiles[c].append(t)
 	
 	
@@ -128,8 +125,8 @@ func _unhandled_input(event):
 func set_bombs(first_click_pos: Vector2i):
 	var indices: Array = []
 	var tile_count = rows * columns
-	var first_click_tile = get_tile_at_cell_position(first_click_pos)
-	var adjacent_to_first_click = get_adjacent_tiles(first_click_tile)
+	var first_click_tile = BoardTileController.INSTANCE.get_tile_at_cell_position(first_click_pos)
+	var adjacent_to_first_click = BoardTileController.INSTANCE.get_adjacent_tiles(first_click_tile)
 	adjacent_to_first_click.append(first_click_tile)
 	var adjacent_indices = {}
 	for tile in adjacent_to_first_click:
@@ -170,7 +167,7 @@ func enter_placing(type: BuildingData.Type):
 	
 	var building = building_prefab.instantiate()
 	add_child(building)
-	building.set_type(type, get_parent().icons[type])
+	building.set_type(type)
 	current_placing_instance = building
 	current_placing_instance.on_placed.connect(on_building_placed)
 	current_placing_instance.right_click_cancelled.connect(on_building_right_click_cancel)
@@ -188,7 +185,7 @@ func _on_tile_destroyed(cell_pos: Vector2i):
 	if !contains_cell_position(cell_pos):
 		return
 	print("tile destroyed called")
-	var tile = get_tile_at_cell_position(cell_pos) 
+	var tile = BoardTileController.INSTANCE.get_tile_at_cell_position(cell_pos) 
 	clear_tile(tile)
 
 func _on_tile_uncovered(cell_pos: Vector2i):
@@ -198,7 +195,7 @@ func _on_tile_uncovered(cell_pos: Vector2i):
 	if !bombs_initialized:
 		set_bombs(cell_pos)
 	
-	var tile = get_tile_at_cell_position(cell_pos)
+	var tile = BoardTileController.INSTANCE.get_tile_at_cell_position(cell_pos)
 	if tile.is_flagged:
 		return
 	
@@ -235,7 +232,7 @@ func enter_build_mode():
 					place_lava_from_bomb(tile)
 	
 	if has_steel_to_collect:
-		var timer = get_tree().create_timer(Globals.collection_effect_lifespan)
+		var timer = get_tree().create_timer(Globals.COLLECTION_EFFECT_LIFESPAN)
 		timer.timeout.connect(minesweeper_collection_complete)
 	else:
 		minesweeper_collection_complete()
@@ -252,14 +249,14 @@ func place_lava_from_bomb(tile: BoardTile):
 	var building = building_prefab.instantiate()
 	var lava_type = BuildingData.Type.LAVA
 	add_child(building)
-	building.set_type(lava_type, get_parent().icons[lava_type])
+	building.set_type(lava_type)
 	current_placing_instance = building
 	building.state = building.State.Confirmed
 	building.can_show_problem = false
 	building.cant_build_label.visible = false
 	var tile_pos = tile.get_position()
-	var snapped = Vector2(snapped(tile_pos.x-Globals.TILE_SIZE/2, Globals.TILE_SIZE), snapped(tile_pos.y-Globals.TILE_SIZE/2, Globals.TILE_SIZE))
-	building.position = snapped
+	var snapped_pos = Vector2(snapped(tile_pos.x-Globals.TILE_SIZE/2, Globals.TILE_SIZE), snapped(tile_pos.y-Globals.TILE_SIZE/2, Globals.TILE_SIZE))
+	building.position = snapped_pos
 	building.sprite.material = null
 	
 	# Add tile to lava_tiles dictionary, assign UID to lava source
@@ -278,7 +275,7 @@ func refresh_lava_connections() -> void:
 	for tile in lava_tiles.values():
 		if tile.is_bomb && tile.bomb_type == BombData.Type.LAVA:
 			var source_uid = str(tile.lava_uid)
-			var adjacent_tiles = get_cardinal_tiles(tile)
+			var adjacent_tiles = BoardTileController.INSTANCE.get_orthogonal_tiles(tile)
 			for adj_tile in adjacent_tiles:
 				var check = adj_tile.cell_position
 				if tile_out_of_bounds(adj_tile):
@@ -333,7 +330,7 @@ func register_lava_connections(source_uid: String, tile: BoardTile) -> void:
 		var check = tile.cell_position + offset
 		if !contains_cell_position(check):
 			continue
-		var adjacent_tile = get_tile_at_cell_position(check)
+		var adjacent_tile = BoardTileController.INSTANCE.get_tile_at_cell_position(check)
 		if !adjacent_tile.has_building:
 			continue
 		if buildings_by_id[adjacent_tile.building_id].type == BuildingData.Type.LAVA:
@@ -358,7 +355,7 @@ func on_cancel_building_placement():
 		current_placing_instance.cancel_placement()
 		current_placing_instance = null
 
-func on_confirm_building_placement():
+func on_confirm_building_placement() -> void:
 	var building = current_placing_instance
 	var building_world_pos = building.global_position
 	
@@ -369,7 +366,7 @@ func on_confirm_building_placement():
 	var type = building.type
 	var id = building.id
 	total_building_count += 1
-	var data = BuildingData.data[type]
+	var data = BuildingData.get_building_data(type)
 	var size = data["size"]
 	if !stairs_placed:
 		stairs_placed = type == BuildingData.Type.STAIRCASE
@@ -386,7 +383,7 @@ func on_confirm_building_placement():
 	var world_positions_to_update = get_world_positions_in_area(building_world_pos, size)
 	for world_pos in world_positions_to_update:
 		var cell_pos = tilemap.local_to_map(tilemap.to_local(world_pos))
-		tile = get_tile_at_cell_position(cell_pos)
+		tile = BoardTileController.INSTANCE.get_tile_at_cell_position(cell_pos)
 		tile.has_building = true
 		tile.building_id = id
 	
@@ -468,7 +465,7 @@ func destroy_selected_building():
 	var world_positions_to_update = get_world_positions_in_area(building_world_pos, size)
 	for world_pos in world_positions_to_update:
 		var cell_pos = tilemap.local_to_map(tilemap.to_local(world_pos))
-		var tile = get_tile_at_cell_position(cell_pos)
+		var tile = BoardTileController.INSTANCE.get_tile_at_cell_position(cell_pos)
 		tile.has_building = false
 		tile.building_id = 0
 		if type == BuildingData.Type.LAVA:
@@ -500,8 +497,8 @@ func move_selected_building():
 	
 	var old_world_positions = get_world_positions_in_area(moving_building_original_world_position, size)
 	for world_pos in old_world_positions:
-		var cell_pos = tilemap.local_to_map(tilemap.to_local(world_pos))
-		var tile = get_tile_at_cell_position(cell_pos)
+		var cell_pos := tilemap.local_to_map(tilemap.to_local(world_pos))
+		var tile := BoardTileController.INSTANCE.get_tile_at_cell_position(cell_pos)
 		tile.has_building = false
 		tile.building_id = 0
 	
@@ -522,7 +519,7 @@ func confirm_selected_building_move():
 	var new_world_positions = get_world_positions_in_area(selected_building.global_position, size)
 	for world_pos in new_world_positions:
 		var cell_pos = tilemap.local_to_map(tilemap.to_local(world_pos))
-		var tile = get_tile_at_cell_position(cell_pos)
+		var tile = BoardTileController.INSTANCE.get_tile_at_cell_position(cell_pos)
 		tile.has_building = true
 		tile.building_id = selected_building.id
 	
@@ -546,7 +543,7 @@ func cancel_selected_building_move():
 	var old_world_positions = get_world_positions_in_area(moving_building_original_world_position, size)
 	for world_pos in old_world_positions:
 		var cell_pos = tilemap.local_to_map(tilemap.to_local(world_pos))
-		var tile = get_tile_at_cell_position(cell_pos)
+		var tile = BoardTileController.INSTANCE.get_tile_at_cell_position(cell_pos)
 		tile.has_building = true
 		tile.building_id = selected_building.id
 	
@@ -570,7 +567,7 @@ func collect_resources():
 				var check_cell = cell_pos + direction
 				if !contains_cell_position(check_cell):
 					continue
-				var tile = get_tile_at_cell_position(check_cell)
+				var tile = BoardTileController.INSTANCE.get_tile_at_cell_position(check_cell)
 				if tile.has_building and !tiles_to_collect_from.has(tile.building_id):
 					tiles_to_collect_from[tile.building_id] = tile
 	
@@ -589,7 +586,7 @@ func collect_resources():
 				collected_count+= 1
 		
 	if collected_resources:
-		var timer = get_tree().create_timer(Globals.collection_effect_lifespan)
+		var timer = get_tree().create_timer(Globals.COLLECTION_EFFECT_LIFESPAN)
 		timer.timeout.connect(building_collection_complete)
 		SoundManager.play_collection()
 	else:
@@ -643,7 +640,7 @@ func uncover_tile(tile: BoardTile, distance: int = 0):
 		flags += 1
 		tile.destroy_flag()
 	
-	var adjacent_tiles = get_adjacent_tiles(tile)
+	var adjacent_tiles = BoardTileController.INSTANCE.get_adjacent_tiles(tile)
 	
 	var adjacent_bombs = 0
 	for adjacent_tile in adjacent_tiles:
@@ -663,46 +660,11 @@ func explode_mine():
 
 func on_bomb_animation_complete():
 	mine_animation_complete.emit()
-	
-# TODO: merge redundant code with get_adjacent_tiles
-func get_cardinal_tiles(tile: BoardTile) -> Array[BoardTile]:
-	var cardinals: Array[BoardTile] = []
-	var offsets = [
-		Vector2i.UP,
-		Vector2i.DOWN,
-		Vector2i.LEFT,
-		Vector2i.RIGHT,
-	]
-	
-	for offset in offsets:
-		var adjacent = tile.cell_position + offset
-		if contains_cell_position(adjacent):
-			cardinals.append(get_tile_at_cell_position(adjacent))
-	return cardinals
-
-func get_adjacent_tiles(tile: BoardTile) -> Array[BoardTile]:
-	var surroundings: Array[BoardTile] = []
-	var offsets = [
-		(Vector2i.UP + Vector2i.LEFT),
-		(Vector2i.UP),
-		(Vector2i.UP + Vector2i.RIGHT),
-		(Vector2i.LEFT),
-		(Vector2i.RIGHT),
-		(Vector2i.DOWN + Vector2i.LEFT),
-		(Vector2i.DOWN),
-		(Vector2i.DOWN + Vector2i.RIGHT),
-	]
-	
-	for offset in offsets:
-		var adjacent = tile.cell_position + offset
-		if contains_cell_position(adjacent):
-			surroundings.append(get_tile_at_cell_position(adjacent))
-	return surroundings
 
 func _on_flag_toggled(cell_pos: Vector2i):
 	if !contains_cell_position(cell_pos):
 		return
-	var tile = get_tile_at_cell_position(cell_pos)
+	var tile = BoardTileController.INSTANCE.get_tile_at_cell_position(cell_pos)
 		
 	if tile.is_flagged:
 		flags += 1
@@ -730,7 +692,7 @@ func can_place_at_position(world_pos: Vector2, size: int) -> bool:
 		var cell_pos = tilemap.local_to_map(tilemap.to_local(pos))
 		if !contains_cell_position(cell_pos):
 			return false
-		var tile = get_tile_at_cell_position(cell_pos)
+		var tile = BoardTileController.INSTANCE.get_tile_at_cell_position(cell_pos)
 		if !(tilemap.get_cell_tile_data(0, cell_pos) == null && !tile.is_bomb && !tile.has_building):
 			return false	
 	return true
@@ -741,7 +703,7 @@ func can_use_ability_at_position(world_pos: Vector2, size: int):
 		var cell_pos = tilemap.local_to_map(tilemap.to_local(pos))
 		if !contains_cell_position(cell_pos):
 			return false
-		var tile = get_tile_at_cell_position(cell_pos)
+		var tile = BoardTileController.INSTANCE.get_tile_at_cell_position(cell_pos)
 		if tile.is_bomb && !tile.is_cover:
 			return false
 	return !can_place_at_position(world_pos, size)
@@ -767,44 +729,19 @@ func get_adjacent_positions(global_positions: Array[Vector2]) -> Array[Vector2]:
 				board_adjacent_coordinates.append(tilemap.to_global(tilemap.map_to_local(adjacent)))
 	return board_adjacent_coordinates
 
-# Returns the board tiles of provided array of global positions 
-func get_tiles_from_positions(positions: Array[Vector2]) -> Array[BoardTile]:
-	var output_tiles: Array[BoardTile] = []
-	for pos in positions:
-		var cell_pos = tilemap.local_to_map(tilemap.to_local(pos))
-		var tile = get_tile_at_cell_position(cell_pos)
-		output_tiles.append(tile)
-	#print("output tiles, ", output_tiles)
-	return output_tiles
-
-# Returns array of tiles a building is on
-func get_tiles_of_building(building: BaseBuilding) -> Array[BoardTile]:
-	var positions_to_check = get_world_positions_in_area(building.global_position, building.size)
-	var building_tiles = get_tiles_from_positions(positions_to_check)
-	return building_tiles
-
 # Returns if tile provided is next to a certain type of building
 func tile_is_next_to_building_type(tile: BoardTile, type: BuildingData.Type) -> bool:
-	var adjacent_tiles = get_cardinal_tiles(tile)
+	var adjacent_tiles = BoardTileController.INSTANCE.get_orthogonal_tiles(tile)
 	for adj_tile in adjacent_tiles:
 		if adj_tile.has_building && buildings_by_id[adj_tile.building_id] == type:
 			return true
 	return false
 
-func building_is_next_to_minecart(building: BaseBuilding) -> bool:
-	var places_to_check = get_world_positions_in_area(building.global_position, building.size)
-	var adjacent_positions = get_adjacent_positions(places_to_check)
-	var adjacent_tiles = get_tiles_from_positions(adjacent_positions)
-	
-	var offsets = [Vector2i.UP, Vector2i.DOWN, Vector2i.LEFT, Vector2i.RIGHT]	
+func building_is_next_to_minecart(building: BaseBuildingEntityModel) -> bool:
+	var occupied_tiles := building.get_occupied_tiles()
+	var orthogonal_tiles := BoardTileController.INSTANCE.get_orthogonal_tiles_for_array(occupied_tiles, get_boundaries_rect())
 
-	for pos in places_to_check:
-		var cell_pos = tilemap.local_to_map(tilemap.to_local(pos))
-		for offset in offsets:
-			var check = cell_pos + offset
-			if  !contains_cell_position(check):
-				continue
-			var tile = get_tile_at_cell_position(check)
+	for tile in orthogonal_tiles:
 			if !tile.has_building:
 				continue
 			var other_building = buildings_by_id[tile.building_id]
@@ -813,30 +750,23 @@ func building_is_next_to_minecart(building: BaseBuilding) -> bool:
 	return false
 
 # TODO: See if we can use tiles_is_next_to_building_type here
-func building_is_next_to_lava_moat(building: BaseBuilding) -> bool:
-	var tiles_to_check
-	if state == State.Placing:
-		tiles_to_check = get_tiles_from_positions(get_world_positions_in_area(current_placing_instance.global_position, building.size))
-	else:
-		tiles_to_check = get_tiles_of_building(building)
-	for tile in tiles_to_check:
-		var adj_tiles = get_cardinal_tiles(tile)
-		for adj_tile in adj_tiles:
-			if adj_tile not in tiles_to_check && adj_tile.has_building:
-				var other_building = buildings_by_id[adj_tile.building_id]
-				if other_building.type == BuildingData.Type.LAVA && len(other_building.connected_lava_sources) > 0:
-					return true
+func building_is_next_to_lava_moat(building: BaseBuildingEntityModel) -> bool:
+	var occupied_tiles := building.get_occupied_tiles()
+	var orthogonal_tiles := BoardTileController.INSTANCE.get_orthogonal_tiles_for_array(occupied_tiles, get_boundaries_rect())
+	
+	for tile in orthogonal_tiles:
+		if !tile.has_building:
+			continue
+		var other_building = buildings_by_id[tile.building_id]
+		if other_building.type == BuildingData.Type.LAVA && len(other_building.connected_lava_sources) > 0:
+			return true
 	return false
 
 # TODO: Combine redundant logic with building_is_next_to_lava_moat
-func building_is_next_to_lava_source(building: BaseBuilding) -> bool:
-	var tiles_to_check
-	if state == State.Placing:
-		tiles_to_check = get_tiles_from_positions(get_world_positions_in_area(current_placing_instance.global_position, building.size))
-	else:
-		tiles_to_check = get_tiles_of_building(building)
+func building_is_next_to_lava_source(building: BaseBuildingEntityModel) -> bool:
+	var tiles_to_check =  building.get_occupied_tiles()
 	for tile in tiles_to_check:
-		var adjacent_tiles = get_cardinal_tiles(tile)
+		var adjacent_tiles = BoardTileController.INSTANCE.get_orthogonal_tiles(tile)
 		for adj_tile in adjacent_tiles:
 			if adj_tile.lava_uid && adj_tile.lava_uid != tile.lava_uid:
 				return true
@@ -852,7 +782,7 @@ func player_placing_minecart_next_to_building(building: BaseBuilding) -> bool:
 		var check = minecart_cell_pos + offset
 		if !contains_cell_position(check):
 			continue
-		var tile = get_tile_at_cell_position(check)
+		var tile := BoardTileController.INSTANCE.get_tile_at_cell_position(check)
 		if !tile.has_building:
 			continue
 		if tile.building_id == building.id:
@@ -860,21 +790,12 @@ func player_placing_minecart_next_to_building(building: BaseBuilding) -> bool:
 	return false
 	
 func get_world_positions_in_area(origin_world_pos: Vector2, size: int) -> Array[Vector2]:
-	var tiles: Array[Vector2] = []
+	var world_positions: Array[Vector2] = []
 	for x in range(size):
 		for y in range (size):
-			tiles.push_back(Vector2(origin_world_pos.x + x*Globals.TILE_SIZE, origin_world_pos.y + y*Globals.TILE_SIZE))
+			world_positions.push_back(Vector2(origin_world_pos.x + x*Globals.TILE_SIZE, origin_world_pos.y + y*Globals.TILE_SIZE))
 	
-	return tiles
-	
-# Convert array of global positions to corresponding board tiles
-func world_positions_to_tiles(positions: Array[Vector2]) -> Array[BoardTile]:
-	var converted_tiles = []
-	for pos in positions:
-		var cell_pos = tilemap.local_to_map(tilemap.to_local(pos))
-		var tile = get_tile_at_cell_position(cell_pos)
-		converted_tiles.append(tile)
-	return converted_tiles
+	return world_positions
 
 func world_to_cell(world):
 	return tilemap.local_to_map(tilemap.to_local(world))
@@ -918,10 +839,6 @@ func get_size_global_position() -> Vector2:
 
 func contains_cell_position(pos: Vector2i) -> bool:
 	return get_boundaries_rect().has_point(pos)
-
-func get_tile_at_cell_position(pos: Vector2i):
-	var check = pos - tilemap_origin_cell_pos
-	return tiles[check.x][check.y]
 
 func get_boundaries_rect() -> Rect2i:
 	return Rect2i(tilemap_origin_cell_pos, Vector2i(columns, rows))

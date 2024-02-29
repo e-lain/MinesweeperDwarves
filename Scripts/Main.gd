@@ -181,10 +181,6 @@ func _process(delta):
 		
 		responsive_ui.set_descend_disabled(!stairs_placed())
 		responsive_ui.set_stairs_placed(stairs_placed())
-	
-	if (Input.is_action_just_pressed("Test_1")):
-		await RenderingServer.frame_post_draw
-		get_viewport().get_texture().get_image().save_png("res://Screenshot.png")
 
 func can_enter_build_mode() -> bool:
 	return get_current_board().tiles_uncovered != 0

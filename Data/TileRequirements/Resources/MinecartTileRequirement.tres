@@ -1,0 +1,7 @@
+[gd_resource type="Resource" script_class="MinecartTileRequirement" load_steps=2 format=3 uid="uid://bb0cwy4lhxasa"]
+
+[ext_resource type="Script" path="res://Data/TileRequirements/Definitions/MinecartTileRequirement.gd" id="1_64rlj"]
+
+[resource]
+script = ExtResource("1_64rlj")
+_problem = 1

@@ -16,7 +16,7 @@ func init(amount: int, icon_path: String, collection_count: int = 0):
 	image.texture = img
 	outline.texture = img
 	label.text = "+"+str(amount)
-	var lifespan = Globals.collection_effect_lifespan
+	var lifespan = Globals.COLLECTION_EFFECT_LIFESPAN
 	
 	get_tree().create_timer(collection_count * 0.2).timeout.connect(func():
 		visible = true

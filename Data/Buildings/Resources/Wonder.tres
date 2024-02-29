@@ -1,0 +1,28 @@
+[gd_resource type="Resource" script_class="BuildingDataResource" load_steps=7 format=3 uid="uid://bckqt7if1cok"]
+
+[ext_resource type="Script" path="res://Data/Costs/Definitions/CostResource.gd" id="1_w6dhd"]
+[ext_resource type="Script" path="res://Scripts/Entities/Model/BaseBuildingEntityModel.gd" id="2_40udw"]
+[ext_resource type="Texture2D" uid="uid://cjyj7x6nof7tr" path="res://Assets/UI/WonderUIIcon.png" id="2_ljuk5"]
+[ext_resource type="Script" path="res://Data/Buildings/Definitions/BuildingDataResource.gd" id="4_uao5j"]
+
+[sub_resource type="Resource" id="Resource_ipuwo"]
+script = ExtResource("1_w6dhd")
+type = 0
+amount = 100
+
+[sub_resource type="Resource" id="Resource_1gkwb"]
+script = ExtResource("1_w6dhd")
+type = 1
+amount = 5
+
+[resource]
+script = ExtResource("4_uao5j")
+type = 4
+name = "Beer Hall"
+description = "Win the Game"
+building_entity_model_script = ExtResource("2_40udw")
+_costs = Array[ExtResource("1_w6dhd")]([SubResource("Resource_ipuwo"), SubResource("Resource_1gkwb")])
+bounding_rect_dimensions = Vector2i(5, 5)
+icon = ExtResource("2_ljuk5")
+orthogonal_tile_placement_requirements = Array[Resource("res://Data/TileRequirements/Definitions/TileRequirement.gd")]([])
+orthogonal_tile_collection_requirements = Array[Resource("res://Data/TileRequirements/Definitions/TileRequirement.gd")]([])
