@@ -5,14 +5,15 @@ var type: BuildingData.Type
 
 @export
 var name: String
+
 @export
 var description: String
 
-
-## For instantiating the correct building entity model for the associated building.
-## Unfortunately, it isn't possible to limit script export to certain kinds of scripts
 @export
-var building_entity_model_script: Script = preload("res://Scripts/Entities/Model/BaseBuildingEntityModel.gd")
+var model_script: Script = preload("res://Scripts/Entities/Model/BaseBuildingEntityModel.gd")
+
+@export
+var scene: PackedScene = preload("res://Buildings/EntityView.tscn")
 
 @export
 var _costs: Array[CostResource]
@@ -31,7 +32,17 @@ var orthogonal_tile_collection_requirements: Array[TileRequirement]
 
 var costs = {}
 
+var _grants_resources: bool = false
+
+func grants_resources() -> bool:
+	return _grants_resources
+
 func _init():
 	super()
 	for cost in _costs:
 		costs[cost.type] = cost.amount
+		if cost.ammount < 0:
+			_grants_resources = true
+
+func get_raw_costs() -> Array[CostResource]:
+	return _costs

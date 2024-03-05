@@ -17,16 +17,6 @@ var _entity_id: int = -1 : get = get_entity_id
 
 var _state: TileState = TileState.Covered
 
-#var number_label_prefab: PackedScene = preload("res://Prefabs/NumberLabel.tscn")
-#var flag_prefab: PackedScene = preload("res://Prefabs/Flag.tscn")
-#var bomb_prefab: PackedScene = preload("res://Prefabs/Bomb.tscn")
-#
-#var label
-#var flag
-#var bomb
-#
-#var _label_parent: Node
-
 func _init(cell_pos: Vector2i, label_parent: Node):
 	cell_position = cell_pos
 	#_label_parent = label_parent
@@ -40,33 +30,22 @@ func toggle_flag():
 			_state = TileState.Covered
 			#destroy_flag()
 
-#func create_label(adjacent_bomb_count: int):
-#	if label != null:
-#		label.queue_free()
-#		label = null
-#
-#	if adjacent_bomb_count > 0:
-#		label = number_label_prefab.instantiate()
-#		_label_parent.add_child(label)
-#		label.global_position = get_global_position()
-#		label.set_number(adjacent_bomb_count)
-#
+func collect() -> Array[CostResource]:
+	if !has_bomb() || !is_flagged():
+		return []
+	var entity: BombEntityModel = BoardTileController.INSTANCE.get_entity(get_entity_id())
+	uncover()
+	return entity.collect()
+
 #func create_flag():
 #	flag = flag_prefab.instantiate()
 #	_label_parent.add_child(flag)
 #	flag.global_position = get_global_position()
-#
+
 #func destroy_flag():
 #	if flag != null:
 #		flag.queue_free()
 #		flag = null
-
-#func create_bomb(bomb_type: BombData.Type) -> Node2D:
-#	bomb = bomb_prefab.instantiate()
-#	bomb.set_type(bomb_type)
-#	_label_parent.add_child(bomb)
-#	bomb.global_position = get_global_position()
-#	return bomb
 
 
 ## Returns this board tile's cell position converted to world coordinates
@@ -78,7 +57,6 @@ func has_bomb() -> bool:
 		return false
 	
 	var entity := BoardTileController.INSTANCE.get_entity(get_entity_id())
-	
 	return entity is BombEntityModel
 
 func has_lava() -> bool:
@@ -86,7 +64,7 @@ func has_lava() -> bool:
 		return false
 	
 	var entity: BombEntityModel = BoardTileController.INSTANCE.get_entity(get_entity_id())
-	return entity.get_bomb_type() == BombData.Type.LAVA
+	return entity.get_bomb_type() == BombData.Type.Lava
 
 #region SETTERS AND GETTERS
 func get_entity_id() -> int:
@@ -101,8 +79,16 @@ func set_entity_id(id: int) -> void:
 func has_entity() -> bool:
 	return _entity_id > 0
 	
+func is_covered() -> bool:
+	return _state == TileState.Covered
+
 func is_uncovered() -> bool:
 	return _state == TileState.Uncovered
 
+func is_flagged() -> bool:
+	return _state == TileState.Flagged
+
+func uncover() -> void:
+	_state = TileState.Uncovered
 #endregion
 

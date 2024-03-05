@@ -34,8 +34,6 @@ var overlay_toggled: bool = false
 
 var current_board
 
-var icons = {}
-
 var last_checked_resource_amounts = {}
 
 var state = State.Play
@@ -47,6 +45,46 @@ enum State {
 	Build,
 	Placing
 }
+
+
+# Called when the node enters the scene tree for the first time.
+func _ready():
+#	randomize()
+#	var random_seed = randi()
+#	seed(random_seed)
+#	print("Seed: %d" % random_seed)
+	seed(975027303)
+	
+	## Initialize Singletons
+	EntityIdController.new()
+	BoardTileController.new(Vector2i(300, 300), get_tree().root, shared_tilemap)
+	LavaConnectionController.new()
+	
+	
+	depth_by_tier[tier] = 0
+	
+	# place board in center with correct offset accounting for tile size and board size
+	test_new_tier()
+	
+	var starting_origin =  overworld.max_size / 2 - Vector2i(overworld.start_room_size / 2, overworld.start_room_size / 2)
+	var start_room_size = overworld.start_room_size
+	var starting_room_id = overworld.generate_room(start_room_size, starting_origin)
+
+	
+	update_current_board(generate_board(0, starting_room_id))
+	camera.reset(get_current_board().get_center_global_position(), get_current_board().get_size_global_position())
+	
+	shared_tilemap.fill(Rect2i(starting_origin - Vector2i(20, 20), Vector2i(40, 40)))
+
+
+	responsive_ui.update_buildings(available_buildings)
+	responsive_ui.update_resources(available_resources)
+	responsive_ui.update_abilities(ability_charge_counts, ability_charge_maximums)
+	responsive_ui.enter_play_mode()
+	
+	last_checked_resource_amounts = Resources.get_amounts_copy()
+	
+	create_grid_lines()
 
 func generate_board(difficulty: int, room_id: int) -> Board:
 	var overworld_room = overworld.rooms[room_id]
@@ -74,7 +112,7 @@ func generate_board(difficulty: int, room_id: int) -> Board:
 	b.workshop_destroyed.connect(on_workshop_destroyed)
 	b.on_building_collection_complete.connect(on_building_collection_complete)
 	b.on_minesweeper_collection_complete.connect(on_minesweeper_collection_complete)
-	
+
 	b.placing_building_instantiated.connect(on_placing_building_instantiated)
 	b.building_placed.connect(on_building_placed)
 	
@@ -109,44 +147,6 @@ func update_current_board(board: Board):
 	camera.smooth_reset(board.get_center_global_position())
 	
 	play_area_border.set_area(board.global_position, board.get_size_global_position())
-
-# Called when the node enters the scene tree for the first time.
-func _ready():
-#	randomize()
-#	var random_seed = randi()
-#	seed(random_seed)
-#	print("Seed: %d" % random_seed)
-	seed(975027303)
-	
-	
-	depth_by_tier[tier] = 0
-	for key in BuildingData.data.keys():
-		icons[key] = load(BuildingData.data[key]["icon_path"])
-	
-	# place board in center with correct offset accounting for tile size and board size
-	test_new_tier()
-	
-	
-
-	var starting_origin =  overworld.max_size / 2 - Vector2i(overworld.start_room_size / 2, overworld.start_room_size / 2)
-	var start_room_size = overworld.start_room_size
-	var starting_room_id = overworld.generate_room(start_room_size, starting_origin)
-
-	
-	update_current_board(generate_board(0, starting_room_id))
-	camera.reset(get_current_board().get_center_global_position(), get_current_board().get_size_global_position())
-	
-	shared_tilemap.fill(Rect2i(starting_origin - Vector2i(20, 20), Vector2i(40, 40)))
-
-
-	responsive_ui.update_buildings(available_buildings)
-	responsive_ui.update_resources(available_resources)
-	responsive_ui.update_abilities(ability_charge_counts, ability_charge_maximums)
-	responsive_ui.enter_play_mode()
-	
-	last_checked_resource_amounts = Resources.get_amounts_copy()
-	
-	create_grid_lines()
 
 func test_new_tier():
 	#TESTING
@@ -222,7 +222,7 @@ func on_building_placed():
 	responsive_ui.on_building_placed()
 	DragOrZoomEventManager.drag_blocked = false
 
-func on_building_selected(building: BaseBuilding):
+func on_building_selected(building: BuildingEntityView):
 	responsive_ui.on_building_selected(building)
 
 func on_building_deselected():
@@ -421,7 +421,7 @@ func _on_responsive_ui_move_selected_building_cancelled():
 func _on_responsive_ui_move_selected_building_confirmed():
 	get_current_board().confirm_selected_building_move()
 
-func on_placing_building_instantiated(building: BaseBuilding):
+func on_placing_building_instantiated(building: BuildingEntityView):
 	responsive_ui.on_building_placement_instantiated(building)
 
 func reset_available_for_tier_data():

@@ -17,7 +17,6 @@ var _bounding_cell_rect: Rect2i
 ## All Board Tiles which are occupied by this entity. No reliable order is expected. 
 var _occupied_tiles: Array[BoardTile] = []
 
-
 ## Constructor.
 func _init(bounding_cell_rect: Rect2i):
 	_id = EntityIdController.INSTANCE.generate_id()
@@ -39,6 +38,17 @@ func can_place() -> bool:
 func place(bounding_cell_rect: Rect2i) -> void:
 	_is_placed = true
 	move(bounding_cell_rect)
+
+func unplace() -> void:
+	if _is_placed:
+		for tile in _occupied_tiles:
+			tile.clear_entity_id()
+		_is_placed = false
+
+func remove() -> void:
+	unplace()
+	BoardTileController.INSTANCE.unregister_entity(_id)
+	free()
 
 ## Move to a new location / collection of occupied tiles.
 ## 

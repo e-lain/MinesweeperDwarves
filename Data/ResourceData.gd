@@ -1,6 +1,7 @@
 class_name ResourceData
 
 enum Resources {
+	NONE,
 	STONE,
 	POPULATION,
 	STEEL,

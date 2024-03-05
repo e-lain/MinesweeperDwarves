@@ -25,3 +25,12 @@ func get_amount(type: ResourceData.Resources):
 func update_amount(type: ResourceData.Resources, delta: int):
 	amounts[type] += delta
 	amounts_changed.emit()
+
+
+func add_amounts(costs: Array[CostResource]):
+	for cost in costs:
+		update_amount(cost.type, cost.amount)
+
+func subtract_amounts(costs: Array[CostResource]):
+	for cost in costs:
+		update_amount(cost.type, -cost.amount)

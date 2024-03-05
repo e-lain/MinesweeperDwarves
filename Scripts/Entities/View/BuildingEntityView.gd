@@ -1,27 +1,13 @@
 class_name BuildingEntityView extends BoardEntityView
 
-signal right_click_cancelled
-signal on_placed
-signal on_selected(building: BaseBuilding)
-signal on_deselected
-
 var type: BuildingData.Type
-var building_data: BuildingDataResource
 
 @onready var speech_bubble: SpeechBubble = $SpeechBubble
-
-@onready var background_sprite: Sprite2D = $BG
-
-@onready var gui_control = $Control
-
 @onready var handle_arrows = $HandleArrows
 @onready var cant_build_label = $CantBuildLabel
-@onready var pointlight = $PointLight2D
 
 var building_placement_material: ShaderMaterial = preload("res://Shaders/InvalidBuildingPlacement.tres")
 var drawing_material: ShaderMaterial = preload("res://Shaders/EraserMaterial.tres")
-
-const bg_offset: Vector2i = Vector2i(3, 3)
 
 const collection_prefab: PackedScene = preload("res://UI/collection_effect.tscn")
 
@@ -30,14 +16,11 @@ const need_lava_texture: Texture = preload("res://Assets/walltiles/LavaPoolDowns
 
 var state := State.Unplaced
 
-var move_begin_offset = Vector2.ZERO
-
-var mouse_in = false
-
+var move_begin_offset := Vector2.ZERO
 var can_show_problem: bool = true
 
+var mouse_in = false
 var touch_events = {}
-
 var selection_event
 var deselection_event
 
@@ -54,22 +37,18 @@ func init(model: BoardEntityModel):
 	if !(model is BaseBuildingEntityModel):
 		push_error("Creating Building Entity View with incorrect Model")
 	
+	var data := get_building_data()
+	type = data.type
 	
-	building_data = (model as BaseBuildingEntityModel).get_building_data()
-	type = building_data.type
-
-	var size: Vector2i = building_data.bounding_rect_dimensions
+	var size: Vector2i = data.bounding_rect_dimensions
 	
-	gui_control.size = Globals.TILE_SIZE * size
+	control.size = Globals.TILE_SIZE * size
 	speech_bubble.position.x = Globals.TILE_SIZE * size.x / 2.0 - (Globals.TILE_SIZE / 2.0)
 	cant_build_label.position.x = Globals.TILE_SIZE * size.x / 2.0 - (cant_build_label.size.x / 2.0)
 	cant_build_label.position.y = Globals.TILE_SIZE * size.y
 	
-	sprite.texture = building_data.icon
+	sprite.texture = data.icon
 	handle_arrows.scale = size
-	
-	if type == BuildingData.Type.LAVA:
-		pointlight.visible = true
 
 func _process(delta):
 	if state != State.Confirmed:
@@ -99,25 +78,13 @@ func _process(delta):
 			sprite.material = null
 			cant_build_label.visible = false
 	
-	var size = building_data.bounding_rect_dimensions
-	
-	if size == Vector2i.ONE:
-		background_sprite.visible = false
-	else:
-		background_sprite.position = bg_offset
-		var cell_pos = _model.get_bounding_cell_rect().position
-		var region_x = bg_offset.x + ((cell_pos.x % 8) * Globals.TILE_SIZE)
-		var region_y = bg_offset.y + ((cell_pos.y % 8) * Globals.TILE_SIZE)
-		var region_w = size.x * Globals.TILE_SIZE - bg_offset.x * 2
-		var region_h = size.y * Globals.TILE_SIZE - bg_offset.y * 2
-		background_sprite.region_rect = Rect2(region_x, region_y, region_w, region_h)
+	var size = get_building_data().bounding_rect_dimensions
 	
 	var problems = (_model as BaseBuildingEntityModel).get_collection_problems()
 	if problems.size() > 0:
 		toggle_problem(true, problems[0])
 	else:
 		toggle_problem(false)
-
 
 func toggle_problem(has_problem: bool, reason: TileRequirement.RequirementProblem = TileRequirement.RequirementProblem.NoMinecart):
 	if has_problem:
@@ -129,24 +96,28 @@ func toggle_problem(has_problem: bool, reason: TileRequirement.RequirementProble
 	
 	speech_bubble.set_revealed(has_problem && can_show_problem, 0.1 if !can_show_problem else 0.5)
 
-
 ## Returns true if the model indicates the building can be placed at the current position. False otherwise.
 func can_place() -> bool:
 	return (_model as BaseBuildingEntityModel).can_place()
 
-func requires_minecart_adjacency():
-	return type == BuildingData.Type.HOUSE || type == BuildingData.Type.QUARRY
-
 func place():
-	_model.place(_model.get_bounding_cell_rect())
+	var cell_pos := Globals.global_to_cell(global_position)
+	var movement_rect := Rect2i(cell_pos, _model.get_bounding_cell_rect().size)
+	_model.move(movement_rect)
 	state = State.PlacedUnconfirmed
 	sprite.material = null
 	on_placed.emit()
+
+func start_move() -> void:
+	_model.unplace()
+	state = State.PlacedUnconfirmed
+	sprite.material = null
 
 func set_building_visibility(val: bool) -> void:
 	# used by lava moat tile to hide building in favor of lava moat tile
 	sprite.visible = val
 
+## TODO: Bubble up to parent class if input handling needed for other views
 func _unhandled_input(event):
 	if PlatformUtil.isMobile():
 		_handle_touch_input(event)
@@ -227,6 +198,7 @@ func exit_move_state():
 	state = State.PlacedUnconfirmed
 	move_begin_offset = Vector2.ZERO
 	DragOrZoomEventManager.drag_began_in_unconfirmed_building = false
+	
 
 func select(event):
 	if event != null && event == deselection_event:
@@ -245,6 +217,7 @@ func deselect(event):
 
 func confirm_placement():
 	state = State.Confirmed
+	_model.place(_model.get_bounding_cell_rect())
 	
 	can_show_problem = false
 	sprite.material = drawing_material.duplicate()
@@ -256,37 +229,38 @@ func confirm_placement():
 	)
 	cant_build_label.visible = false
 
-func cancel_placement():
-	# Handling for specific building logic on cancel
-	if type == BuildingData.Type.LAVA:
-		connected_lava_sources = []
-		board.refresh_lava_connections()
+func cancel_placement() -> void:
+	_model.remove()
 	queue_free()
 
-func play_collection_animation(icon_path: String, collection_count: int = 0):
-	var instance = collection_prefab.instantiate()
+func play_collection_animation(collection_count: int = 0) -> void:
+	var data := get_building_data()
+	var size := data.bounding_rect_dimensions
+	var costs: Array[CostResource] = data.get_raw_costs()
+	
+	var collections: Array[CostResource] = []
+	
+	for cost in costs:
+		if cost.amount < 0:
+			collections.append(cost)
+	
+	# TODO: Proper support for multiple collection types
+	var instance: Node = collection_prefab.instantiate()
+	instance.init(collections, collection_count)
 	add_child(instance)
-	var amount = 0
-	var data = BuildingData.data[type]
-	
-	#TODO: Allow for multiple different resources to be collected from a building?
-	
-	var stone = BuildingData.get_cost(type, ResourceData.Resources.STONE)
-	var pop =  BuildingData.get_cost(type, ResourceData.Resources.POPULATION)
-	var steel = BuildingData.get_cost(type, ResourceData.Resources.STEEL)
-	
-	if stone < 0:
-		amount = -stone
-	if steel < 0:
-		amount = -steel
-	if pop < 0:
-		amount = -pop
-	
-	instance.global_position = global_position + (Vector2(Globals.TILE_SIZE, Globals.TILE_SIZE) * size / 2.0) + Vector2(0, -16)
-	instance.init(amount, icon_path, collection_count)
+	instance.global_position = global_position + Vector2(size * Globals.TILE_SIZE / 2.0) + Vector2(0, -16)
+
+
+
+func destroy() -> void:
+	_model.remove()
+	queue_free()
 
 func _on_control_mouse_entered():
 	mouse_in = true
 
 func _on_control_mouse_exited():
 	mouse_in = false
+	
+func get_building_data() -> BuildingDataResource:
+	return (_model as BaseBuildingEntityModel).get_building_data()

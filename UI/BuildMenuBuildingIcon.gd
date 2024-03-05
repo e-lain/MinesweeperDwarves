@@ -1,5 +1,4 @@
-extends VBoxContainer
-class_name BuildMenuBuildingIcon
+class_name BuildMenuBuildingIcon extends VBoxContainer
 
 signal clicked
 
@@ -21,13 +20,14 @@ var steel_req
 
 var stairs_placed: bool = false
 
+
 var clickable = true
 
 var scroll_container_swiping = false
 
 func set_type(val: BuildingData.Type):
 	type = val
-	texture_rect.texture = load(BuildingData.data[type]["icon_path"])
+	texture_rect.texture = BuildingData.get_building_data(type).icon
 	var costs = BuildingData.get_costs(val)
 	for cost_type in costs.keys():
 		var cost_value = costs[cost_type]

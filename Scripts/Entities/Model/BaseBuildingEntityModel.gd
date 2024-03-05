@@ -48,6 +48,40 @@ func check_requirements(requirements: Array[TileRequirement]) -> Array[TileRequi
 	
 	return failed
 
+func _pay_costs() -> void:
+	var costs := _building_data.get_raw_costs()
+	
+	for cost in costs:
+		if cost.amount > 0:
+			Resources.update_amount(cost.type, -cost.amount)
+
+func _refund_costs() -> void:
+	var costs := _building_data.get_raw_costs()
+	
+	for cost in costs:
+		if cost.amount > 0:
+			Resources.update_amount(cost.type, cost.amount)
+
+func collect() -> void:
+	var costs := _building_data.get_raw_costs()
+	
+	for cost in costs:
+		if cost.amount < 0:
+			Resources.update_amount(cost.type, -cost.amount)
+
+
+func place(bounding_cell_rect: Rect2i) -> void:
+	super(bounding_cell_rect)
+	_pay_costs()
+
+func unplace() -> void:
+	super()
+	_refund_costs()
+
+func remove() -> void:
+	super()
+	_refund_costs()
+
 func get_type() -> BuildingData.Type:
 	return _building_data.type
 

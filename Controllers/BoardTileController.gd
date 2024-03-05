@@ -88,14 +88,14 @@ func get_orthogonal_tiles_for_array(tiles: Array[BoardTile], bounds_filter: Rect
 	var offset_indices: Dictionary = {}
 	
 	for tile in tiles:
-		offset_indices[_cell_pos_to_index(tile.cell_position)] = true
+		offset_indices[cell_pos_to_index(tile.cell_position)] = true
 	
 	for tile in tiles:
 		var orthogonal_tiles: Array[BoardTile] = get_orthogonal_tiles(tile, bounds_filter)
 		
 		for orthogonal_tile in orthogonal_tiles:
 			var cell_pos: Vector2i = orthogonal_tile.cell_position
-			var index = _cell_pos_to_index(cell_pos)
+			var index = cell_pos_to_index(cell_pos)
 			if !offset_indices.has(index):
 				result.append(orthogonal_tile)
 				offset_indices[index] = true
@@ -103,8 +103,13 @@ func get_orthogonal_tiles_for_array(tiles: Array[BoardTile], bounds_filter: Rect
 	return result
 
 
-func _cell_pos_to_index(cell_pos: Vector2i) -> int:
+func cell_pos_to_index(cell_pos: Vector2i) -> int:
 	return cell_pos.y * _bounds.size.x + cell_pos.x
+
+func index_to_cell_pos(index: int) -> Vector2i:
+	var y_val := int(index / _bounds.size.x)
+	var x_val := index - y_val
+	return Vector2i(x_val, y_val)
 
 ## Returns the 8 adjacent tiles in each direction from the given BoardTile
 ##
@@ -137,3 +142,6 @@ func get_entity(id: int) -> BoardEntityModel:
 
 func register_entity(id: int, entity: BoardEntityModel) -> void:
 	_entities_by_id[id] = entity
+
+func unregister_entity(id: int) -> void:
+	_entities_by_id.erase(id)

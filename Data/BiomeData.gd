@@ -5,7 +5,7 @@ enum Type {
 	LAVA
 }
 
-static func get_buildings(tier: int):
+static func get_buildings(tier: int) -> Array[BuildingData.Type]:
 	match tier:
 		1:
 			return data[Type.DEFAULT].buildings
@@ -14,7 +14,7 @@ static func get_buildings(tier: int):
 		_:
 			return []
 
-static func get_bombs(tier: int):
+static func get_bombs(tier: int) -> Array[BombData.Type]:
 	match tier:
 		1:
 			return data[Type.DEFAULT].bombs
@@ -23,7 +23,7 @@ static func get_bombs(tier: int):
 		_:
 			return []
 
-static func get_resources(tier: int):
+static func get_resources(tier: int) -> Array[ResourceData.Resources]:
 	if !data.has(tier):
 		return []
 	else:

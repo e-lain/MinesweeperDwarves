@@ -1,0 +1,32 @@
+[gd_scene load_steps=5 format=3 uid="uid://daawt481r4tui"]
+
+[ext_resource type="Texture2D" uid="uid://cp2j4aclx6fww" path="res://Assets/UI/Background512.png" id="1_myqyx"]
+[ext_resource type="Script" path="res://Scripts/Entities/View/BoardEntityView.gd" id="1_ygtvx"]
+[ext_resource type="Material" uid="uid://nqpwbe45b8cn" path="res://Shaders/InvalidBuildingPlacement.tres" id="2_h1y8l"]
+[ext_resource type="Texture2D" uid="uid://dgwg34udoytxd" path="res://Assets/BuildingsLarge/StairsDown128.png" id="3_8cekr"]
+
+[node name="EntityView" type="Node2D"]
+script = ExtResource("1_ygtvx")
+
+[node name="Background" type="Sprite2D" parent="."]
+modulate = Color(1, 1, 1, 0.803922)
+texture_repeat = 2
+texture = ExtResource("1_myqyx")
+centered = false
+region_enabled = true
+region_rect = Rect2(0, 0, 128, 128)
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+material = ExtResource("2_h1y8l")
+texture = ExtResource("3_8cekr")
+centered = false
+
+[node name="Control" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 64.0
+offset_bottom = 64.0
+mouse_filter = 1
+
+[connection signal="mouse_entered" from="Control" to="." method="_on_control_mouse_entered"]
+[connection signal="mouse_exited" from="Control" to="." method="_on_control_mouse_exited"]

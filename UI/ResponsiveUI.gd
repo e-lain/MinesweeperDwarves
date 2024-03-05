@@ -78,7 +78,7 @@ enum State {
 
 var state: State
 var prev_state: State
-var selected_building
+var selected_building: BuildingEntityView
 
 var alert_proceed_callback
 
@@ -86,7 +86,7 @@ var board_unlock_panels = []
 
 func _process(delta):
 	if state == State.PLACEMENT_MOVE_BUILDING || state == State.MOVE_BUILDING:
-		cancel_confirm_confirm_button.disabled = !selected_building.can_place(selected_building.global_position)
+		cancel_confirm_confirm_button.disabled = !selected_building.can_place()
 	
 	if board_unlock_panels != null:
 		for panel in board_unlock_panels:
@@ -199,8 +199,8 @@ func enter_play_mode():
 	alert_box.visible = false
 	
 func enter_place_mode(type: BuildingData.Type):
-	var data = BuildingData.data[type]
-	var name = data["name"]
+	var data = BuildingData.get_building_data(type)
+	var name = data.name
 	state = State.PLACEMENT_NO_BUILDING
 	build_menu.visible = false
 	cancel_placement.visible = true
@@ -215,7 +215,7 @@ func enter_area_choice_mode():
 	infobox.visible = false
 	alert_box.visible = false
 
-func on_building_placement_instantiated(building: BaseBuilding):
+func on_building_placement_instantiated(building: BuildingEntityView):
 	if state == State.PLACEMENT_NO_BUILDING:
 		selected_building = building
 
@@ -243,11 +243,12 @@ func set_enter_build_mode_disabled(val: bool):
 func set_descend_disabled(val: bool):
 	descend_button.disabled = val
 
-func on_building_selected(building: BaseBuilding):
+func on_building_selected(building: BuildingEntityView):
 	state = State.SELECTED 
 	selected_building = building
-	var data = BuildingData.data[building.type] 
-	infobox.set_building_selection(building.type, data["name"], data["description"])
+	
+	var data = building.get_building_data()
+	infobox.set_building_selection(data.type, data.name, data.description)
 	cancel_confirm.visible = false
 	cancel_placement.visible = false
 	infobox.visible = true
@@ -338,7 +339,6 @@ func _on_destroy_selected_building_pressed():
 	infobox.visible = false
 	cancel_confirm.visible = true
 	cancel_confirm_message.text = "Destroy Building?"
-
 
 func show_transition(to_tier: int) -> void:
 	transition.modulate = Color(1, 1, 1, 0)
