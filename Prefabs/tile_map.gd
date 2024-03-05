@@ -33,9 +33,9 @@ func remove_tile(pos: Vector2i, bounds_rect: Rect2i, origin_distance: int = 0) -
 	var tile_instance = mined_tile_prefab.instantiate()
 	add_child(tile_instance)
 	
-	var atlas_coords = get_cell_atlas_coords(0, pos)
+	var atlas_coords := get_cell_atlas_coords(0, pos)
 	tile_instance.init(map_to_local(pos), atlas_coords, pos, origin_distance)
-	var update = {pos: -1}
+
 	BetterTerrain.set_cell(self, 0, pos, -1)
 
 func set_lava_source(pos: Vector2i, bounds_rect: Rect2i) -> void:
@@ -74,11 +74,6 @@ func _unhandled_input(event):
 		return
 	
 	if event is InputEventMouseButton:
-		if event.is_action_pressed("left_click") && get_parent().get_current_board().clearing_tile:
-			event = make_input_local(event)
-			var mouse_pos = event.position
-			var cell_pos = local_to_map(mouse_pos)
-			destroyed.emit(cell_pos)
 		if get_parent().get_current_board().state == Board.State.Play:
 			event = make_input_local(event)
 			var mouse_pos = event.position

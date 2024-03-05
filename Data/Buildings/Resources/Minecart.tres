@@ -1,0 +1,25 @@
+[gd_resource type="Resource" script_class="BuildingDataResource" load_steps=7 format=3 uid="uid://gptjf3ueu85k"]
+
+[ext_resource type="Script" path="res://Data/Costs/Definitions/CostResource.gd" id="1_igy4e"]
+[ext_resource type="Script" path="res://Scripts/Entities/Model/BaseBuildingEntityModel.gd" id="2_i7v0h"]
+[ext_resource type="Texture2D" uid="uid://e6xq74k42sye" path="res://Assets/BuildingsLarge/Minecart128.png" id="2_nslyt"]
+[ext_resource type="Script" path="res://Data/Buildings/Definitions/BuildingDataResource.gd" id="2_u4e7w"]
+[ext_resource type="PackedScene" uid="uid://fwqe5324iv5u" path="res://ViewScenes/BuildingEntityView.tscn" id="4_fx70i"]
+
+[sub_resource type="Resource" id="Resource_kyy82"]
+script = ExtResource("1_igy4e")
+type = 3
+amount = 1
+
+[resource]
+script = ExtResource("2_u4e7w")
+type = 5
+name = "Minecart"
+description = "Collect Resources of Adjacent Buildings"
+model_script = ExtResource("2_i7v0h")
+scene = ExtResource("4_fx70i")
+_costs = Array[ExtResource("1_igy4e")]([SubResource("Resource_kyy82")])
+bounding_rect_dimensions = Vector2i(1, 1)
+icon = ExtResource("2_nslyt")
+orthogonal_tile_placement_requirements = Array[Resource("res://Data/TileRequirements/Definitions/TileRequirement.gd")]([])
+orthogonal_tile_collection_requirements = Array[Resource("res://Data/TileRequirements/Definitions/TileRequirement.gd")]([])

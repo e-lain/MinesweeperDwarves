@@ -18,14 +18,16 @@ class_name BuildingInfoPopup
 @onready var steel_label: Label = $Costs/SteelBox/Label
 
 func set_data(type: BuildingData.Type):
-	var data = BuildingData.data[type]
+	var data: BuildingDataResource = BuildingData.INSTANCE.get_building_data(type)
 	
-	name_label.text = data["name"]
-	description_label.text = data["description"]
-	
-	var population_cost = BuildingData.get_cost(type, ResourceData.Resources.POPULATION)
-	var stone_cost = BuildingData.get_cost(type, ResourceData.Resources.STONE)
-	var steel_cost = BuildingData.get_cost(type, ResourceData.Resources.STEEL)
+	name_label.text = data.name
+	description_label.text = data.description
+		
+		
+	## TODO: Do this programmatically instead of hardcoed
+	var population_cost = BuildingData.INSTANCE.get_cost(type, ResourceData.Resources.POPULATION)
+	var stone_cost = BuildingData.INSTANCE.get_cost(type, ResourceData.Resources.STONE)
+	var steel_cost = BuildingData.INSTANCE.get_cost(type, ResourceData.Resources.STEEL)
 	
 	if population_cost == 0:
 		population_box.visible = false

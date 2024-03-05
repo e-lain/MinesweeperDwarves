@@ -1,5 +1,4 @@
-extends VBoxContainer
-class_name BuildMenuBuildingIcon
+class_name BuildMenuBuildingIcon extends VBoxContainer
 
 signal clicked
 
@@ -21,14 +20,15 @@ var steel_req
 
 var stairs_placed: bool = false
 
+
 var clickable = true
 
 var scroll_container_swiping = false
 
 func set_type(val: BuildingData.Type):
 	type = val
-	texture_rect.texture = load(BuildingData.data[type]["icon_path"])
-	var costs = BuildingData.get_costs(val)
+	texture_rect.texture = BuildingData.INSTANCE.get_building_data(type).icon
+	var costs = BuildingData.INSTANCE.get_costs(val)
 	for cost_type in costs.keys():
 		var cost_value = costs[cost_type]
 		var cost_ui_instance = resource_cost_prefab.instantiate()
@@ -36,7 +36,7 @@ func set_type(val: BuildingData.Type):
 		cost_ui_instance.set_data(cost_type, cost_value)
 
 func _process(delta):
-	var building_costs = BuildingData.get_costs(type)
+	var building_costs = BuildingData.INSTANCE.get_costs(type)
 	var cant_afford = false
 	
 	for cost_type in building_costs.keys():

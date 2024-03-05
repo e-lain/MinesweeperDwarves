@@ -5,30 +5,39 @@ enum Type {
 	LAVA
 }
 
-static func get_buildings(tier: int):
+static func get_buildings(tier: int) -> Array[BuildingData.Type]:
+	var result :Array[BuildingData.Type]
 	match tier:
 		1:
-			return data[Type.DEFAULT].buildings
+			result.assign(data[Type.DEFAULT]["buildings"])
 		2: 
-			return data[Type.LAVA].buildings
+			result.assign(data[Type.LAVA]["buildings"])
 		_:
 			return []
+	return result
 
-static func get_bombs(tier: int):
+static func get_bombs(tier: int) -> Array[BombData.Type]:
+	var result: Array[BombData.Type]
 	match tier:
 		1:
-			return data[Type.DEFAULT].bombs
+			result.assign(data[Type.DEFAULT]["bombs"])
 		2:
-			return data[Type.LAVA].bombs
+			result.assign(data[Type.LAVA]["bombs"])
 		_:
 			return []
+	return result 
 
-static func get_resources(tier: int):
+static func get_resources(tier: int) -> Array[ResourceData.Resources]:
 	if !data.has(tier):
 		return []
 	else:
 		var tier_data = data[tier]
-		return [] if !tier_data.has("resources") else tier_data["resources"]
+		if !tier_data.has("resources"):
+			return []
+		
+		var result: Array[ResourceData.Resources]
+		result.assign(tier_data["resources"])
+		return result
 
 static var data = {
 	Type.DEFAULT: {
@@ -36,7 +45,7 @@ static var data = {
 		"name": "The Mines",
 		"tier": 1,
 		"buildings": [BuildingData.Type.STAIRCASE, BuildingData.Type.MINECART, BuildingData.Type.HOUSE, BuildingData.Type.QUARRY, BuildingData.Type.WORKSHOP],
-		"bombs": [BombData.Type.DEFAULT],
+		"bombs": [BombData.Type.Default],
 		"resources": [ResourceData.Resources.STONE, ResourceData.Resources.POPULATION, ResourceData.Resources.STEEL]
 	},
 	Type.LAVA: {
@@ -44,7 +53,7 @@ static var data = {
 		"name": "The Volcano",
 		"tier": 2,
 		"buildings": [BuildingData.Type.LAVA, BuildingData.Type.FORGE, BuildingData.Type.GLASSWORKS],
-		"bombs": [BombData.Type.DEFAULT, BombData.Type.LAVA],
+		"bombs": [BombData.Type.Default, BombData.Type.Lava],
 		"resources": [ResourceData.Resources.SLEDGEHAMMER]
 	}
 }

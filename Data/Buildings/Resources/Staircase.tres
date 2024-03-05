@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="BuildingDataResource" load_steps=5 format=3 uid="uid://dge3n84u1x473"]
+
+[ext_resource type="Texture2D" uid="uid://dgwg34udoytxd" path="res://Assets/BuildingsLarge/StairsDown128.png" id="1_i8bsk"]
+[ext_resource type="Script" path="res://Scripts/Entities/Model/BaseBuildingEntityModel.gd" id="1_k4dhn"]
+[ext_resource type="PackedScene" uid="uid://fwqe5324iv5u" path="res://ViewScenes/BuildingEntityView.tscn" id="3_ccam4"]
+[ext_resource type="Script" path="res://Data/Buildings/Definitions/BuildingDataResource.gd" id="4_4kwsb"]
+
+[resource]
+script = ExtResource("4_4kwsb")
+type = 2
+name = "Staircase"
+description = "Opens next floor and allows placing other buildings"
+model_script = ExtResource("1_k4dhn")
+scene = ExtResource("3_ccam4")
+_costs = Array[Resource("res://Data/Costs/Definitions/CostResource.gd")]([])
+bounding_rect_dimensions = Vector2i(1, 1)
+icon = ExtResource("1_i8bsk")
+orthogonal_tile_placement_requirements = Array[Resource("res://Data/TileRequirements/Definitions/TileRequirement.gd")]([])
+orthogonal_tile_collection_requirements = Array[Resource("res://Data/TileRequirements/Definitions/TileRequirement.gd")]([])

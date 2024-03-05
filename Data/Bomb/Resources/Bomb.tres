@@ -1,0 +1,21 @@
+[gd_resource type="Resource" script_class="BombData" load_steps=7 format=3 uid="uid://wl7cqicj2dit"]
+
+[ext_resource type="Script" path="res://Scripts/Entities/Model/BombEntityModel.gd" id="1_j4m8q"]
+[ext_resource type="Script" path="res://Data/Bomb/BombData.gd" id="1_m65kn"]
+[ext_resource type="Texture2D" uid="uid://bdvgerrn8866d" path="res://Assets/Mine.png" id="3_cnq6s"]
+[ext_resource type="Script" path="res://Data/Costs/Definitions/CostResource.gd" id="3_ng4s4"]
+[ext_resource type="PackedScene" uid="uid://c27qx5wg4x00a" path="res://ViewScenes/BombEntityView.tscn" id="5_wsdgl"]
+
+[sub_resource type="Resource" id="Resource_8bjwf"]
+script = ExtResource("3_ng4s4")
+type = 3
+amount = 1
+
+[resource]
+script = ExtResource("1_m65kn")
+type = 0
+name = "Bomb"
+successful_flag_reward = Array[ExtResource("3_ng4s4")]([SubResource("Resource_8bjwf")])
+texture = ExtResource("3_cnq6s")
+model_script = ExtResource("1_j4m8q")
+view_scene = ExtResource("5_wsdgl")

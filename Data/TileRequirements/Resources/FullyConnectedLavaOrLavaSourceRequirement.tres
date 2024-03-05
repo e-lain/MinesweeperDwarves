@@ -1,0 +1,21 @@
+[gd_resource type="Resource" script_class="LogicTileRequirement" load_steps=6 format=3 uid="uid://bu1n2yaysnqi1"]
+
+[ext_resource type="Script" path="res://Data/TileRequirements/Definitions/ConnectedLavaMoatTileRequirement.gd" id="1_jl8bw"]
+[ext_resource type="Script" path="res://Data/TileRequirements/Definitions/LavaSourceTileRequirement.gd" id="2_3dvou"]
+[ext_resource type="Script" path="res://Data/TileRequirements/Definitions/LogicTileRequirement.gd" id="3_bavvi"]
+
+[sub_resource type="Resource" id="Resource_us84q"]
+script = ExtResource("1_jl8bw")
+connection_count_minimum = 2
+_problem = 0
+
+[sub_resource type="Resource" id="Resource_21ste"]
+script = ExtResource("2_3dvou")
+_problem = 0
+
+[resource]
+script = ExtResource("3_bavvi")
+operation = 1
+a = SubResource("Resource_us84q")
+b = SubResource("Resource_21ste")
+_problem = 2
