@@ -1,0 +1,88 @@
+[gd_scene load_steps=8 format=3 uid="uid://do1uir83gp56q"]
+
+[ext_resource type="Script" path="res://Scripts/Entities/View/LavaSourceEntityView.gd" id="1_ondm4"]
+[ext_resource type="Texture2D" uid="uid://cp2j4aclx6fww" path="res://Assets/UI/Background512.png" id="2_sojfc"]
+[ext_resource type="Texture2D" uid="uid://xl7vrwiygpt4" path="res://Assets/walltiles/LavaPoolDownscaled.png" id="4_xwcpi"]
+[ext_resource type="PackedScene" uid="uid://wkann8ehanma" path="res://Prefabs/BuildingPointLight.tscn" id="5_l4jij"]
+
+[sub_resource type="Animation" id="Animation_8dell"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:visible")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+
+[sub_resource type="Animation" id="Animation_qd81s"]
+resource_name = "explode"
+length = 0.5
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:visible")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2, 0.3, 0.4),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"update": 1,
+"values": [true, false, true, false, true]
+}
+tracks/1/type = "method"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0.5),
+"transitions": PackedFloat32Array(1),
+"values": [{
+"args": [],
+"method": &"finish"
+}]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_berbr"]
+_data = {
+"RESET": SubResource("Animation_8dell"),
+"explode": SubResource("Animation_qd81s")
+}
+
+[node name="LavaSourceEntityView" type="Node2D"]
+script = ExtResource("1_ondm4")
+
+[node name="Background" type="Sprite2D" parent="."]
+modulate = Color(1, 1, 1, 0.803922)
+texture_repeat = 2
+texture = ExtResource("2_sojfc")
+centered = false
+region_enabled = true
+region_rect = Rect2(0, 0, 128, 128)
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+scale = Vector2(2, 2)
+texture = ExtResource("4_xwcpi")
+centered = false
+
+[node name="Control" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 64.0
+offset_bottom = 64.0
+mouse_filter = 2
+
+[node name="PointLight2D" parent="." instance=ExtResource("5_l4jij")]
+position = Vector2(64, 64)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_berbr")
+}

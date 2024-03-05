@@ -17,6 +17,7 @@ static func cell_to_global(cell_position: Vector2i) -> Vector2:
 	return cell_position * TILE_SIZE
 
 static func snap_position(pos: Vector2) -> Vector2:
+	@warning_ignore("integer_division")
 	return Vector2(snapped(pos.x-TILE_SIZE/2, TILE_SIZE), snapped(pos.y-TILE_SIZE/2, TILE_SIZE))
 
 static func instantiate_class_from_class_name(classname: String) -> Variant:
@@ -36,7 +37,7 @@ static func get_all_file_paths(path: String) -> Array[String]:
 	while file_name != "":  
 		var file_path = path + "/" + file_name  
 		if dir.current_is_dir():  
-			file_paths.append(_get_all_file_paths(file_path))  
+			file_paths.append(get_all_file_paths(file_path))  
 		else:  
 			file_paths.append(file_path)  
 		file_name = dir.get_next()  

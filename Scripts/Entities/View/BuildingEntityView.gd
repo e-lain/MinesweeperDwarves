@@ -50,7 +50,7 @@ func init(model: BoardEntityModel):
 	sprite.texture = data.icon
 	handle_arrows.scale = size
 
-func _process(delta):
+func _process(_delta):
 	if state != State.Confirmed:
 		sprite.modulate.a = 0.5
 	else:
@@ -63,14 +63,16 @@ func _process(delta):
 
 	
 	if state == State.Unplaced || state == State.Moving:
-		var mouse = get_local_mouse_position()
+		var mouse: Vector2 = get_global_mouse_position()
 		if state == State.Moving:
 			mouse -= move_begin_offset
 		
 		# in-bounds with grid check
-		var snapped = Globals.snap_position(mouse)
-		position = snapped
-
+		var snapped_pos := Globals.snap_position(mouse)
+		var cell_pos := Globals.global_to_cell(snapped_pos)
+		_model.move(Rect2i(cell_pos, _model.get_bounding_cell_rect().size))
+		match_model_position()
+		
 		if !can_place():
 			sprite.material = building_placement_material
 			cant_build_label.visible = true

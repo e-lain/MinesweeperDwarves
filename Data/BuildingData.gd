@@ -1,4 +1,6 @@
-class_name BuildingData
+class_name BuildingData extends RefCounted
+
+static var INSTANCE: BuildingData
 
 const building_resources_path := "res://Data/Buildings/Resources/"
 
@@ -14,21 +16,27 @@ enum Type {
 	GLASSWORKS
 }
 
-static var _data := {}
+var _data: Dictionary = {}
 
-static func _static_init():
+func _init():
+	if INSTANCE == null:
+		INSTANCE = self
+	else:
+		return 
+	
 	var building_paths := Globals.get_all_file_paths(building_resources_path)
 	
 	for path in building_paths:
 		var b = load(path) as BuildingDataResource
+		b.init()
 		_data[b.type] = b
 
-static func get_building_data(building_type: Type) -> BuildingDataResource:
+func get_building_data(building_type: Type) -> BuildingDataResource:
 	return _data[building_type]
 
-static func get_costs(building_type: Type) -> Dictionary:
+func get_costs(building_type: Type) -> Dictionary:
 	return get_building_data(building_type).costs
 	
-static func get_cost(building_type: Type, resource_type: ResourceData.Resources) -> int:
+func get_cost(building_type: Type, resource_type: ResourceData.Resources) -> int:
 	var costs = get_costs(building_type)
 	return 0 if !costs.has(resource_type) else costs[resource_type]

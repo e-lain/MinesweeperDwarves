@@ -1,39 +1,26 @@
-[gd_scene load_steps=10 format=3 uid="uid://fwqe5324iv5u"]
+[gd_scene load_steps=8 format=3 uid="uid://c4eupo4y7kuea"]
 
-[ext_resource type="Script" path="res://Scripts/Entities/View/BuildingEntityView.gd" id="1_r7nyo"]
-[ext_resource type="Texture2D" uid="uid://cp2j4aclx6fww" path="res://Assets/UI/Background512.png" id="1_wt7ck"]
-[ext_resource type="Material" uid="uid://nqpwbe45b8cn" path="res://Shaders/InvalidBuildingPlacement.tres" id="2_a42hw"]
-[ext_resource type="Texture2D" uid="uid://dgwg34udoytxd" path="res://Assets/BuildingsLarge/StairsDown128.png" id="3_5xaaf"]
-[ext_resource type="Texture2D" uid="uid://cxnwi8bt7vm5k" path="res://Assets/UI/ArrowRightSource.png" id="4_ob7ls"]
-[ext_resource type="Theme" uid="uid://b6iv3a38m6uhb" path="res://UI/UI.tres" id="5_jssou"]
-[ext_resource type="PackedScene" uid="uid://d36ds4qy5esq1" path="res://UI/speech_bubble.tscn" id="6_h0tta"]
+[ext_resource type="Script" path="res://Scripts/Entities/View/LavaMoatEntityView.gd" id="1_eib3k"]
+[ext_resource type="Texture2D" uid="uid://cp2j4aclx6fww" path="res://Assets/UI/Background512.png" id="2_2y8p8"]
+[ext_resource type="Texture2D" uid="uid://dgwg34udoytxd" path="res://Assets/BuildingsLarge/StairsDown128.png" id="4_fjdbk"]
+[ext_resource type="Texture2D" uid="uid://cxnwi8bt7vm5k" path="res://Assets/UI/ArrowRightSource.png" id="5_tva24"]
+[ext_resource type="Theme" uid="uid://b6iv3a38m6uhb" path="res://UI/UI.tres" id="6_snhiv"]
+[ext_resource type="PackedScene" uid="uid://wkann8ehanma" path="res://Prefabs/BuildingPointLight.tscn" id="7_iw66a"]
+[ext_resource type="PackedScene" uid="uid://d36ds4qy5esq1" path="res://UI/speech_bubble.tscn" id="8_k032o"]
 
-[sub_resource type="Gradient" id="Gradient_xdb0i"]
-colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0)
-
-[sub_resource type="GradientTexture2D" id="GradientTexture2D_ff2kk"]
-gradient = SubResource("Gradient_xdb0i")
-width = 1024
-height = 1024
-fill = 1
-fill_from = Vector2(0.5, 0.5)
-fill_to = Vector2(1, 0.5)
-metadata/_snap_enabled = true
-
-[node name="BuildingEntityView" type="Node2D"]
-script = ExtResource("1_r7nyo")
+[node name="LavaMoatEntityView" type="Node2D"]
+script = ExtResource("1_eib3k")
 
 [node name="Background" type="Sprite2D" parent="."]
 modulate = Color(1, 1, 1, 0.803922)
 texture_repeat = 2
-texture = ExtResource("1_wt7ck")
+texture = ExtResource("2_2y8p8")
 centered = false
 region_enabled = true
 region_rect = Rect2(0, 0, 128, 128)
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-material = ExtResource("2_a42hw")
-texture = ExtResource("3_5xaaf")
+texture = ExtResource("4_fjdbk")
 centered = false
 
 [node name="Control" type="Control" parent="."]
@@ -64,7 +51,7 @@ offset_bottom = 32.0
 grow_horizontal = 0
 grow_vertical = 2
 mouse_filter = 2
-texture = ExtResource("4_ob7ls")
+texture = ExtResource("5_tva24")
 expand_mode = 2
 
 [node name="TextureRect3" type="TextureRect" parent="HandleArrows"]
@@ -79,7 +66,7 @@ offset_bottom = 128.0
 grow_horizontal = 2
 rotation = -1.57079
 mouse_filter = 2
-texture = ExtResource("4_ob7ls")
+texture = ExtResource("5_tva24")
 expand_mode = 2
 
 [node name="TextureRect4" type="TextureRect" parent="HandleArrows"]
@@ -96,7 +83,7 @@ grow_horizontal = 2
 grow_vertical = 0
 rotation = -1.57079
 mouse_filter = 2
-texture = ExtResource("4_ob7ls")
+texture = ExtResource("5_tva24")
 expand_mode = 2
 flip_h = true
 
@@ -110,7 +97,7 @@ offset_right = 64.0
 offset_bottom = 32.0
 grow_vertical = 2
 mouse_filter = 2
-texture = ExtResource("4_ob7ls")
+texture = ExtResource("5_tva24")
 expand_mode = 2
 flip_h = true
 
@@ -125,21 +112,17 @@ offset_right = 177.0
 offset_bottom = 195.0
 grow_horizontal = 2
 size_flags_horizontal = 4
-theme = ExtResource("5_jssou")
+theme = ExtResource("6_snhiv")
 theme_override_colors/font_color = Color(1, 0, 0, 1)
 theme_override_font_sizes/font_size = 64
 text = "Can't Build Here"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="PointLight2D" type="PointLight2D" parent="."]
-visible = false
-position = Vector2(32, 32)
-color = Color(1, 0.368627, 0.0509804, 1)
-texture = SubResource("GradientTexture2D_ff2kk")
-texture_scale = 0.2
+[node name="PointLight2D" parent="." instance=ExtResource("7_iw66a")]
+position = Vector2(64, 64)
 
-[node name="SpeechBubble" parent="." instance=ExtResource("6_h0tta")]
+[node name="SpeechBubble" parent="." instance=ExtResource("8_k032o")]
 visible = false
 mouse_filter = 2
 

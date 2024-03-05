@@ -22,6 +22,6 @@ func place(bounding_cell_rect: Rect2i) -> void:
 	LavaConnectionController.INSTANCE.add_lava_connection_entity(self, false)
 
 func remove() -> void:
-	LavaConnectionController.INSTANCE.remove_lava_connection_entity(self, false)
+	LavaConnectionController.INSTANCE.remove_lava_connection_entity(self)
 	super()
 

@@ -21,7 +21,7 @@ var _model: BoardEntityModel
 func init(model: BoardEntityModel) -> void:
 	_model = model
 
-func _process(delta) -> void:
+func _process(_delta) -> void:
 	match_model_position()
 
 func _update_background() -> void:

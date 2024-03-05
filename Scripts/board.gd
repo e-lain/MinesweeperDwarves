@@ -42,12 +42,15 @@ var total_tiles = rows*columns
 #TODO: populate this programmatically
 var unlock_costs = { ResourceData.Resources.POPULATION: 1 }
 
-var tiles = []
-var number_labels = []
+var tiles := []
+var number_labels := []
+var flags_by_cell_pos := {}
+
 
 var stairs_placed: bool = false
 
 var building_views_by_entity_id := {}
+var bomb_views_by_entity_id := {}
 
 var mine_exploded = false
 
@@ -92,7 +95,7 @@ func init_board(rows: int, cols: int, bombs: int, tier: int, tilemap: SharedTile
 		tiles.append([])
 		for r in rows:
 			var cell_pos: Vector2i = tilemap_origin_cell_pos + Vector2i(c, r)
-			tiles[c] = BoardTileController.INSTANCE.get_tile_at_cell_position(cell_pos)
+			tiles[c].append(BoardTileController.INSTANCE.get_tile_at_cell_position(cell_pos))
 	
 func _unhandled_input(event):
 	if state == State.MobilePrePlacing and event is InputEventScreenTouch:
@@ -126,7 +129,11 @@ func set_bombs(first_click_pos: Vector2i):
 		var type_index: int = randi() % (types.size())
 		var bomb_type: BombData.Type = types[type_index]
 		
-		var bomb_entity: BombEntityModel = BombData.get_bomb_data(bomb_type).model_script.new(Rect2i(0,0,1,1), bomb_type)
+		
+		var bounding_rect := Rect2i(tile.cell_position,Vector2i(1,1))
+		
+		var bomb_entity: BombEntityModel = BombData.get_bomb_data(bomb_type).model_script.new(bounding_rect, bomb_type)
+		bomb_entity.place(bounding_rect)
 		
 		tile.set_entity_id(bomb_entity.get_id())
 		n += 1
@@ -145,12 +152,15 @@ func enter_placing(type: BuildingData.Type):
 	state = State.Placing
 	placing_type = type
 	
-	var data := BuildingData.get_building_data(type)
+	var data := BuildingData.INSTANCE.get_building_data(type)
 	
 	var building: BuildingEntityView = data.scene.instantiate()
-	var model: BaseBuildingEntityModel = data.model_script.new(Vector2i(-100, -100), type)
-	building.init(model)
+	
+	var origin_pos: Vector2i = get_boundaries_rect().position + (get_boundaries_rect().size / 2)
+	
+	var model: BaseBuildingEntityModel = data.model_script.new(origin_pos, type)
 	add_child(building)
+	building.init(model)
 	current_placing_instance = building
 	current_placing_instance.on_placed.connect(on_building_placed)
 	current_placing_instance.right_click_cancelled.connect(on_building_right_click_cancel)
@@ -197,6 +207,8 @@ func enter_build_mode() -> void:
 				uncover_tile(tile, 0, 0, false)
 				create_bomb_view(tile)
 	
+	tilemap.update_terrain(get_boundaries_rect())
+	
 	if has_steel_to_collect:
 		var timer = get_tree().create_timer(Globals.COLLECTION_EFFECT_LIFESPAN)
 		timer.timeout.connect(minesweeper_collection_complete)
@@ -212,10 +224,12 @@ func create_bomb_view(tile: BoardTile) -> BombEntityView:
 	var bomb_prefab: PackedScene = BombData.get_bomb_data(bomb_entity.get_bomb_type()).view_scene
 	
 	var bomb_view = bomb_prefab.instantiate()
-	bomb_view.init(bomb_entity)
 	get_tree().root.add_child(bomb_view)
+	bomb_view.init(bomb_entity)
 
 	bomb_view.global_position = tile.get_global_position()
+	bomb_views_by_entity_id[bomb_entity.get_id()] = bomb_view
+	
 	return bomb_view
 
 func on_building_placed():
@@ -344,6 +358,7 @@ func cancel_selected_building_move():
 	deselect_building()
 
 func collect_resources():
+	print("beginning collection")
 	state = State.Complete
 	
 	var collected_count := 0
@@ -353,12 +368,15 @@ func collect_resources():
 		if !data.grants_resources():
 			continue
 		
+		print("grants resources")
+		
 		var type := building.type
 		var model: BaseBuildingEntityModel = building.get_model()
 		
 		var occupied_tiles := model.get_occupied_tiles()
 		var collection_problems := model.get_collection_problems()
 		if collection_problems.is_empty():
+			print("no collection problem")
 			model.collect()
 			building_views_by_entity_id[model.get_id()].play_collection_animation(collected_count)
 			collected_count += 1
@@ -377,12 +395,11 @@ func building_collection_complete():
 func minesweeper_collection_complete():
 	state = State.Build
 	
-	for row in tiles:
-		for tile in row:
-			if tile.label:
-				tile.label.queue_free()
-			if tile.is_bomb:
-				tile.destroy_bomb()
+	for label in number_labels:
+		label.queue_free()
+	
+	for flag in flags_by_cell_pos.values():
+		flag.queue_free()
 	
 	on_minesweeper_collection_complete.emit()
 
@@ -402,24 +419,25 @@ func uncover_tile(tile: BoardTile, distance: int = 0, max_depth: int = -1, trigg
 	
 	if tile.has_bomb() && trigger_mines:
 		var bomb_view : BombEntityView = create_bomb_view(tile)
-		mine_exploded = true
 		bomb_view.animation_complete.connect(on_bomb_animation_complete)
+		bomb_view.play_explode_animation()
+		mine_exploded = true
 		return
 	
 	if tile.is_flagged():
 		flags += 1
 		tile.destroy_flag()
 	
-	var adjacent_tiles: Array[BoardTile] = BoardTileController.INSTANCE.get_adjacent_tiles(tile)
+	var adjacent_tiles: Array[BoardTile] = BoardTileController.INSTANCE.get_adjacent_tiles(tile, get_boundaries_rect())
 	
 	var adjacent_bombs = 0
 	for adjacent_tile in adjacent_tiles:
-		if adjacent_tile.is_bomb:
+		if adjacent_tile.has_bomb():
 			adjacent_bombs += 1
 	
 	if adjacent_bombs > 0:
 		create_number_label(tile, adjacent_bombs)
-	elif max_depth >= 0 && distance <= max_depth:
+	elif max_depth < 0 || distance <= max_depth:
 		for adjacent_tile in adjacent_tiles:
 			if adjacent_tile.is_covered() && !tile.has_bomb():
 				uncover_tile(adjacent_tile, distance, max_depth, trigger_mines)
@@ -446,48 +464,49 @@ func _on_flag_toggled(cell_pos: Vector2i):
 	if !contains_cell_position(cell_pos):
 		return
 	var tile: BoardTile = BoardTileController.INSTANCE.get_tile_at_cell_position(cell_pos)
-		
-	if tile.is_flagged:
+	if tile.is_uncovered():
+		return
+	
+	if tile.is_flagged():
 		flags += 1
 	elif flags > 0:
 		flags -= 1
 	else:
 		return
-		
-	if !tile.is_cover:
-		return
-	if !tile.is_flagged && tile.is_bomb:
+	
+
+	
+	if !tile.is_flagged() && tile.has_bomb():
 		bombs_found += 1
-	elif tile.is_flagged && tile.is_bomb:
+	elif tile.is_flagged() && tile.has_bomb():
 		bombs_found -= 1
 	
-	if !tile.is_flagged:
+	if !tile.is_flagged():
 		SoundManager.play_flag_sound()
+		create_flag(cell_pos)
+	else:
+		destroy_flag(cell_pos)
+	
 	print("bombs found: ", bombs_found)
 	tile.toggle_flag()
+	
 	tile_flagged_event_complete.emit()
 
-func player_placing_minecart_next_to_building(building: BuildingEntityView) -> bool:
-	if state != State.Placing || placing_type != BuildingData.Type.MINECART || current_placing_instance == null:
-		return false
-	
-	var minecart_cell_pos = tilemap.local_to_map(tilemap.to_local(current_placing_instance.global_position))
-	var offsets = [Vector2i.UP, Vector2i.DOWN, Vector2i.LEFT, Vector2i.RIGHT]
-	for offset in offsets:
-		var check = minecart_cell_pos + offset
-		if !contains_cell_position(check):
-			continue
-		var tile := BoardTileController.INSTANCE.get_tile_at_cell_position(check)
-		if !tile.has_building:
-			continue
-		if tile.building_id == building.id:
-			return true
-	return false
+func create_flag(cell_pos: Vector2i) -> void:
+	var flag = flag_prefab.instantiate()
+	get_tree().root.add_child(flag)
+	flag.global_position = Globals.cell_to_global(cell_pos)
+	flags_by_cell_pos[cell_pos] = flag
+
+func destroy_flag(cell_pos: Vector2i) -> void:
+	var flag = flags_by_cell_pos[cell_pos]
+	flag.queue_free()
+	flags_by_cell_pos.erase(cell_pos)
 
 func are_all_buildings_being_exploited() -> bool:
 	for building in building_views_by_entity_id.values():
 		var view: BuildingEntityView = building
-		var collection_problems = view.get_model().get_model().get_collection_problems()
+		var collection_problems = view.get_model().get_collection_problems()
 		if collection_problems.size() > 0:
 			return false
 	return true
@@ -498,6 +517,21 @@ func is_cleared():
 func lock():
 	state = State.Locked
 
+func destroy():
+	for label in number_labels:
+		label.queue_free()
+	
+	for flag in flags_by_cell_pos.values():
+		flag.queue_free()
+	
+	for bomb_view in bomb_views_by_entity_id.values():
+		bomb_view.queue_free()
+	
+	for building_view in building_views_by_entity_id.values():
+		building_view.queue_free()
+	
+	queue_free()
+	
 func deactivate():
 	deselect_building()
 	state = State.Deactivated

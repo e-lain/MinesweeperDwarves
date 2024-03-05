@@ -1,19 +1,20 @@
-[gd_resource type="Resource" script_class="BuildingDataResource" load_steps=8 format=3 uid="uid://dkiwm4wag4dux"]
+[gd_resource type="Resource" script_class="BuildingDataResource" load_steps=9 format=3 uid="uid://dkiwm4wag4dux"]
 
 [ext_resource type="Script" path="res://Data/Costs/Definitions/CostResource.gd" id="1_0rmdr"]
 [ext_resource type="Script" path="res://Data/Buildings/Definitions/BuildingDataResource.gd" id="1_s1nkt"]
 [ext_resource type="Texture2D" uid="uid://b6biwvg8gsoy1" path="res://Assets/BuildingsLarge/House128.png" id="2_cn1lb"]
 [ext_resource type="Script" path="res://Scripts/Entities/Model/BaseBuildingEntityModel.gd" id="2_l50qr"]
 [ext_resource type="Resource" uid="uid://bb0cwy4lhxasa" path="res://Data/TileRequirements/Resources/MinecartTileRequirement.tres" id="4_xbxqd"]
+[ext_resource type="PackedScene" uid="uid://fwqe5324iv5u" path="res://ViewScenes/BuildingEntityView.tscn" id="5_xjrnh"]
 
 [sub_resource type="Resource" id="Resource_cj0kr"]
 script = ExtResource("1_0rmdr")
-type = 0
+type = 1
 amount = 10
 
 [sub_resource type="Resource" id="Resource_yxing"]
 script = ExtResource("1_0rmdr")
-type = 1
+type = 2
 amount = -2
 
 [resource]
@@ -21,7 +22,8 @@ script = ExtResource("1_s1nkt")
 type = 0
 name = "House"
 description = "Gain 2 Population"
-building_entity_model_script = ExtResource("2_l50qr")
+model_script = ExtResource("2_l50qr")
+scene = ExtResource("5_xjrnh")
 _costs = Array[ExtResource("1_0rmdr")]([SubResource("Resource_cj0kr"), SubResource("Resource_yxing")])
 bounding_rect_dimensions = Vector2i(2, 2)
 icon = ExtResource("2_cn1lb")

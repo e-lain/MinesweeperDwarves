@@ -199,7 +199,7 @@ func enter_play_mode():
 	alert_box.visible = false
 	
 func enter_place_mode(type: BuildingData.Type):
-	var data = BuildingData.get_building_data(type)
+	var data = BuildingData.INSTANCE.get_building_data(type)
 	var name = data.name
 	state = State.PLACEMENT_NO_BUILDING
 	build_menu.visible = false

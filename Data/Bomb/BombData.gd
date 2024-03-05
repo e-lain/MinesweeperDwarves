@@ -17,8 +17,8 @@ static func _static_init():
 		var b = load(path)
 		_data[b.type] = b
 		
-static func get_bomb_data(type: Type) -> BombData:
-	return _data[type]
+static func get_bomb_data(_type: Type) -> BombData:
+	return _data[_type]
 #endregion
 
 #region Resource Type Variables

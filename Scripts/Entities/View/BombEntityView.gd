@@ -1,11 +1,16 @@
 class_name BombEntityView extends BoardEntityView
 
+@onready var animation_player = $AnimationPlayer
 
-# Called when the node enters the scene tree for the first time.
-func _ready():
-	pass # Replace with function body.
+signal animation_complete
 
+func init(model: BoardEntityModel):
+	super(model)
+	var type: BombData.Type = (_model as BombEntityModel).get_bomb_type()
+	sprite.texture = BombData.get_bomb_data(type).texture
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta):
-	pass
+func play_explode_animation():
+	animation_player.play("explode")
+	
+func finish():
+	animation_complete.emit()

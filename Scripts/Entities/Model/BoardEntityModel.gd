@@ -48,7 +48,6 @@ func unplace() -> void:
 func remove() -> void:
 	unplace()
 	BoardTileController.INSTANCE.unregister_entity(_id)
-	free()
 
 ## Move to a new location / collection of occupied tiles.
 ## 

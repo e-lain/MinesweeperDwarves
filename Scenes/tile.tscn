@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://ci66bx1mp5wl7"]
+[gd_scene load_steps=7 format=3 uid="uid://c44xkf6224fgm"]
 
 [ext_resource type="Script" path="res://Scripts/BoardTile.gd" id="1_ttxc6"]
 [ext_resource type="Texture2D" uid="uid://uwmkyp2x0wvv" path="res://Assets/PlaceholderTileBack.png" id="2_he5hn"]

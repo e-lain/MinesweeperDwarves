@@ -1,9 +1,9 @@
 [gd_scene load_steps=15 format=3 uid="uid://iqvlmmwy7d46"]
 
 [ext_resource type="Script" path="res://Scripts/Main.gd" id="1_3dh30"]
-[ext_resource type="PackedScene" uid="uid://b6wmhfmc3fthp" path="res://Scenes/fog.tscn" id="2_f5qlx"]
+[ext_resource type="PackedScene" uid="uid://b6wmhfmc3fthp" path="res://Prefabs/fog.tscn" id="2_f5qlx"]
 [ext_resource type="Texture2D" uid="uid://cp2j4aclx6fww" path="res://Assets/UI/Background512.png" id="3_bi5a7"]
-[ext_resource type="PackedScene" uid="uid://bdsa3o7l5tq10" path="res://Scenes/overworld_map.tscn" id="4_6fs5e"]
+[ext_resource type="PackedScene" uid="uid://bdsa3o7l5tq10" path="res://Prefabs/overworld_map.tscn" id="4_6fs5e"]
 [ext_resource type="PackedScene" uid="uid://c7renurwmj3uy" path="res://Prefabs/tile_map.tscn" id="5_p3rcr"]
 [ext_resource type="PackedScene" uid="uid://dnr83m4pqs7mp" path="res://UI/ResponsiveUI.tscn" id="6_qxp0c"]
 [ext_resource type="Script" path="res://Controllers/CameraController.gd" id="7_6xk5s"]
@@ -112,5 +112,16 @@ offset_bottom = 47719.0
 mouse_filter = 2
 color = Color(0.639216, 0.380392, 0.109804, 0.0627451)
 
+[connection signal="board_unlock_pressed" from="ResponsiveUICanvas/ResponsiveUI" to="." method="_on_responsive_ui_board_unlock_pressed"]
+[connection signal="build_menu_item_pressed" from="ResponsiveUICanvas/ResponsiveUI" to="." method="_on_responsive_ui_build_menu_item_pressed"]
+[connection signal="cancel_placement_pressed" from="ResponsiveUICanvas/ResponsiveUI" to="." method="_on_responsive_ui_cancel_placement_pressed"]
+[connection signal="confirm_placement_pressed" from="ResponsiveUICanvas/ResponsiveUI" to="." method="_on_responsive_ui_confirm_placement_pressed"]
+[connection signal="descend_pressed" from="ResponsiveUICanvas/ResponsiveUI" to="." method="_on_responsive_ui_descend_pressed"]
+[connection signal="destroy_selected_building_pressed" from="ResponsiveUICanvas/ResponsiveUI" to="." method="_on_responsive_ui_destroy_selected_building_pressed"]
+[connection signal="enter_build_mode_pressed" from="ResponsiveUICanvas/ResponsiveUI" to="." method="_on_responsive_ui_enter_build_mode_pressed"]
+[connection signal="move_selected_building_cancelled" from="ResponsiveUICanvas/ResponsiveUI" to="." method="_on_responsive_ui_move_selected_building_cancelled"]
+[connection signal="move_selected_building_confirmed" from="ResponsiveUICanvas/ResponsiveUI" to="." method="_on_responsive_ui_move_selected_building_confirmed"]
+[connection signal="move_selected_building_pressed" from="ResponsiveUICanvas/ResponsiveUI" to="." method="_on_responsive_ui_move_selected_building_pressed"]
+[connection signal="tier_transition_midpoint" from="ResponsiveUICanvas/ResponsiveUI" to="." method="on_transition_to_next_tier_midpoint"]
 [connection signal="drag_complete" from="Camera2D" to="." method="_on_camera_2d_drag_complete"]
 [connection signal="tap_complete" from="Camera2D" to="." method="_on_camera_2d_tap_complete"]

@@ -18,19 +18,19 @@ func get_amounts_copy():
 		ret[type] = amounts[type]
 	return ret
 
-func get_amount(type: ResourceData.Resources):
+func get_amount(type: ResourceData.Resources) -> int:
 	return amounts[type]
 
 
-func update_amount(type: ResourceData.Resources, delta: int):
+func update_amount(type: ResourceData.Resources, delta: int) -> void:
 	amounts[type] += delta
 	amounts_changed.emit()
 
 
-func add_amounts(costs: Array[CostResource]):
+func add_amounts(costs: Array[CostResource]) -> void:
 	for cost in costs:
 		update_amount(cost.type, cost.amount)
 
-func subtract_amounts(costs: Array[CostResource]):
+func subtract_amounts(costs: Array[CostResource]) -> void:
 	for cost in costs:
 		update_amount(cost.type, -cost.amount)

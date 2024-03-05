@@ -1,13 +1,15 @@
-[gd_resource type="Resource" script_class="BombData" load_steps=4 format=3 uid="uid://cljlfnpp8ng8i"]
+[gd_resource type="Resource" script_class="BombData" load_steps=5 format=3 uid="uid://cljlfnpp8ng8i"]
 
 [ext_resource type="Script" path="res://Data/Bomb/BombData.gd" id="1_cgo7j"]
 [ext_resource type="Script" path="res://Scripts/Entities/Model/LavaEntityModel.gd" id="1_vy7j1"]
 [ext_resource type="Texture2D" uid="uid://xl7vrwiygpt4" path="res://Assets/walltiles/LavaPoolDownscaled.png" id="3_shtaw"]
+[ext_resource type="PackedScene" uid="uid://do1uir83gp56q" path="res://ViewScenes/LavaSourceEntityView.tscn" id="4_rcs62"]
 
 [resource]
 script = ExtResource("1_cgo7j")
 type = 1
 name = "Lava"
-gained_resource = 0
+successful_flag_reward = Array[Resource("res://Data/Costs/Definitions/CostResource.gd")]([])
 texture = ExtResource("3_shtaw")
 model_script = ExtResource("1_vy7j1")
+view_scene = ExtResource("4_rcs62")

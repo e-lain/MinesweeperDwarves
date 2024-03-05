@@ -6,15 +6,10 @@ var _building_data: BuildingDataResource : get = get_building_data
 
 ## Constructor
 func _init(origin_pos: Vector2i, type: BuildingData.Type) -> void:
-	_building_data = BuildingData.get_building_data(type)
+	_building_data = BuildingData.INSTANCE.get_building_data(type)
 	## TODO: Replace this when Adding non-square/recangle support for buildings
 	var bounding_rect := Rect2i(origin_pos, _building_data.bounding_rect_dimensions)
-	var tiles : Array[BoardTile] = []
-	for x in bounding_rect.size.x:
-		for y in bounding_rect.size.y:
-			var pos = origin_pos + Vector2i(x, y)
-			tiles.append(BoardTileController.INSTANCE.get_tile_at_cell_position(pos))
-	
+
 	super(bounding_rect)
 
 ## Would permanently placing the building at the current position be allowed?
@@ -75,12 +70,13 @@ func place(bounding_cell_rect: Rect2i) -> void:
 	_pay_costs()
 
 func unplace() -> void:
+	if _is_placed:
+		_refund_costs()
 	super()
-	_refund_costs()
+
 
 func remove() -> void:
 	super()
-	_refund_costs()
 
 func get_type() -> BuildingData.Type:
 	return _building_data.type

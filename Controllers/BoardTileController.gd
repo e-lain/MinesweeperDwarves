@@ -15,15 +15,13 @@ var _entities_by_id := {}
 ## Boundaries of tiles array
 var _bounds: Rect2i
 
-## Root Scene node. Temporarily Required while some view data is tied up in BoardTiles.
-var _root_node: Node
 ## Tilemap which is the view for all BoardTiles. 
 ##
 ## Used for converting b/w world and cell coordinates. 
 var _tilemap: SharedTileMap
 
 ## Constructor. Assigns self to singleton if not yet assigned.
-func _init(size: Vector2i, root_node: Node, tilemap: SharedTileMap) -> void:
+func _init(size: Vector2i, tilemap: SharedTileMap) -> void:
 	if INSTANCE == null:
 		INSTANCE = self
 	else:
@@ -31,7 +29,6 @@ func _init(size: Vector2i, root_node: Node, tilemap: SharedTileMap) -> void:
 		return
 	
 	_bounds = Rect2i(Vector2i.ZERO, size)
-	_root_node = root_node
 	_tilemap = tilemap
 	
 	tiles = []
@@ -39,8 +36,19 @@ func _init(size: Vector2i, root_node: Node, tilemap: SharedTileMap) -> void:
 		tiles.append([])
 		for r in size.y:
 			var cell_pos := Vector2i(c, r)
-			var t := BoardTile.new(cell_pos, root_node)
+			var t := BoardTile.new(cell_pos)
 			tiles[c].append(t)
+
+func refresh_tiles_in_bounds(bounds: Rect2i) -> void:
+	for x in bounds.size.x:
+		for y in bounds.size.y:
+			var cell_pos := Vector2i(x, y) + bounds.position
+			var tile := get_tile_at_cell_position(cell_pos)
+			if tile.has_entity():
+				var entity: BoardEntityModel = get_entity(tile.get_entity_id())
+				entity.remove()
+			
+			tiles[cell_pos.x][cell_pos.y] = BoardTile.new(cell_pos)
 
 ## Returns the BoardTile at the given cell position
 func get_tile_at_cell_position(cell_pos: Vector2i) -> BoardTile:
@@ -72,7 +80,7 @@ func is_valid_position(extra_filter: Rect2i, position: Vector2i) -> bool:
 ##
 ## Optionally, provide a bounds filter Rect2i which prevents any tiles outside of the given bounds from being returned
 func get_orthogonal_tiles(tile: BoardTile, bounds_filter: Rect2i = EMPTY_RECT) -> Array[BoardTile]:
-	var offsets = [
+	var offsets: Array[Vector2i] = [
 		Vector2i.UP,
 		Vector2i.DOWN,
 		Vector2i.LEFT,
@@ -115,7 +123,7 @@ func index_to_cell_pos(index: int) -> Vector2i:
 ##
 ## Optionally, provide a bounds filter Rect2i which prevents any tiles outside of the given bounds from being returned
 func get_adjacent_tiles(tile: BoardTile, bounds_filter: Rect2i = EMPTY_RECT) -> Array[BoardTile]:
-	var offsets = [
+	var offsets: Array[Vector2i] = [
 		(Vector2i.UP + Vector2i.LEFT),
 		(Vector2i.UP),
 		(Vector2i.UP + Vector2i.RIGHT),
@@ -129,9 +137,9 @@ func get_adjacent_tiles(tile: BoardTile, bounds_filter: Rect2i = EMPTY_RECT) -> 
 
 ## Returns an array of BoardTiles, each one which is at the 
 func _get_tiles_at_offsets(tile: BoardTile, offsets: Array[Vector2i], bounds_filter: Rect2i) -> Array[BoardTile]:
-	var surroundings = []
+	var surroundings: Array[BoardTile] = []
 	for offset in offsets:
-		var adjacent = tile.cell_position + offset
+		var adjacent := tile.cell_position + offset
 		if is_valid_position(bounds_filter, adjacent):
 			surroundings.append(get_tile_at_cell_position(adjacent))
 	return surroundings

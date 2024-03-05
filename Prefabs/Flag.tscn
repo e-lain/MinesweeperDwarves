@@ -3,4 +3,6 @@
 [ext_resource type="Texture2D" uid="uid://bl2ixi00xkp8y" path="res://Assets/exclamation.png" id="1_2j8hy"]
 
 [node name="Flag" type="Sprite2D"]
+scale = Vector2(2, 2)
 texture = ExtResource("1_2j8hy")
+centered = false

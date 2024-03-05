@@ -17,18 +17,15 @@ var _entity_id: int = -1 : get = get_entity_id
 
 var _state: TileState = TileState.Covered
 
-func _init(cell_pos: Vector2i, label_parent: Node):
+func _init(cell_pos: Vector2i):
 	cell_position = cell_pos
-	#_label_parent = label_parent
 
 func toggle_flag():
 	if _state != TileState.Uncovered:
 		if _state == TileState.Covered:
 			_state = TileState.Flagged
-			#create_flag()
 		elif _state == TileState.Flagged:
 			_state = TileState.Covered
-			#destroy_flag()
 
 func collect() -> Array[CostResource]:
 	if !has_bomb() || !is_flagged():
@@ -37,20 +34,9 @@ func collect() -> Array[CostResource]:
 	uncover()
 	return entity.collect()
 
-#func create_flag():
-#	flag = flag_prefab.instantiate()
-#	_label_parent.add_child(flag)
-#	flag.global_position = get_global_position()
-
-#func destroy_flag():
-#	if flag != null:
-#		flag.queue_free()
-#		flag = null
-
-
 ## Returns this board tile's cell position converted to world coordinates
 func get_global_position() -> Vector2:
-	return cell_position * Globals.TILE_SIZE + Vector2i(Globals.TILE_SIZE / 2, Globals.TILE_SIZE / 2)
+	return cell_position * Globals.TILE_SIZE
 
 func has_bomb() -> bool:
 	if !has_entity():

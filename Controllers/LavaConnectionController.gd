@@ -21,12 +21,12 @@ func get_next_connection_graph_id() -> int:
 func _merge_connection_graphs(a: ConnectionGraph, b: ConnectionGraph) -> void:
 	for entity_id in b.lava_source_entity_ids:
 		var lava_source: LavaEntityModel = BoardTileController.INSTANCE.get_entity(entity_id)
-		lava_source.set_new_connection_graph_id(b.id)
+		lava_source.set_new_connection_graph_id(a.id)
 		a.lava_source_entity_ids.append(entity_id)
 	
 	for entity_id in b.lava_connection_building_entity_ids:
 		var lava_connected_building: LavaConnectedBuildingEntityModel = BoardTileController.INSTANCE.get_entity(entity_id)
-		lava_connected_building.set_new_connection_graph_id(b.id)
+		lava_connected_building.set_new_connection_graph_id(a.id)
 		a.lava_connection_building_entity_ids.append(entity_id)
 		
 	connection_graphs.erase(b.id)
@@ -60,6 +60,7 @@ func add_lava_connection_entity(entity: BoardEntityModel, is_source: bool) -> vo
 		new_graph.add_entity_id(entity_id, is_source)
 		
 		entity.set_new_connection_graph_id(new_graph.id)
+		connection_graphs[new_graph.id] = new_graph
 	else:
 		# Each orthogonal connection graph to the added one gets merged together now
 		while graph_count >= 2:
@@ -71,16 +72,15 @@ func add_lava_connection_entity(entity: BoardEntityModel, is_source: bool) -> vo
 		
 		var graph_id := orthogonal_connection_graph_ids[0]
 		var connection_graph: ConnectionGraph = connection_graphs[graph_id]
+		entity.set_new_connection_graph_id(graph_id)
 		connection_graph.add_entity_id(entity_id, is_source)
 
-func remove_lava_connection_entity(entity: BoardEntityModel, is_source: bool) -> void:
+func remove_lava_connection_entity(entity: BoardEntityModel) -> void:
 	assert(is_lava_connection_entity(entity))
 	
 	var visited: Array[Dictionary] = []
-	var entity_id = entity.get_id()
 	var orthogonal_tiles := BoardTileController.INSTANCE.get_orthogonal_tiles_for_array(entity.get_occupied_tiles())
-	
-	var orthogonal_lava: Array[BoardTile] = []
+
 	## For each orthogonal lava tile:
 	## - if an orthogonal tile has been visited already by another BFS iteration, then that means that another orhtogonal direction still connects with the current tile. So skip running BFS again
 	## - Otherwise, Perform BFS, marking visited tiles. Also skip the tile associated with entity given to this function, as it will be deleted.
@@ -100,8 +100,8 @@ func remove_lava_connection_entity(entity: BoardEntityModel, is_source: bool) ->
 		var skip = false
 		# Checking to see if this tile has alerady been visited by a previous iteration of BFS.
 		# If it has, then we will skip it, as it's already been included in another set
-		for set in visited:
-			if set.has(cell_pos):
+		for visit_set in visited:
+			if visit_set.has(cell_pos):
 
 				skip = true
 				break
@@ -149,11 +149,11 @@ func remove_lava_connection_entity(entity: BoardEntityModel, is_source: bool) ->
 	entity.set_new_connection_graph_id(-1)
 	
 	## Now each entry in visited is its own connection graph, build these and insert them into the connection graphs dict.
-	for set in visited:
+	for visit_set in visited:
 		var graph = ConnectionGraph.new()
 		graph.id = get_next_connection_graph_id()
 		var entity_ids := {}
-		for cell_pos in set:
+		for cell_pos in visit_set.keys():
 			var tile := BoardTileController.INSTANCE.get_tile_at_cell_position(cell_pos)
 			var tile_entity_id := tile.get_entity_id()
 			if entity_ids.has(tile_entity_id):

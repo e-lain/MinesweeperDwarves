@@ -56,8 +56,9 @@ func _ready():
 	seed(975027303)
 	
 	## Initialize Singletons
+	BuildingData.new()
 	EntityIdController.new()
-	BoardTileController.new(Vector2i(300, 300), get_tree().root, shared_tilemap)
+	BoardTileController.new(Vector2i(300, 300), shared_tilemap)
 	LavaConnectionController.new()
 	
 	
@@ -120,8 +121,6 @@ func generate_board(difficulty: int, room_id: int) -> Board:
 	
 	b.building_selected.connect(on_building_selected)
 	b.building_deselected.connect(on_building_deselected)
-	
-	b.ability_complete.connect(on_ability_completed)
 	
 	b.tile_uncover_event_complete.connect(on_tile_uncover_event_complete)
 	b.tile_flagged_event_complete.connect(on_tile_uncover_event_complete)
@@ -280,7 +279,7 @@ func _on_responsive_ui_enter_build_mode_pressed():
 
 func on_mine_animation_complete():
 	SoundManager.play_negative()
-	var pop = Resources.get_amount(ResourceData.Resources.POPULATION)
+	var pop:int = Resources.get_amount(ResourceData.Resources.POPULATION)
 	
 	if pop > 0:
 		responsive_ui.show_mine_hit_popup(_on_mine_hit_restart_level_pressed)
@@ -288,10 +287,14 @@ func on_mine_animation_complete():
 		print_debug("GAME OVER - LOSS")
 
 func _on_mine_hit_restart_level_pressed():
-	var room_id = get_current_board().overworld_room_id
-	var prev_board = get_current_board()
+	var room_id: int = get_current_board().overworld_room_id
+	var prev_board: Board = get_current_board()
+	BoardTileController.INSTANCE.refresh_tiles_in_bounds(prev_board.get_boundaries_rect())
+	
+	prev_board.destroy()
+	
 	update_current_board(generate_board(get_depth(), room_id))
-	prev_board.queue_free()
+
 	shared_tilemap.fill(get_current_board().get_boundaries_rect())
 
 func stairs_placed():
@@ -395,14 +398,8 @@ func _on_responsive_ui_confirm_placement_pressed():
 	get_current_board().on_confirm_building_placement()
 	responsive_ui.enter_build_mode()
 
-
-func _on_responsive_ui_ability_menu_item_pressed(type: AbilityData.Type):
-	ability(type)
-
-
 func _on_camera_2d_drag_complete():
 	pass # Replace with function body.
-
 
 func _on_camera_2d_tap_complete(event):
 	get_current_board().deselect_building(event)
