@@ -27,8 +27,8 @@ var placing_type: BuildingData.Type
 var current_placing_instance: BuildingEntityView
 
 var tier: int
-var rows = 6
-var columns = 6
+var rows := 6
+var columns := 6
 var bomb_count = 4
 
 var flags = bomb_count
@@ -43,7 +43,7 @@ var total_tiles = rows*columns
 var unlock_costs = { ResourceData.Resources.POPULATION: 1 }
 
 var tiles := []
-var number_labels := []
+var number_labels: Array[NumberLabel] = []
 var flags_by_cell_pos := {}
 
 
@@ -58,7 +58,7 @@ var state := State.Play
 
 var selected_building
 
-var moving_building_origin_cell_pos
+var moving_building_origin_cell_pos: Vector2i
 
 var overworld_room_id: int = -1
 
@@ -197,7 +197,7 @@ func enter_build_mode() -> void:
 				var collection: Array[CostResource] = tile.collect()
 				if collection.size() > 0:
 					Resources.add_amounts(collection)
-					var instance = collection_prefab.instantiate()
+					var instance: CollectionEffect = collection_prefab.instantiate()
 					add_child(instance)
 					
 					instance.global_position = Globals.cell_to_global(tile.cell_position)
@@ -223,7 +223,7 @@ func create_bomb_view(tile: BoardTile) -> BombEntityView:
 	var bomb_entity: BombEntityModel =  BoardTileController.INSTANCE.get_entity(tile.get_entity_id())
 	var bomb_prefab: PackedScene = BombData.get_bomb_data(bomb_entity.get_bomb_type()).view_scene
 	
-	var bomb_view = bomb_prefab.instantiate()
+	var bomb_view: BombEntityView = bomb_prefab.instantiate()
 	get_tree().root.add_child(bomb_view)
 	bomb_view.init(bomb_entity)
 
@@ -324,7 +324,7 @@ func move_selected_building():
 	state = State.Moving
 	moving_building_origin_cell_pos = building.get_model().get_bounding_cell_rect().position
 	
-	selected_building.start_move()
+	building.start_move()
 
 func confirm_selected_building_move():
 	assert(state == State.Moving)
@@ -354,11 +354,10 @@ func cancel_selected_building_move():
 	
 	model.move(Rect2i(moving_building_origin_cell_pos, model.get_bounding_cell_rect().size))
 	building.match_model_position()
-	selected_building.confirm_placement()
+	building.confirm_placement()
 	deselect_building()
 
 func collect_resources():
-	print("beginning collection")
 	state = State.Complete
 	
 	var collected_count := 0
@@ -368,15 +367,12 @@ func collect_resources():
 		if !data.grants_resources():
 			continue
 		
-		print("grants resources")
-		
 		var type := building.type
 		var model: BaseBuildingEntityModel = building.get_model()
 		
 		var occupied_tiles := model.get_occupied_tiles()
 		var collection_problems := model.get_collection_problems()
 		if collection_problems.is_empty():
-			print("no collection problem")
 			model.collect()
 			building_views_by_entity_id[model.get_id()].play_collection_animation(collected_count)
 			collected_count += 1
@@ -426,11 +422,11 @@ func uncover_tile(tile: BoardTile, distance: int = 0, max_depth: int = -1, trigg
 	
 	if tile.is_flagged():
 		flags += 1
-		tile.destroy_flag()
+		_on_flag_toggled(tile.cell_position)
 	
 	var adjacent_tiles: Array[BoardTile] = BoardTileController.INSTANCE.get_adjacent_tiles(tile, get_boundaries_rect())
 	
-	var adjacent_bombs = 0
+	var adjacent_bombs := 0
 	for adjacent_tile in adjacent_tiles:
 		if adjacent_tile.has_bomb():
 			adjacent_bombs += 1
@@ -446,7 +442,7 @@ func create_number_label(tile: BoardTile, bomb_count: int) -> void:
 	if state != State.Play:
 		return
 	if bomb_count > 0:
-		var label = number_label_prefab.instantiate()
+		var label: NumberLabel = number_label_prefab.instantiate()
 		get_tree().root.add_child(label)
 		label.global_position = tile.get_global_position()
 		label.set_number(bomb_count)
@@ -473,8 +469,6 @@ func _on_flag_toggled(cell_pos: Vector2i):
 		flags -= 1
 	else:
 		return
-	
-
 	
 	if !tile.is_flagged() && tile.has_bomb():
 		bombs_found += 1
@@ -519,16 +513,20 @@ func lock():
 
 func destroy():
 	for label in number_labels:
-		label.queue_free()
+		if label != null:
+			label.queue_free()
 	
 	for flag in flags_by_cell_pos.values():
-		flag.queue_free()
+		if flag != null:
+			flag.queue_free()
 	
 	for bomb_view in bomb_views_by_entity_id.values():
-		bomb_view.queue_free()
+		if bomb_view != null:
+			bomb_view.queue_free()
 	
 	for building_view in building_views_by_entity_id.values():
-		building_view.queue_free()
+		if building_view != null:
+			building_view.queue_free()
 	
 	queue_free()
 	

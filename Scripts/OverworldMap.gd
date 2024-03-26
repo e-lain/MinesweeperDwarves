@@ -1,4 +1,4 @@
-extends Node
+class_name OverworldMap extends Node
 
 # This will do for now, in the future, consider Wave Function Collapse: https://robertheaton.com/2018/12/17/wavefunction-collapse-algorithm/
 # OR let players place the location + size of minesweep area themselves

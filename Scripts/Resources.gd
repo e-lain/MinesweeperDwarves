@@ -6,9 +6,9 @@ func _ready():
 	for type in ResourceData.Resources.values():
 		amounts[type] = 0
 	
-	amounts[ResourceData.Resources.POPULATION] = 300 #3
-	amounts[ResourceData.Resources.STONE] = 800 #8
-	amounts[ResourceData.Resources.STEEL] = 300 #3
+	amounts[ResourceData.Resources.POPULATION] = 3 #300
+	amounts[ResourceData.Resources.STONE] = 8 #800
+	amounts[ResourceData.Resources.STEEL] = 3 #300
 
 var amounts = {}
 

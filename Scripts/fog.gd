@@ -1,4 +1,4 @@
-extends Node2D
+class_name Fog extends Node2D
 
 @export var fog_width = 1080
 @export var fog_height = 1080

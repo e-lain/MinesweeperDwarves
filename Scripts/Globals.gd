@@ -8,6 +8,8 @@ const MINE_HIT_POPULATION_COST: int = 1
 const TILE_SIZE: int = 128
 const TILE_SIZE_VECTOR: Vector2 = Vector2(TILE_SIZE, TILE_SIZE)
 
+const ANIMATION_SPEED_MULTIPLIER: float = 2.0
+
 ## Util Function for converting from global (godot) position to cell (BoardTileController grid) position
 static func global_to_cell(global_position: Vector2) -> Vector2i:
 	return  Vector2i(int(global_position.x / Globals.TILE_SIZE), int(global_position.y / Globals.TILE_SIZE))

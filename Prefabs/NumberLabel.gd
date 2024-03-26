@@ -1,4 +1,4 @@
-extends Sprite2D
+class_name NumberLabel extends Sprite2D
 
 @export var textures: Array[Texture] = []
 

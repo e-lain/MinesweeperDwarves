@@ -67,6 +67,8 @@ expand_mode = 1
 stretch_mode = 1
 
 [node name="OverworldMap" parent="." instance=ExtResource("4_6fs5e")]
+start_room_size = 12
+min_room_size = 12
 
 [node name="TileMap" parent="." instance=ExtResource("5_p3rcr")]
 
@@ -76,6 +78,7 @@ stretch_mode = 1
 
 [node name="Camera2D" type="Camera2D" parent="."]
 script = ExtResource("7_6xk5s")
+min_zoom = 0.5
 
 [node name="CanvasModulate" type="CanvasModulate" parent="."]
 visible = false

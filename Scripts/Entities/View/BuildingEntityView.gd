@@ -247,9 +247,9 @@ func play_collection_animation(collection_count: int = 0) -> void:
 			collections.append(cost)
 	
 	# TODO: Proper support for multiple collection types
-	var instance: Node = collection_prefab.instantiate()
-	instance.init(collections, collection_count)
+	var instance: CollectionEffect = collection_prefab.instantiate()
 	add_child(instance)
+	instance.init(collections, collection_count)
 	instance.global_position = global_position + Vector2(size * Globals.TILE_SIZE / 2.0) + Vector2(0, -16)
 
 

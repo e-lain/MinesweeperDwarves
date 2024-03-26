@@ -1,26 +1,19 @@
-extends Node2D
-class_name GameController
+class_name GameController extends Node2D
 
-@onready var overworld = $OverworldMap
-
+@onready var overworld: OverworldMap = $OverworldMap
 @onready var responsive_ui: ResponsiveUI = $ResponsiveUICanvas/ResponsiveUI
-
 @onready var camera: CameraController = $Camera2D
-
-@onready var canvas_modulate = $CanvasModulate
-@onready var pointlight = $PointLight2D
-
-@onready var fog = $Fog
+@onready var canvas_modulate: CanvasModulate = $CanvasModulate
+@onready var pointlight: PointLight2D = $PointLight2D
+@onready var fog: Fog = $Fog
 @onready var shared_tilemap: SharedTileMap = $TileMap
-@onready var play_area_border = $PlayAreaBorder
+@onready var play_area_border: Sprite2D = $PlayAreaBorder
 
-
-
-var board_prefab = preload("res://Prefabs/board.tscn")
+var board_prefab: PackedScene = preload("res://Prefabs/board.tscn")
 
 var grid_line_prefab: PackedScene = preload("res://Prefabs/GridLine.tscn")
 
-var tier = 1
+var tier := 1
 var depth_by_tier = {}
 var available_buildings: Array[BuildingData.Type] = []
 var available_resources: Array[ResourceData.Resources] = []
@@ -28,7 +21,7 @@ var available_resources: Array[ResourceData.Resources] = []
 var ability_charge_maximums = { AbilityData.Type.ARMOR: 0, AbilityData.Type.DESTROY: 0, AbilityData.Type.DOWSE: 0 }
 var ability_charge_counts = {}
 
-var total_workshop_count = 0
+var total_workshop_count := 0
 
 var overlay_toggled: bool = false
 
@@ -45,7 +38,6 @@ enum State {
 	Build,
 	Placing
 }
-
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -243,10 +235,7 @@ func next_level(chosen_room_id: int):
 	responsive_ui.enter_play_mode()
 
 func _on_responsive_ui_enter_build_mode_pressed():
-	if state == State.Build:
-		push_error("ALREADY IN BUILD MODE but end level button pressed")
-		return
-	
+	assert(state != State.Build)
 	
 	responsive_ui.hide_enter_build_mode()
 	get_current_board().enter_build_mode()
